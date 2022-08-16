@@ -1,4 +1,4 @@
-From f61d6d31783a60d13aa76e12020937829463d226 Mon Sep 17 00:00:00 2001
+From 13d7e06c8e59f9c65c867dfce9521f52f2605229 Mon Sep 17 00:00:00 2001
 From: Daniel Micay <danielmicay@gmail.com>
 Date: Sun, 22 Mar 2020 01:23:48 -0400
 Subject: [PATCH] disable content feed suggestions by default
