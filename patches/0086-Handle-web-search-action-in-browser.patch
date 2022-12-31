@@ -1,4 +1,4 @@
-From a13d2d00fd2fae86e969206638b1c24d2be9e65b Mon Sep 17 00:00:00 2001
+From 03db0ebb8c47be57fcec403ac9dd3174f07b8913 Mon Sep 17 00:00:00 2001
 From: fgei <fgei@gmail.com>
 Date: Wed, 28 Sep 2022 05:37:00 +0200
 Subject: [PATCH] Handle web search action in browser

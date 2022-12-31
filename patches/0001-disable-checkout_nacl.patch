@@ -1,4 +1,4 @@
-From bfa52fa939543191992781cc932160e87cab03f5 Mon Sep 17 00:00:00 2001
+From c920fbc8dac9bda4a2620e06cfd43937b9f453fe Mon Sep 17 00:00:00 2001
 From: Daniel Micay <danielmicay@gmail.com>
 Date: Sat, 21 Nov 2020 01:30:06 -0500
 Subject: [PATCH] disable checkout_nacl

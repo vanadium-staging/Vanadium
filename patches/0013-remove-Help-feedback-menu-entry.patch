@@ -1,4 +1,4 @@
-From 94b2ff82ff9b37fd0578f813d21cb145dde0948e Mon Sep 17 00:00:00 2001
+From 01ce130b5c725dea502bb11c29da584fd7fbf40d Mon Sep 17 00:00:00 2001
 From: Daniel Micay <danielmicay@gmail.com>
 Date: Thu, 15 Apr 2021 02:14:37 -0400
 Subject: [PATCH] remove Help & feedback menu entry

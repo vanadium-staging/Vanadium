@@ -1,4 +1,4 @@
-From 419978bd8fe33cd6a8d55d997c4010fe88a9325f Mon Sep 17 00:00:00 2001
+From f667adef1d61e6ec8260303bc2cf94761b1cde21 Mon Sep 17 00:00:00 2001
 From: fgei <fgei@gmail.com>
 Date: Sun, 19 Jun 2022 06:39:48 +0000
 Subject: [PATCH] Toggle for navigating external URL in incognito

@@ -1,4 +1,4 @@
-From f9c3d402c7e8808035baf16924385e73d87717dc Mon Sep 17 00:00:00 2001
+From c68105c4917130ac8d0c6f36e9c9cfd127325ac9 Mon Sep 17 00:00:00 2001
 From: fgei <fgei@gmail.com>
 Date: Tue, 8 Feb 2022 03:04:20 +0000
 Subject: [PATCH] Disable detailed language settings by default

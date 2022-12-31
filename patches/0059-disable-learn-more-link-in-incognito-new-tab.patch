@@ -1,4 +1,4 @@
-From d73109203cdd21dedea83006d8330dafed66687f Mon Sep 17 00:00:00 2001
+From 3b678de9abc49762178283192722e0b6b4daba3c Mon Sep 17 00:00:00 2001
 From: A Mak <refragable@mailbox.org>
 Date: Sat, 8 Aug 2020 11:17:59 -0700
 Subject: [PATCH] disable learn more link in incognito new tab

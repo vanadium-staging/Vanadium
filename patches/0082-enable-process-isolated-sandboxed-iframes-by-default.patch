@@ -1,4 +1,4 @@
-From 34beef1a2142f3fc41c2c355d10cdc46e10035df Mon Sep 17 00:00:00 2001
+From 4644ae34cd4a9f6502ef36355f5b4d5701479431 Mon Sep 17 00:00:00 2001
 From: June <june@eridan.me>
 Date: Sun, 8 May 2022 01:34:58 +0000
 Subject: [PATCH] enable process isolated sandboxed iframes by default

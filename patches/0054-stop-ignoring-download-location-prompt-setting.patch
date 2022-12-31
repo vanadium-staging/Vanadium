@@ -1,4 +1,4 @@
-From 7a22ca7e674235b8e349350d8da501811882286c Mon Sep 17 00:00:00 2001
+From 4090d70f7a1de66e488fe739f46a2d307d433892 Mon Sep 17 00:00:00 2001
 From: Daniel Micay <danielmicay@gmail.com>
 Date: Fri, 28 Jun 2019 16:56:37 -0400
 Subject: [PATCH] stop ignoring download location prompt setting

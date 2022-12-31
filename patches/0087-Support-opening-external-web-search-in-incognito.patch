@@ -1,4 +1,4 @@
-From 71daccadbe9f44a407e2c80883be14bdd3c480e6 Mon Sep 17 00:00:00 2001
+From eee2d06e6d6a5b72bba51e81674d14f85c9ff16c Mon Sep 17 00:00:00 2001
 From: fgei <fgei@gmail.com>
 Date: Sat, 3 Sep 2022 08:15:59 +0200
 Subject: [PATCH] Support opening external web search in incognito

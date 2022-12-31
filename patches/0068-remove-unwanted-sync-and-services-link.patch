@@ -1,4 +1,4 @@
-From 04debf9af4c33c31812905b396a88f6130ea9e9e Mon Sep 17 00:00:00 2001
+From 6b6bf61fb84b78768a1098392cbf5f6d85f4eb8c Mon Sep 17 00:00:00 2001
 From: Daniel Micay <danielmicay@gmail.com>
 Date: Sat, 7 Aug 2021 15:01:54 -0400
 Subject: [PATCH] remove unwanted sync and services link
