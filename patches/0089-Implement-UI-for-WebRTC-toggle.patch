@@ -14,10 +14,10 @@ PrefService for the said policy.
  .../res/xml/webrtc_policy_preferences.xml     |  9 ++
  .../privacy/settings/PrivacySettingsExt.java  | 11 +++
  .../settings/WebRtcPolicyPreference.java      | 97 +++++++++++++++++++
- .../webrtc/settings/WebRtcPolicySettings.java | 58 +++++++++++
- .../webrtc/settings/WebRtcPolicyUtils.java    | 92 ++++++++++++++++++
+ .../webrtc/settings/WebRtcPolicySettings.java | 67 +++++++++++++
+ .../webrtc/settings/WebRtcPolicyUtils.java    | 90 +++++++++++++++++
  .../strings/android_chrome_ext_strings.grdp   | 16 +++
- 10 files changed, 346 insertions(+)
+ 10 files changed, 353 insertions(+)
  create mode 100644 chrome/android/java/res/layout/webrtc_policy_preference.xml
  create mode 100644 chrome/android/java/res/xml/webrtc_policy_preferences.xml
  create mode 100644 chrome/android/java/src/org/chromium/chrome/browser/webrtc/settings/WebRtcPolicyPreference.java
@@ -137,7 +137,7 @@ index 0000000000000..f90f9d7231ff9
 +        android:key="webrtc_policy" />
 +</PreferenceScreen>
 diff --git a/chrome/android/java/src/org/chromium/chrome/browser/privacy/settings/PrivacySettingsExt.java b/chrome/android/java/src/org/chromium/chrome/browser/privacy/settings/PrivacySettingsExt.java
-index e75b5cd5a534a..fdd7daddf6dca 100644
+index 0b3c42b0e37c2..487349d62e0e6 100644
 --- a/chrome/android/java/src/org/chromium/chrome/browser/privacy/settings/PrivacySettingsExt.java
 +++ b/chrome/android/java/src/org/chromium/chrome/browser/privacy/settings/PrivacySettingsExt.java
 @@ -17,6 +17,7 @@ import org.chromium.chrome.browser.preferences.SharedPrefsUtils.SharedPrefsExt;
@@ -154,11 +154,11 @@ index e75b5cd5a534a..fdd7daddf6dca 100644
              SharedPrefsExt.OPEN_LINKS_IN_INCOGNITO.getKey();
 +    private static final String PREF_WEBRTC_POLICY = "webrtc_policy";
  
-     private static final Preference.OnPreferenceChangeListener LISTENER =
-         (pref, val) -> {
-@@ -94,6 +96,11 @@ final class PrivacySettingsExt {
+     private static final Preference.OnPreferenceChangeListener getListener(@NonNull Profile profile) {
+         return (pref, val) -> {
+@@ -96,6 +98,11 @@ final class PrivacySettingsExt {
              openLinksInIncognitoPref.setOrder(PRIVACY_PREFERENCES_ORDER);
-             openLinksInIncognitoPref.setOnPreferenceChangeListener(LISTENER);
+             openLinksInIncognitoPref.setOnPreferenceChangeListener(getListener(profile));
          }
 +
 +        Preference webRtcPolicyPref = prefFragment.findPreference(PREF_WEBRTC_POLICY);
@@ -167,15 +167,15 @@ index e75b5cd5a534a..fdd7daddf6dca 100644
 +        }
      }
  
-     static void updatePreferences(@NonNull PreferenceFragmentCompat prefFragment) {
-@@ -116,5 +123,9 @@ final class PrivacySettingsExt {
+     static void updatePreferences(@NonNull PreferenceFragmentCompat prefFragment, @NonNull Profile profile) {
+@@ -118,5 +125,9 @@ final class PrivacySettingsExt {
          SettingsExtUtils.safelyUpdateSwitchPreference(/* switchPref */ openLinksInIncognitoPref,
                  /* newSummary*/ null,
                  /* newCheckedValue*/ SharedPrefsExt.OPEN_LINKS_IN_INCOGNITO.get());
 +
 +        Preference webRtcPolicyPref = prefFragment.findPreference(PREF_WEBRTC_POLICY);
 +        SettingsExtUtils.safelyUpdatePreference(/* preference */ webRtcPolicyPref,
-+                /* newSummary */ WebRtcPolicySettings.getWebRtcPolicySummaryString(prefFragment.getContext()));
++                /* newSummary */ WebRtcPolicySettings.getWebRtcPolicySummaryString(prefFragment.getContext(), profile));
      }
  }
 diff --git a/chrome/android/java/src/org/chromium/chrome/browser/webrtc/settings/WebRtcPolicyPreference.java b/chrome/android/java/src/org/chromium/chrome/browser/webrtc/settings/WebRtcPolicyPreference.java
@@ -283,10 +283,10 @@ index 0000000000000..2026f9461b632
 +}
 diff --git a/chrome/android/java/src/org/chromium/chrome/browser/webrtc/settings/WebRtcPolicySettings.java b/chrome/android/java/src/org/chromium/chrome/browser/webrtc/settings/WebRtcPolicySettings.java
 new file mode 100644
-index 0000000000000..5ee1893382254
+index 0000000000000..e8513b046e1b8
 --- /dev/null
 +++ b/chrome/android/java/src/org/chromium/chrome/browser/webrtc/settings/WebRtcPolicySettings.java
-@@ -0,0 +1,58 @@
+@@ -0,0 +1,67 @@
 +/* Copyright (c) 2021 The Brave Authors. All rights reserved.
 + * This Source Code Form is subject to the terms of the Mozilla Public
 + * License, v. 2.0. If a copy of the MPL was not distributed with this file,
@@ -308,11 +308,15 @@ index 0000000000000..5ee1893382254
 +import androidx.preference.PreferenceFragmentCompat;
 +
 +import org.chromium.chrome.R;
++import org.chromium.chrome.browser.profiles.Profile;
++import org.chromium.chrome.browser.settings.ProfileDependentSetting;
 +import org.chromium.components.browser_ui.settings.SettingsUtils;
 +import org.chromium.ui.UiUtils;
 +
-+public class WebRtcPolicySettings extends PreferenceFragmentCompat {
++public class WebRtcPolicySettings extends PreferenceFragmentCompat implements ProfileDependentSetting {
 +    static final String PREF_WEBRTC_POLICY = "webrtc_policy";
++
++    private Profile mProfile;
 +
 +    @Override
 +    public void onCreatePreferences(@Nullable Bundle savedInstanceState, String rootKey) {
@@ -321,16 +325,16 @@ index 0000000000000..5ee1893382254
 +
 +        WebRtcPolicyPreference webRtcPolicyPreference =
 +                (WebRtcPolicyPreference) findPreference(PREF_WEBRTC_POLICY);
-+        webRtcPolicyPreference.initialize(WebRtcPolicyUtils.getPolicy());
++        webRtcPolicyPreference.initialize(WebRtcPolicyUtils.getPolicy(mProfile));
 +
 +        webRtcPolicyPreference.setOnPreferenceChangeListener((preference, newValue) -> {
-+            WebRtcPolicyUtils.setPolicy((int) newValue);
++            WebRtcPolicyUtils.setPolicy((int) newValue, mProfile);
 +            return true;
 +        });
 +    }
 +
-+    public static String getWebRtcPolicySummaryString(Context context) {
-+        return WebRtcPolicyUtils.getSummary(context);
++    public static String getWebRtcPolicySummaryString(Context context, Profile profile) {
++        return WebRtcPolicyUtils.getSummary(context, profile);
 +    }
 +
 +    @Override
@@ -344,13 +348,18 @@ index 0000000000000..5ee1893382254
 +
 +        setDivider(null);
 +    }
++
++    @Override
++    public void setProfile(Profile profile) {
++        mProfile = profile;
++    }
 +}
 diff --git a/chrome/android/java/src/org/chromium/chrome/browser/webrtc/settings/WebRtcPolicyUtils.java b/chrome/android/java/src/org/chromium/chrome/browser/webrtc/settings/WebRtcPolicyUtils.java
 new file mode 100644
-index 0000000000000..296e59fc57167
+index 0000000000000..f4166b696e423
 --- /dev/null
 +++ b/chrome/android/java/src/org/chromium/chrome/browser/webrtc/settings/WebRtcPolicyUtils.java
-@@ -0,0 +1,92 @@
+@@ -0,0 +1,90 @@
 +// Copyright 2023 GrapheneOS
 +// Use of this source code is governed by a GPLv2 only-style license that can be
 +// found in the LICENSE file.
@@ -380,8 +389,8 @@ index 0000000000000..296e59fc57167
 +    private static final String WEBRTC_DISABLE_NON_PROXIED_UDP =
 +            "disable_non_proxied_udp";
 +
-+    static String getSummary(Context context) {
-+        switch (convertToWebRtcPolicyInt(getPolicyFromNative())) {
++    static String getSummary(Context context, Profile profile) {
++        switch (convertToWebRtcPolicyInt(getPolicyFromNative(profile))) {
 +            case WebRtcPolicy.DEFAULT:
 +                return context.getString(R.string.webrtc_policy_default);
 +            case WebRtcPolicy.DEFAULT_PUBLIC_AND_PRIVATE_INTERFACES:
@@ -427,18 +436,16 @@ index 0000000000000..296e59fc57167
 +        }
 +    }
 +
-+    private static String getPolicyFromNative() {
-+        return UserPrefs.get(Profile.getLastUsedRegularProfile())
-+                .getString(Pref.WEB_RTCIP_HANDLING_POLICY);
++    private static String getPolicyFromNative(Profile profile) {
++        return UserPrefs.get(profile).getString(Pref.WEB_RTCIP_HANDLING_POLICY);
 +    }
 +
-+    static @WebRtcPolicy int getPolicy() {
-+        return convertToWebRtcPolicyInt(getPolicyFromNative());
++    static @WebRtcPolicy int getPolicy(Profile profile) {
++        return convertToWebRtcPolicyInt(getPolicyFromNative(profile));
 +    }
 +
-+    static void setPolicy(@WebRtcPolicy int policy) {
-+        UserPrefs.get(Profile.getLastUsedRegularProfile())
-+                .setString(Pref.WEB_RTCIP_HANDLING_POLICY, convertToWebRtcPolicyString(policy));
++    static void setPolicy(@WebRtcPolicy int policy, Profile profile) {
++        UserPrefs.get(profile).setString(Pref.WEB_RTCIP_HANDLING_POLICY, convertToWebRtcPolicyString(policy));
 +    }
 +
 +    private WebRtcPolicyUtils() {}
