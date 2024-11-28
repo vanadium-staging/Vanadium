@@ -3,8 +3,8 @@ target_os = "android"
 target_cpu = "arm64"
 
 android_channel = "stable"
-android_default_version_name = "126.0.6478.50"
-android_default_version_code = "647805000"
+android_default_version_name = "127.0.6533.104"
+android_default_version_code = "653310400"
 
 ext_version_enabled = true
 ext_version_increment = "2"
@@ -35,6 +35,7 @@ use_relative_vtables_abi = false
 # This flag was enabled as of M127, and doesn't compile as intended, contrary to upstream documentation.
 # When enabled, this increases the build time by approximately 50% without substantial benefits.
 include_both_v8_snapshots = false
+enable_shadow_call_stack = true
 
 enable_vr = false
 enable_arcore = false
@@ -51,6 +52,6 @@ trichrome_library_package = "app.vanadium.trichromelibrary"
 
 config_apk_package = "app.vanadium.config"
 config_apk_certdigest = "c6adb8b83c6d4c17d292afde56fd488a51d316ff8f2c11c5410223bff8a7dbb3"
-config_apk_version_name = "23"
-config_apk_version_code = "23"
+config_apk_version_name = "37"
+config_apk_version_code = "37"
 config_apk_is_debug = false
