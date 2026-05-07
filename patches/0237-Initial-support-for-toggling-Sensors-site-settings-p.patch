@@ -1,0 +1,95 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: quh4gko8 <88831734+quh4gko8@users.noreply.github.com>
+Date: Mon, 19 Jan 2026 14:36:41 +0000
+Subject: [PATCH] Initial support for toggling Sensors site settings per-site
+
+---
+ .../site_settings/SensorsSettingsHooks.java   | 45 +++++++++++++++++++
+ .../SiteSettingsHooksRegistry.java            |  2 +
+ ...site_settings_android_java_ext_sources.gni |  1 +
+ 3 files changed, 48 insertions(+)
+ create mode 100644 components/browser_ui/site_settings/android/java/src/org/chromium/components/browser_ui/site_settings/SensorsSettingsHooks.java
+
+diff --git a/components/browser_ui/site_settings/android/java/src/org/chromium/components/browser_ui/site_settings/SensorsSettingsHooks.java b/components/browser_ui/site_settings/android/java/src/org/chromium/components/browser_ui/site_settings/SensorsSettingsHooks.java
+new file mode 100644
+index 0000000000000..c941ea4d00b30
+--- /dev/null
++++ b/components/browser_ui/site_settings/android/java/src/org/chromium/components/browser_ui/site_settings/SensorsSettingsHooks.java
+@@ -0,0 +1,45 @@
++package org.chromium.components.browser_ui.site_settings;
++
++import androidx.preference.Preference;
++
++import org.chromium.build.annotations.AlwaysInline;
++import org.chromium.build.annotations.NonNull;
++import org.chromium.build.annotations.NullMarked;
++import org.chromium.build.annotations.Nullable;
++import org.chromium.components.browser_ui.settings.ChromeBasePreference;
++import org.chromium.components.content_settings.ContentSetting;
++import org.chromium.components.content_settings.ContentSettingsType;
++import org.chromium.content_public.browser.BrowserContextHandle;
++
++@NullMarked
++public final class SensorsSettingsHooks {
++
++    static final class WebsitePermissionsFetcherHooksImpl extends WebsitePermissionsFetcherHooks {
++
++        @Override
++        protected int getPermissionTypeOverride() {
++            return PERMISSION_INFO;
++        }
++
++        @Override
++        protected boolean shouldCreateExceptionIfNull() {
++            return true;
++        }
++    }
++
++    static final class SingleWebsiteSettingsHooksImpl extends SingleWebsiteSettingsHooks {
++
++        @Override
++        protected @Nullable PermissionSetting getPermissionSettingForSetup(
++                @NonNull BrowserContextHandle browserContextHandle,
++                @Nullable PermissionSetting setting,
++                @ContentSettingsType.EnumType int contentType) {
++            if (setting == null) {
++                boolean isEnabled = WebsitePreferenceBridge.isContentSettingEnabled(browserContextHandle, contentType);
++                int value = isEnabled ? ContentSetting.ALLOW : ContentSetting.BLOCK;
++                return new PermissionSetting(null, value, false);
++            }
++            return setting;
++        }
++    }
++}
+diff --git a/components/browser_ui/site_settings/android/java/src/org/chromium/components/browser_ui/site_settings/SiteSettingsHooksRegistry.java b/components/browser_ui/site_settings/android/java/src/org/chromium/components/browser_ui/site_settings/SiteSettingsHooksRegistry.java
+index 9639018faf7ca..f90a0b0de253d 100644
+--- a/components/browser_ui/site_settings/android/java/src/org/chromium/components/browser_ui/site_settings/SiteSettingsHooksRegistry.java
++++ b/components/browser_ui/site_settings/android/java/src/org/chromium/components/browser_ui/site_settings/SiteSettingsHooksRegistry.java
+@@ -34,6 +34,7 @@ public final class SiteSettingsHooksRegistry {
+             @ContentSettingsType.EnumType int contentType) {
+         return switch (contentType) {
+             case ContentSettingsType.JAVASCRIPT_JIT -> new JavascriptJitSettingsHooks.SingleWebsiteSettingsHooksImpl();
++            case ContentSettingsType.SENSORS -> new SensorsSettingsHooks.SingleWebsiteSettingsHooksImpl();
+             default -> SingleWebsiteSettingsHooks.getDefaultInstance();
+         };
+     }
+@@ -74,6 +75,7 @@ public final class SiteSettingsHooksRegistry {
+             @ContentSettingsType.EnumType int contentType) {
+         return switch (contentType) {
+             case ContentSettingsType.JAVASCRIPT_JIT -> new JavascriptJitSettingsHooks.WebsitePermissionsFetcherHooksImpl();
++            case ContentSettingsType.SENSORS -> new SensorsSettingsHooks.WebsitePermissionsFetcherHooksImpl();
+             default -> WebsitePermissionsFetcherHooks.getDefaultInstance();
+         };
+     }
+diff --git a/components/browser_ui/site_settings/android/site_settings_android_java_ext_sources.gni b/components/browser_ui/site_settings/android/site_settings_android_java_ext_sources.gni
+index 3b6555a695933..8027d179c412e 100644
+--- a/components/browser_ui/site_settings/android/site_settings_android_java_ext_sources.gni
++++ b/components/browser_ui/site_settings/android/site_settings_android_java_ext_sources.gni
+@@ -4,6 +4,7 @@
+ 
+ site_settings_android_java_ext_sources = [
+   "java/src/org/chromium/components/browser_ui/site_settings/JavascriptJitSettingsHooks.java",
++  "java/src/org/chromium/components/browser_ui/site_settings/SensorsSettingsHooks.java",
+   "java/src/org/chromium/components/browser_ui/site_settings/SingleCategorySettingsHooks.java",
+   "java/src/org/chromium/components/browser_ui/site_settings/SingleWebsiteSettingsHooks.java",
+   "java/src/org/chromium/components/browser_ui/site_settings/SiteSettingsCategoryHooks.java",
