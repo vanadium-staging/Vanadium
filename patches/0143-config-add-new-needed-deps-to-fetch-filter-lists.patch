@@ -10,7 +10,7 @@ for adblocking.
  1 file changed, 12 insertions(+)
 
 diff --git a/DEPS b/DEPS
-index e4320539c07a7..97aabbe7dd27d 100644
+index 76b147f4afe13..88f058a7409c8 100644
 --- a/DEPS
 +++ b/DEPS
 @@ -4858,6 +4858,18 @@ hooks = [
