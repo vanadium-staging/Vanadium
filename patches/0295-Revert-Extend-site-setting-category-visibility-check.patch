@@ -1,0 +1,29 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: quh4gko8 <88831734+quh4gko8@users.noreply.github.com>
+Date: Sun, 14 Jun 2026 12:32:47 +0000
+Subject: [PATCH] Revert "Extend site setting category visibility check on
+ single website settings"
+
+This reverts commit bafaa2b9c84df8d9e75f7bb51b72ef5011bfce7e.
+---
+ .../browser_ui/site_settings/SingleWebsiteSettings.java    | 7 -------
+ 1 file changed, 7 deletions(-)
+
+diff --git a/components/browser_ui/site_settings/android/java/src/org/chromium/components/browser_ui/site_settings/SingleWebsiteSettings.java b/components/browser_ui/site_settings/android/java/src/org/chromium/components/browser_ui/site_settings/SingleWebsiteSettings.java
+index be415e4cf251a..e16a38ce9f8e9 100644
+--- a/components/browser_ui/site_settings/android/java/src/org/chromium/components/browser_ui/site_settings/SingleWebsiteSettings.java
++++ b/components/browser_ui/site_settings/android/java/src/org/chromium/components/browser_ui/site_settings/SingleWebsiteSettings.java
+@@ -1451,13 +1451,6 @@ public class SingleWebsiteSettings extends BaseSiteSettingsFragment
+             Preference preference, @ContentSetting @Nullable Integer value) {
+         @ContentSettingsType.EnumType
+         int contentType = getContentSettingsTypeFromPreferenceKey(preference.getKey());
+-        SiteSettingsCategory siteSettingsCategory =
+-                SiteSettingsCategory.createFromContentSettingsType(
+-                        getBrowserContextHandle(), contentType);
+-        if (!getSiteSettingsDelegate().isCategoryVisible(siteSettingsCategory.getType())) {
+-            return;
+-        }
+-
+         int titleResourceId = ContentSettingsResources.getTitle(contentType);
+ 
+         if (contentType == ContentSettingsType.JAVASCRIPT_OPTIMIZER) {
