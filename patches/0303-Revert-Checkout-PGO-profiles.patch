@@ -1,0 +1,23 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: quh4gko8 <88831734+quh4gko8@users.noreply.github.com>
+Date: Wed, 17 Jun 2026 00:25:03 +0000
+Subject: [PATCH] Revert "Checkout PGO profiles"
+
+This reverts commit 1a98c152b03803feb85de5ff326c85f5866b0d36.
+---
+ DEPS | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/DEPS b/DEPS
+index 691e753d22ea0..fa07d3865f918 100644
+--- a/DEPS
++++ b/DEPS
+@@ -165,7 +165,7 @@ vars = {
+   'checkout_clang_coverage_tools': False,
+ 
+   # Fetch the pgo profiles to optimize official builds.
+-  'checkout_pgo_profiles': True,
++  'checkout_pgo_profiles': False,
+ 
+   # Fetch clang-tidy into the same bin/ directory as our clang binary.
+   'checkout_clang_tidy': False,

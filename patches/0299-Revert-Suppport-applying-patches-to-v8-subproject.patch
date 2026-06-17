@@ -1,0 +1,29 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: quh4gko8 <88831734+quh4gko8@users.noreply.github.com>
+Date: Wed, 17 Jun 2026 00:24:48 +0000
+Subject: [PATCH] Revert "Suppport applying patches to v8 subproject"
+
+This reverts commit e553c3d4bb1e6c30d56325b4108ac4585182d6b6.
+---
+ vanadium/common/apply_subprojects_patches.py | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
+
+diff --git a/vanadium/common/apply_subprojects_patches.py b/vanadium/common/apply_subprojects_patches.py
+index 1c77865a453aa..9a37100e5f832 100644
+--- a/vanadium/common/apply_subprojects_patches.py
++++ b/vanadium/common/apply_subprojects_patches.py
+@@ -8,7 +8,6 @@ import sys
+ 
+ 
+ subprojects_dir_to_patches_dir = {
+-  'v8': 'v8',
+ }
+ 
+ 
+@@ -48,4 +47,4 @@ if __name__ == '__main__':
+                         help='Relative directory for chromium src dir')
+     parser.add_argument('--base_patch_dir', required=True,
+                         help='Base directory where subproject patches are found')
+-    ApplySubprojectPatches(parser.parse_args(sys.argv[1:]))
+\ No newline at end of file
++    ApplySubprojectPatches(parser.parse_args(sys.argv[1:]))

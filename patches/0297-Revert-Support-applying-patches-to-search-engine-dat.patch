@@ -1,0 +1,23 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: quh4gko8 <88831734+quh4gko8@users.noreply.github.com>
+Date: Wed, 17 Jun 2026 00:24:42 +0000
+Subject: [PATCH] Revert "Support applying patches to search engine data
+ resources subproject"
+
+This reverts commit e0d0169533866206776e8f15ebcb029ff8a49bed.
+---
+ vanadium/common/apply_subprojects_patches.py | 1 -
+ 1 file changed, 1 deletion(-)
+
+diff --git a/vanadium/common/apply_subprojects_patches.py b/vanadium/common/apply_subprojects_patches.py
+index 03b4340f42889..1c77865a453aa 100644
+--- a/vanadium/common/apply_subprojects_patches.py
++++ b/vanadium/common/apply_subprojects_patches.py
+@@ -9,7 +9,6 @@ import sys
+ 
+ subprojects_dir_to_patches_dir = {
+   'v8': 'v8',
+-  'third_party/search_engines_data/resources': 'third_party/search_engines_data/resources',
+ }
+ 
+ 

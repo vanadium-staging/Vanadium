@@ -1,0 +1,33 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: quh4gko8 <88831734+quh4gko8@users.noreply.github.com>
+Date: Wed, 17 Jun 2026 00:24:59 +0000
+Subject: [PATCH] Revert "config: add new needed deps to fetch filter lists"
+
+This reverts commit f5cb6498ae5ffbc01065ae91399aa3ad8f5bcc1c.
+---
+ DEPS | 12 ------------
+ 1 file changed, 12 deletions(-)
+
+diff --git a/DEPS b/DEPS
+index d0ad75c72150f..691e753d22ea0 100644
+--- a/DEPS
++++ b/DEPS
+@@ -4985,18 +4985,6 @@ hooks = [
+                '--input-public',
+                'src/chromeos/tast_control_disabled_tests_public_builders.txt'],
+   },
+-  {
+-    'name': 'fetch_filter_lists',
+-    'condition': 'checkout_android',
+-    'action': ['python3',
+-              'src/vanadium/android_config/filter_lists/filter_list_download.py',
+-              '--output',
+-              'src/vanadium/android_config/filter_lists/filter_lists_easylist.txt',
+-              '--urls',
+-              'https://easylist-downloads.adblockplus.org/antiadblockfilters.txt',
+-              'https://easylist.to/easylist/easylist.txt',
+-              'https://easylist.to/easylist/easyprivacy.txt']
+-  },
+ 
+ ]
+ 

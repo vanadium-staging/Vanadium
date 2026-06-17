@@ -1,0 +1,1269 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: quh4gko8 <88831734+quh4gko8@users.noreply.github.com>
+Date: Wed, 17 Jun 2026 00:24:38 +0000
+Subject: [PATCH] Revert "Search engine data patches to always include
+ DuckDuckGo"
+
+This reverts commit bfa0b97b7468f16a98aa5fb8dd88365a3e01ea23.
+---
+ ...ent-maximum-number-of-search-engines.patch |   34 -
+ ...ment-version-for-search-engines-data.patch |   34 -
+ ...n-all-regional-list-of-search-engine.patch | 1167 -----------------
+ 3 files changed, 1235 deletions(-)
+ delete mode 100644 vanadium/subprojects_patches/third_party/search_engines_data/resources/0001-Increment-maximum-number-of-search-engines.patch
+ delete mode 100644 vanadium/subprojects_patches/third_party/search_engines_data/resources/0002-Increment-version-for-search-engines-data.patch
+ delete mode 100644 vanadium/subprojects_patches/third_party/search_engines_data/resources/0003-Add-DuckDuckGo-on-all-regional-list-of-search-engine.patch
+
+diff --git a/vanadium/subprojects_patches/third_party/search_engines_data/resources/0001-Increment-maximum-number-of-search-engines.patch b/vanadium/subprojects_patches/third_party/search_engines_data/resources/0001-Increment-maximum-number-of-search-engines.patch
+deleted file mode 100644
+index 80ad8c9d0bff1..0000000000000
+--- a/vanadium/subprojects_patches/third_party/search_engines_data/resources/0001-Increment-maximum-number-of-search-engines.patch
++++ /dev/null
+@@ -1,34 +0,0 @@
+-From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+-From: quh4gko8 <88831734+quh4gko8@users.noreply.github.com>
+-Date: Tue, 13 May 2025 14:41:06 +0000
+-Subject: [PATCH] Increment maximum number of search engines
+-
+-Commands used for incrementing version:
+-
+-```bash
+-    version_line=$(echo $(grep kCurrentDataVersion definitions/prepopulated_engines.json))
+-
+-    version=$(echo $version_line | sed -r "s/.*\"kMaxPrepopulatedEngineID\": //g")
+-
+-    incremented_version=$(($version + 1)); incremented_version_line=$(echo $version_line | sed -r "s/$version/$incremented_version/g")
+-
+-    sed -ri "s/$version_line/$incremented_version_line/g" definitions/prepopulated_engines.json
+-
+-```
+----
+- definitions/prepopulated_engines.json | 2 +-
+- 1 file changed, 1 insertion(+), 1 deletion(-)
+-
+-diff --git a/definitions/prepopulated_engines.json b/definitions/prepopulated_engines.json
+-index 0865e26..84a15c0 100644
+---- a/definitions/prepopulated_engines.json
+-+++ b/definitions/prepopulated_engines.json
+-@@ -22,7 +22,7 @@
+-     // use a lower number. This number is used by UMA stats and must be updated
+-     // to include the full range or else not all engines will be counted in
+-     // stats.
+--    "kMaxPrepopulatedEngineID": 116,
+-+    "kMaxPrepopulatedEngineID": 117,
+- 
+-     // Increment this if you change the data in ways that mean users with
+-     // existing data should get a new version. Otherwise, existing data may
+diff --git a/vanadium/subprojects_patches/third_party/search_engines_data/resources/0002-Increment-version-for-search-engines-data.patch b/vanadium/subprojects_patches/third_party/search_engines_data/resources/0002-Increment-version-for-search-engines-data.patch
+deleted file mode 100644
+index 813195266a0e3..0000000000000
+--- a/vanadium/subprojects_patches/third_party/search_engines_data/resources/0002-Increment-version-for-search-engines-data.patch
++++ /dev/null
+@@ -1,34 +0,0 @@
+-From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+-From: quh4gko8 <88831734+quh4gko8@users.noreply.github.com>
+-Date: Tue, 13 May 2025 14:41:30 +0000
+-Subject: [PATCH] Increment version for search engines data
+-
+-Commands used for incrementing version:
+-
+-```bash
+-    version_line=$(echo $(grep kCurrentDataVersion definitions/prepopulated_engines.json))
+-
+-    version=$(echo $version_line | sed -r "s/.*\"kCurrentDataVersion\": //g")
+-
+-    incremented_version=$(($version + 1)); incremented_version_line=$(echo $version_line | sed -r "s/$version/$incremented_version/g")
+-
+-    sed -ri "s/$version_line/$incremented_version_line/g" definitions/prepopulated_engines.json
+-
+-```
+----
+- definitions/prepopulated_engines.json | 2 +-
+- 1 file changed, 1 insertion(+), 1 deletion(-)
+-
+-diff --git a/definitions/prepopulated_engines.json b/definitions/prepopulated_engines.json
+-index 84a15c0..dabcf3e 100644
+---- a/definitions/prepopulated_engines.json
+-+++ b/definitions/prepopulated_engines.json
+-@@ -28,7 +28,7 @@
+-     // existing data should get a new version. Otherwise, existing data may
+-     // continue to be used and updates made here will not always appear.
+-     // Also then run tools/search_engine_choice/generate_search_engine_icons.py.
+--    "kCurrentDataVersion": 206
+-+    "kCurrentDataVersion": 207
+-   },
+- 
+-   // The following engines are included in country lists and are added to the
+diff --git a/vanadium/subprojects_patches/third_party/search_engines_data/resources/0003-Add-DuckDuckGo-on-all-regional-list-of-search-engine.patch b/vanadium/subprojects_patches/third_party/search_engines_data/resources/0003-Add-DuckDuckGo-on-all-regional-list-of-search-engine.patch
+deleted file mode 100644
+index 9cafae17ce48d..0000000000000
+--- a/vanadium/subprojects_patches/third_party/search_engines_data/resources/0003-Add-DuckDuckGo-on-all-regional-list-of-search-engine.patch
++++ /dev/null
+@@ -1,1167 +0,0 @@
+-From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+-From: quh4gko8 <quh4gko8.vanadium@gmail.com>
+-Date: Fri, 7 Nov 2025 07:00:17 +0000
+-Subject: [PATCH] Add DuckDuckGo on all regional list of search engines
+-
+-Commands used for appending and replacing regional list of search
+-engines in json, in order:
+-
+-```bash
+-    sed -ri "N;N;s/,(|\n)?\n        \"\&duckduckgo\"//g;P;D" definitions/regional_settings.json
+-
+-    sed -ri "s/\"search_engines\": \[/&\n        \"\&duckduckgo\",/g" definitions/regional_settings.json
+-
+-```
+----
+- definitions/regional_settings.json | 268 +++++++++++++++--------------
+- 1 file changed, 137 insertions(+), 131 deletions(-)
+-
+-diff --git a/definitions/regional_settings.json b/definitions/regional_settings.json
+-index b73c17e..5f10db8 100644
+---- a/definitions/regional_settings.json
+-+++ b/definitions/regional_settings.json
+-@@ -153,36 +153,36 @@
+-   "elements": {
+-     "AE": {
+-       "search_engines": [
+-+        "&duckduckgo",
+-         "&google",
+-         "&bing",
+-         "&yahoo",
+--        "&yandex_ru",
+--        "&duckduckgo"
+-+        "&yandex_ru"
+-       ]
+-     },
+-     "AL": {
+-       "search_engines": [
+-+        "&duckduckgo",
+-         "&google",
+-         "&bing",
+-         "&yahoo",
+--        "&yandex_tr",
+--        "&duckduckgo"
+-+        "&yandex_tr"
+-       ]
+-     },
+-     "AR": {
+-       "search_engines": [
+-+        "&duckduckgo",
+-         "&google",
+-         "&bing",
+-         "&yahoo_ar",
+--        "&duckduckgo",
+-         "&yandex_com"
+-       ]
+-     },
+-     "AT": {
+-       "search_engines": [
+-+        "&duckduckgo",
+-         "&google",
+-         "&brave",
+--        "&duckduckgo",
+-         "&ecosia",
+-         "&bing",
+-         "&yahoo_at",
+-@@ -192,27 +192,27 @@
+-     },
+-     "AU": {
+-       "search_engines": [
+-+        "&duckduckgo",
+-         "&google",
+-         "&bing",
+-         "&yahoo_au",
+--        "&duckduckgo",
+-         "&ecosia"
+-       ]
+-     },
+-     "BA": {
+-       "search_engines": [
+-+        "&duckduckgo",
+-         "&google",
+-         "&bing",
+-         "&yahoo",
+--        "&yandex_com",
+--        "&duckduckgo"
+-+        "&yandex_com"
+-       ]
+-     },
+-     "BE": {
+-       "search_engines": [
+-+        "&duckduckgo",
+-         "&google",
+-         "&brave",
+--        "&duckduckgo",
+-         "&ecosia",
+-         "&bing",
+-         "&qwant",
+-@@ -222,9 +222,9 @@
+-     },
+-     "BG": {
+-       "search_engines": [
+-+        "&duckduckgo",
+-         "&google",
+-         "&brave",
+--        "&duckduckgo",
+-         "&bing",
+-         "&yep",
+-         "&ecosia",
+-@@ -234,96 +234,97 @@
+-     },
+-     "BH": {
+-       "search_engines": [
+-+        "&duckduckgo",
+-         "&google",
+-         "&bing",
+-         "&yahoo",
+--        "&yandex_com",
+--        "&duckduckgo"
+-+        "&yandex_com"
+-       ]
+-     },
+-     "BI": {
+-       "search_engines": [
+-+        "&duckduckgo",
+-         "&google",
+-         "&bing",
+-         "&yahoo",
+--        "&yandex_ru",
+--        "&duckduckgo"
+-+        "&yandex_ru"
+-       ]
+-     },
+-     "BN": {
+-       "search_engines": [
+-+        "&duckduckgo",
+-         "&google",
+-         "&bing",
+-         "&yahoo",
+--        "&duckduckgo",
+-         "&yandex_com"
+-       ]
+-     },
+-     "BO": {
+-       "search_engines": [
+-+        "&duckduckgo",
+-         "&google",
+-         "&bing",
+-         "&yahoo",
+--        "&yandex_com",
+--        "&duckduckgo"
+-+        "&yandex_com"
+-       ]
+-     },
+-     "BR": {
+-       "search_engines": [
+-+        "&duckduckgo",
+-         "&google",
+-         "&bing",
+-         "&yahoo_br",
+--        "&duckduckgo",
+-         "&yandex_com"
+-       ]
+-     },
+-     "BY": {
+-       "search_engines": [
+-+        "&duckduckgo",
+-         "&google",
+-         "&yandex_by",
+-         "&bing",
+--        "&duckduckgo",
+-         "&mail_ru"
+-       ]
+-     },
+-     "BZ": {
+-       "search_engines": [
+-+        "&duckduckgo",
+-         "&google",
+-         "&bing",
+--        "&duckduckgo",
+-         "&yahoo",
+-         "&yandex_com"
+-       ]
+-     },
+-     "CA": {
+-       "search_engines": [
+-+        "&duckduckgo",
+-         "&google",
+-         "&bing",
+-         "&yahoo_ca",
+--        "&duckduckgo",
+-         "&yandex_com"
+-       ]
+-     },
+-     "CH": {
+-       "search_engines": [
+-+        "&duckduckgo",
+-         "&google",
+-         "&bing",
+--        "&duckduckgo",
+-         "&yahoo_ch",
+-         "&ecosia"
+-       ]
+-     },
+-     "CL": {
+-       "search_engines": [
+-+        "&duckduckgo",
+-         "&google",
+-         "&bing",
+-         "&yahoo_cl",
+--        "&duckduckgo",
+-         "&yandex_com"
+-       ]
+-     },
+-     "CN": {
+-       "search_engines": [
+-+        "&duckduckgo",
+-         "&baidu",
+-         "&bing",
+-         "&sogou",
+-@@ -333,27 +334,27 @@
+-     },
+-     "CO": {
+-       "search_engines": [
+-+        "&duckduckgo",
+-         "&google",
+-         "&bing",
+-         "&yahoo_co",
+--        "&duckduckgo",
+-         "&ecosia"
+-       ]
+-     },
+-     "CR": {
+-       "search_engines": [
+-+        "&duckduckgo",
+-         "&google",
+-         "&bing",
+-         "&yahoo",
+--        "&duckduckgo",
+-         "&yandex_com"
+-       ]
+-     },
+-     "CY": {
+-       "search_engines": [
+-+        "&duckduckgo",
+-         "&google",
+-         "&brave",
+--        "&duckduckgo",
+-         "&bing",
+-         "&ecosia",
+-         "&qwant",
+-@@ -363,10 +364,10 @@
+-     },
+-     "CZ": {
+-       "search_engines": [
+-+        "&duckduckgo",
+-         "&google",
+-         "&seznam",
+-         "&brave",
+--        "&duckduckgo",
+-         "&bing",
+-         "&ecosia",
+-         "&privacywall",
+-@@ -375,8 +376,8 @@
+-     },
+-     "DE": {
+-       "search_engines": [
+--        "&google",
+-         "&duckduckgo",
+-+        "&google",
+-         "&brave",
+-         "&ecosia",
+-         "&bing",
+-@@ -387,9 +388,9 @@
+-     },
+-     "DK": {
+-       "search_engines": [
+-+        "&duckduckgo",
+-         "&google",
+-         "&brave",
+--        "&duckduckgo",
+-         "&bing",
+-         "&ecosia",
+-         "&qwant",
+-@@ -399,36 +400,36 @@
+-     },
+-     "DO": {
+-       "search_engines": [
+-+        "&duckduckgo",
+-         "&google",
+-         "&bing",
+-         "&yahoo",
+--        "&duckduckgo",
+-         "&yandex_com"
+-       ]
+-     },
+-     "DZ": {
+-       "search_engines": [
+-+        "&duckduckgo",
+-         "&google",
+-         "&bing",
+-         "&yahoo_fr",
+--        "&yandex_com",
+--        "&duckduckgo"
+-+        "&yandex_com"
+-       ]
+-     },
+-     "EC": {
+-       "search_engines": [
+-+        "&duckduckgo",
+-         "&google",
+-         "&bing",
+-         "&yahoo_es",
+--        "&duckduckgo",
+-         "&ecosia"
+-       ]
+-     },
+-     "EE": {
+-       "search_engines": [
+-+        "&duckduckgo",
+-         "&google",
+-         "&brave",
+--        "&duckduckgo",
+-         "&bing",
+-         "&ecosia",
+-         "&privacywall",
+-@@ -438,18 +439,18 @@
+-     },
+-     "EG": {
+-       "search_engines": [
+-+        "&duckduckgo",
+-         "&google",
+-         "&bing",
+-         "&yahoo",
+--        "&yandex_com",
+--        "&duckduckgo"
+-+        "&yandex_com"
+-       ]
+-     },
+-     "ES": {
+-       "search_engines": [
+-+        "&duckduckgo",
+-         "&google",
+-         "&brave",
+--        "&duckduckgo",
+-         "&bing",
+-         "&ecosia",
+-         "&yahoo_es",
+-@@ -459,9 +460,9 @@
+-     },
+-     "FI": {
+-       "search_engines": [
+-+        "&duckduckgo",
+-         "&google",
+-         "&brave",
+--        "&duckduckgo",
+-         "&bing",
+-         "&ecosia",
+-         "&qwant",
+-@@ -471,20 +472,20 @@
+-     },
+-     "FO": {
+-       "search_engines": [
+-+        "&duckduckgo",
+-         "&google",
+-         "&bing",
+-         "&yahoo_uk",
+--        "&duckduckgo",
+-         "&ecosia"
+-       ]
+-     },
+-     "FR": {
+-       "search_engines": [
+-+        "&duckduckgo",
+-         "&google",
+-         "&brave",
+-         "&ecosia",
+-         "&qwant",
+--        "&duckduckgo",
+-         "&bing",
+-         "&yahoo_fr",
+-         "&privacywall"
+-@@ -492,18 +493,18 @@
+-     },
+-     "GB": {
+-       "search_engines": [
+-+        "&duckduckgo",
+-         "&google",
+-         "&bing",
+-         "&yahoo_uk",
+--        "&duckduckgo",
+-         "&ecosia"
+-       ]
+-     },
+-     "GR": {
+-       "search_engines": [
+-+        "&duckduckgo",
+-         "&google",
+-         "&brave",
+--        "&duckduckgo",
+-         "&bing",
+-         "&yahoo_emea",
+-         "&ecosia",
+-@@ -513,15 +514,16 @@
+-     },
+-     "GT": {
+-       "search_engines": [
+-+        "&duckduckgo",
+-         "&google",
+-         "&bing",
+-         "&yahoo",
+--        "&duckduckgo",
+-         "&yandex_com"
+-       ]
+-     },
+-     "HK": {
+-       "search_engines": [
+-+        "&duckduckgo",
+-         "&google",
+-         "&bing",
+-         "&yahoo_hk",
+-@@ -531,18 +533,18 @@
+-     },
+-     "HN": {
+-       "search_engines": [
+-+        "&duckduckgo",
+-         "&google",
+-         "&bing",
+-         "&yahoo",
+--        "&duckduckgo",
+-         "&yandex_com"
+-       ]
+-     },
+-     "HR": {
+-       "search_engines": [
+-+        "&duckduckgo",
+-         "&google",
+-         "&brave",
+--        "&duckduckgo",
+-         "&bing",
+-         "&ecosia",
+-         "&yep",
+-@@ -552,10 +554,10 @@
+-     },
+-     "HU": {
+-       "search_engines": [
+-+        "&duckduckgo",
+-         "&google",
+-         "&brave",
+-         "&bing",
+--        "&duckduckgo",
+-         "&ecosia",
+-         "&yep",
+-         "&qwant",
+-@@ -564,17 +566,17 @@
+-     },
+-     "ID": {
+-       "search_engines": [
+-+        "&duckduckgo",
+-         "&google",
+-         "&yandex_com",
+-         "&bing",
+--        "&yahoo_id",
+--        "&duckduckgo"
+-+        "&yahoo_id"
+-       ]
+-     },
+-     "IE": {
+-       "search_engines": [
+--        "&google",
+-         "&duckduckgo",
+-+        "&google",
+-         "&brave",
+-         "&bing",
+-         "&yahoo_uk",
+-@@ -585,44 +587,44 @@
+-     },
+-     "IL": {
+-       "search_engines": [
+-+        "&duckduckgo",
+-         "&google",
+-         "&bing",
+-         "&yandex_ru",
+--        "&yahoo",
+--        "&duckduckgo"
+-+        "&yahoo"
+-       ]
+-     },
+-     "IN": {
+-       "search_engines": [
+-+        "&duckduckgo",
+-         "&google",
+-         "&bing",
+-         "&yahoo_in",
+--        "&duckduckgo",
+-         "&yandex_com"
+-       ]
+-     },
+-     "IQ": {
+-       "search_engines": [
+-+        "&duckduckgo",
+-         "&google",
+-         "&bing",
+-         "&yandex_tr",
+--        "&yahoo",
+--        "&duckduckgo"
+-+        "&yahoo"
+-       ]
+-     },
+-     "IR": {
+-       "search_engines": [
+-+        "&duckduckgo",
+-         "&google",
+-         "&bing",
+-         "&yahoo",
+--        "&duckduckgo",
+-         "&yandex_com"
+-       ]
+-     },
+-     "IS": {
+-       "search_engines": [
+--        "&google",
+-         "&duckduckgo",
+-+        "&google",
+-         "&brave",
+-         "&bing",
+-         "&ecosia",
+-@@ -633,10 +635,10 @@
+-     },
+-     "IT": {
+-       "search_engines": [
+-+        "&duckduckgo",
+-         "&google",
+-         "&brave",
+-         "&bing",
+--        "&duckduckgo",
+-         "&ecosia",
+-         "&yahoo_it",
+-         "&qwant",
+-@@ -645,42 +647,43 @@
+-     },
+-     "JM": {
+-       "search_engines": [
+-+        "&duckduckgo",
+-         "&google",
+-         "&bing",
+-         "&yahoo",
+--        "&duckduckgo",
+-         "&yandex_com"
+-       ]
+-     },
+-     "JO": {
+-       "search_engines": [
+-+        "&duckduckgo",
+-         "&google",
+-         "&bing",
+-         "&yahoo",
+--        "&yandex_com",
+--        "&duckduckgo"
+-+        "&yandex_com"
+-       ]
+-     },
+-     "JP": {
+-       "search_engines": [
+-+        "&duckduckgo",
+-         "&google",
+-         "&yahoo_jp",
+-         "&bing",
+--        "&duckduckgo",
+-         "&ecosia"
+-       ]
+-     },
+-     "KE": {
+-       "search_engines": [
+-+        "&duckduckgo",
+-         "&google",
+-         "&bing",
+-         "&yahoo",
+--        "&duckduckgo",
+-         "&yandex_com"
+-       ]
+-     },
+-     "KR": {
+-       "search_engines": [
+-+        "&duckduckgo",
+-         "&google",
+-         "&naver",
+-         "&bing",
+-@@ -690,15 +693,16 @@
+-     },
+-     "KW": {
+-       "search_engines": [
+-+        "&duckduckgo",
+-         "&google",
+-         "&bing",
+-         "&yandex_tr",
+--        "&yahoo",
+--        "&duckduckgo"
+-+        "&yahoo"
+-       ]
+-     },
+-     "KZ": {
+-       "search_engines": [
+-+        "&duckduckgo",
+-         "&google",
+-         "&yandex_kz",
+-         "&bing",
+-@@ -708,17 +712,17 @@
+-     },
+-     "LB": {
+-       "search_engines": [
+-+        "&duckduckgo",
+-         "&google",
+-         "&bing",
+-         "&yahoo",
+--        "&duckduckgo",
+-         "&yandex_com"
+-       ]
+-     },
+-     "LI": {
+-       "search_engines": [
+--        "&google",
+-         "&duckduckgo",
+-+        "&google",
+-         "&brave",
+-         "&bing",
+-         "&ecosia",
+-@@ -729,9 +733,9 @@
+-     },
+-     "LT": {
+-       "search_engines": [
+-+        "&duckduckgo",
+-         "&google",
+-         "&brave",
+--        "&duckduckgo",
+-         "&bing",
+-         "&ecosia",
+-         "&qwant",
+-@@ -741,9 +745,9 @@
+-     },
+-     "LU": {
+-       "search_engines": [
+-+        "&duckduckgo",
+-         "&google",
+-         "&brave",
+--        "&duckduckgo",
+-         "&bing",
+-         "&ecosia",
+-         "&qwant",
+-@@ -753,9 +757,9 @@
+-     },
+-     "LV": {
+-       "search_engines": [
+-+        "&duckduckgo",
+-         "&google",
+-         "&brave",
+--        "&duckduckgo",
+-         "&bing",
+-         "&ecosia",
+-         "&privacywall",
+-@@ -765,64 +769,64 @@
+-     },
+-     "LY": {
+-       "search_engines": [
+-+        "&duckduckgo",
+-         "&google",
+-         "&bing",
+-         "&yandex_tr",
+--        "&yahoo",
+--        "&duckduckgo"
+-+        "&yahoo"
+-       ]
+-     },
+-     "MA": {
+-       "search_engines": [
+-+        "&duckduckgo",
+-         "&google",
+-         "&bing",
+-         "&yahoo_fr",
+--        "&yandex_com",
+--        "&duckduckgo"
+-+        "&yandex_com"
+-       ]
+-     },
+-     "MC": {
+-       "search_engines": [
+-+        "&duckduckgo",
+-         "&google",
+-         "&bing",
+-         "&yahoo_fr",
+--        "&duckduckgo",
+-         "&yandex_com"
+-       ]
+-     },
+-     "MD": {
+-       "search_engines": [
+-+        "&duckduckgo",
+-         "&google",
+-         "&yandex_ru",
+-         "&bing",
+--        "&duckduckgo",
+-         "&mail_ru"
+-       ]
+-     },
+-     "ME": {
+-       "search_engines": [
+-+        "&duckduckgo",
+-         "&google",
+-         "&bing",
+-         "&yandex_ru",
+--        "&yahoo",
+--        "&duckduckgo"
+-+        "&yahoo"
+-       ]
+-     },
+-     "MK": {
+-       "search_engines": [
+-+        "&duckduckgo",
+-         "&google",
+-         "&bing",
+-         "&yahoo",
+--        "&yandex_com",
+--        "&duckduckgo"
+-+        "&yandex_com"
+-       ]
+-     },
+-     "MT": {
+-       "search_engines": [
+-+        "&duckduckgo",
+-         "&google",
+-         "&brave",
+-         "&bing",
+--        "&duckduckgo",
+-         "&ecosia",
+-         "&privacywall",
+-         "&yahoo_emea",
+-@@ -831,35 +835,35 @@
+-     },
+-     "MX": {
+-       "search_engines": [
+-+        "&duckduckgo",
+-         "&google",
+-         "&bing",
+-         "&yahoo_mx",
+--        "&duckduckgo",
+-         "&ecosia"
+-       ]
+-     },
+-     "MY": {
+-       "search_engines": [
+-+        "&duckduckgo",
+-         "&google",
+-         "&bing",
+-         "&yahoo_my",
+--        "&yandex_com",
+--        "&duckduckgo"
+-+        "&yandex_com"
+-       ]
+-     },
+-     "NI": {
+-       "search_engines": [
+-+        "&duckduckgo",
+-         "&google",
+-         "&bing",
+-         "&yahoo",
+--        "&duckduckgo",
+-         "&yandex_com"
+-       ]
+-     },
+-     "NL": {
+-       "search_engines": [
+--        "&google",
+-         "&duckduckgo",
+-+        "&google",
+-         "&brave",
+-         "&bing",
+-         "&ecosia",
+-@@ -870,8 +874,8 @@
+-     },
+-     "NO": {
+-       "search_engines": [
+--        "&google",
+-         "&duckduckgo",
+-+        "&google",
+-         "&brave",
+-         "&bing",
+-         "&ecosia",
+-@@ -882,63 +886,63 @@
+-     },
+-     "NZ": {
+-       "search_engines": [
+-+        "&duckduckgo",
+-         "&google",
+-         "&bing",
+-         "&yahoo_nz",
+--        "&duckduckgo",
+-         "&ecosia"
+-       ]
+-     },
+-     "OM": {
+-       "search_engines": [
+-+        "&duckduckgo",
+-         "&google",
+-         "&bing",
+-         "&yahoo",
+--        "&duckduckgo",
+-         "&yandex_com"
+-       ]
+-     },
+-     "PA": {
+-       "search_engines": [
+-+        "&duckduckgo",
+-         "&google",
+-         "&bing",
+-         "&yahoo_es",
+--        "&duckduckgo",
+-         "&yandex_com"
+-       ]
+-     },
+-     "PE": {
+-       "search_engines": [
+-+        "&duckduckgo",
+-         "&google",
+-         "&bing",
+-         "&yahoo_pe",
+--        "&yandex_com",
+--        "&duckduckgo"
+-+        "&yandex_com"
+-       ]
+-     },
+-     "PH": {
+-       "search_engines": [
+-+        "&duckduckgo",
+-         "&google",
+-         "&bing",
+-         "&yahoo_ph",
+--        "&ecosia",
+--        "&duckduckgo"
+-+        "&ecosia"
+-       ]
+-     },
+-     "PK": {
+-       "search_engines": [
+-+        "&duckduckgo",
+-         "&google",
+-         "&bing",
+-         "&yahoo",
+--        "&duckduckgo",
+-         "&yandex_com"
+-       ]
+-     },
+-     "PL": {
+-       "search_engines": [
+-+        "&duckduckgo",
+-         "&google",
+-         "&brave",
+--        "&duckduckgo",
+-         "&bing",
+-         "&ecosia",
+-         "&yahoo_emea",
+-@@ -948,19 +952,19 @@
+-     },
+-     "PR": {
+-       "search_engines": [
+-+        "&duckduckgo",
+-         "&google",
+-         "&bing",
+-         "&yahoo",
+--        "&duckduckgo",
+-         "&yandex_com"
+-       ]
+-     },
+-     "PT": {
+-       "search_engines": [
+-+        "&duckduckgo",
+-         "&google",
+-         "&brave",
+-         "&bing",
+--        "&duckduckgo",
+-         "&ecosia",
+-         "&yep",
+-         "&qwant",
+-@@ -969,27 +973,27 @@
+-     },
+-     "PY": {
+-       "search_engines": [
+-+        "&duckduckgo",
+-         "&google",
+-         "&bing",
+-         "&yahoo_es",
+--        "&duckduckgo",
+-         "&yandex_com"
+-       ]
+-     },
+-     "QA": {
+-       "search_engines": [
+-+        "&duckduckgo",
+-         "&google",
+-         "&bing",
+-         "&yahoo",
+--        "&duckduckgo",
+-         "&yandex_tr"
+-       ]
+-     },
+-     "RO": {
+-       "search_engines": [
+-+        "&duckduckgo",
+-         "&google",
+-         "&brave",
+--        "&duckduckgo",
+-         "&bing",
+-         "&yahoo_emea",
+-         "&ecosia",
+-@@ -999,44 +1003,44 @@
+-     },
+-     "RS": {
+-       "search_engines": [
+-+        "&duckduckgo",
+-         "&google",
+-         "&bing",
+-         "&yahoo",
+--        "&yandex_ru",
+--        "&duckduckgo"
+-+        "&yandex_ru"
+-       ]
+-     },
+-     "RU": {
+-       "search_engines": [
+-+        "&duckduckgo",
+-         "&yandex_ru",
+-         "&google",
+-         "&bing",
+--        "&duckduckgo",
+-         "&mail_ru"
+-       ]
+-     },
+-     "RW": {
+-       "search_engines": [
+-+        "&duckduckgo",
+-         "&google",
+-         "&bing",
+-         "&yahoo",
+--        "&duckduckgo",
+-         "&yandex_com"
+-       ]
+-     },
+-     "SA": {
+-       "search_engines": [
+-+        "&duckduckgo",
+-         "&google",
+-         "&bing",
+-         "&yandex_com",
+--        "&yahoo",
+--        "&duckduckgo"
+-+        "&yahoo"
+-       ]
+-     },
+-     "SE": {
+-       "search_engines": [
+--        "&google",
+-         "&duckduckgo",
+-+        "&google",
+-         "&brave",
+-         "&bing",
+-         "&ecosia",
+-@@ -1047,18 +1051,18 @@
+-     },
+-     "SG": {
+-       "search_engines": [
+-+        "&duckduckgo",
+-         "&google",
+-         "&bing",
+-         "&yahoo_sg",
+--        "&duckduckgo",
+-         "&yandex_com"
+-       ]
+-     },
+-     "SI": {
+-       "search_engines": [
+-+        "&duckduckgo",
+-         "&google",
+-         "&brave",
+--        "&duckduckgo",
+-         "&bing",
+-         "&ecosia",
+-         "&yep",
+-@@ -1068,9 +1072,9 @@
+-     },
+-     "SK": {
+-       "search_engines": [
+-+        "&duckduckgo",
+-         "&google",
+-         "&brave",
+--        "&duckduckgo",
+-         "&bing",
+-         "&seznam",
+-         "&ecosia",
+-@@ -1080,60 +1084,61 @@
+-     },
+-     "SV": {
+-       "search_engines": [
+-+        "&duckduckgo",
+-         "&google",
+-         "&bing",
+-         "&yahoo_es",
+--        "&duckduckgo",
+-         "&yandex_com"
+-       ]
+-     },
+-     "SY": {
+-       "search_engines": [
+-+        "&duckduckgo",
+-         "&google",
+-         "&bing",
+-         "&yandex_ru",
+--        "&yahoo",
+--        "&duckduckgo"
+-+        "&yahoo"
+-       ]
+-     },
+-     "TH": {
+-       "search_engines": [
+-+        "&duckduckgo",
+-         "&google",
+-         "&bing",
+-         "&yahoo_th",
+--        "&yandex_com",
+--        "&duckduckgo"
+-+        "&yandex_com"
+-       ]
+-     },
+-     "TN": {
+-       "search_engines": [
+-+        "&duckduckgo",
+-         "&google",
+-         "&bing",
+-         "&yahoo_fr",
+--        "&yandex_com",
+--        "&duckduckgo"
+-+        "&yandex_com"
+-       ]
+-     },
+-     "TR": {
+-       "search_engines": [
+-+        "&duckduckgo",
+-         "&google",
+-         "&yandex_tr",
+-         "&yahoo_tr",
+--        "&bing",
+--        "&duckduckgo"
+-+        "&bing"
+-       ]
+-     },
+-     "TT": {
+-       "search_engines": [
+-+        "&duckduckgo",
+-         "&google",
+-         "&bing",
+-         "&yahoo",
+--        "&duckduckgo",
+-         "&yandex_com"
+-       ]
+-     },
+-     "TW": {
+-       "search_engines": [
+-+        "&duckduckgo",
+-         "&google",
+-         "&yahoo_tw",
+-         "&bing",
+-@@ -1143,8 +1148,8 @@
+-     },
+-     "TZ": {
+-       "search_engines": [
+--        "&google",
+-         "&duckduckgo",
+-+        "&google",
+-         "&bing",
+-         "&yahoo",
+-         "&yandex_com"
+-@@ -1152,78 +1157,79 @@
+-     },
+-     "UA": {
+-       "search_engines": [
+-+        "&duckduckgo",
+-         "&google",
+-         "&yandex_ru",
+-         "&bing",
+--        "&duckduckgo",
+-         "&yahoo"
+-       ]
+-     },
+-     "US": {
+-       "search_engines": [
+-+        "&duckduckgo",
+-         "&google",
+-         "&bing",
+-         "&yahoo",
+--        "&duckduckgo",
+-         "&yandex_com"
+-       ]
+-     },
+-     "UY": {
+-       "search_engines": [
+-+        "&duckduckgo",
+-         "&google",
+-         "&bing",
+-         "&yahoo_es",
+--        "&duckduckgo",
+-         "&yandex_com"
+-       ]
+-     },
+-     "VE": {
+-       "search_engines": [
+-+        "&duckduckgo",
+-         "&google",
+-         "&bing",
+-         "&yahoo_es",
+--        "&duckduckgo",
+-         "&yandex_com"
+-       ]
+-     },
+-     "VN": {
+-       "search_engines": [
+-+        "&duckduckgo",
+-         "&google",
+-         "&coccoc",
+-         "&yahoo",
+--        "&bing",
+--        "&duckduckgo"
+-+        "&bing"
+-       ]
+-     },
+-     "YE": {
+-       "search_engines": [
+-+        "&duckduckgo",
+-         "&google",
+-         "&bing",
+-         "&yahoo",
+--        "&duckduckgo",
+-         "&yandex_com"
+-       ]
+-     },
+-     "ZA": {
+-       "search_engines": [
+-+        "&duckduckgo",
+-         "&google",
+-         "&bing",
+-         "&yahoo",
+--        "&duckduckgo",
+-         "&yandex_com"
+-       ]
+-     },
+-     "ZW": {
+-       "search_engines": [
+-+        "&duckduckgo",
+-         "&google",
+-         "&bing",
+-         "&yahoo",
+--        "&duckduckgo",
+-         "&sogou"
+-       ]
+-     },
+-     "ZZ": {
+-       "search_engines": [
+-+        "&duckduckgo",
+-         "&google",
+-         "&bing",
+-         "&yahoo"
