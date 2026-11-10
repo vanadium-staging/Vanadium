@@ -7,10 +7,10 @@ Subject: [PATCH] config: Add protobuf generator, parser for config apk
 ---
  vanadium/android_config/proto/host/BUILD.gn   |  55 ++++
  .../vanadium/config/host/ConfigGenerator.java |  10 +
- .../config/host/ConfigGeneratorImpl.kt        | 299 ++++++++++++++++++
+ .../config/host/ConfigGeneratorImpl.kt        | 300 ++++++++++++++++++
  .../vanadium/config/host/ConfigParser.java    |  31 ++
  .../config/android/internal_rules_ext.gni     |   2 +
- 5 files changed, 397 insertions(+)
+ 5 files changed, 398 insertions(+)
  create mode 100644 vanadium/android_config/proto/host/BUILD.gn
  create mode 100644 vanadium/android_config/proto/host/java/src/app/vanadium/config/host/ConfigGenerator.java
  create mode 100644 vanadium/android_config/proto/host/java/src/app/vanadium/config/host/ConfigGeneratorImpl.kt
@@ -95,10 +95,10 @@ index 0000000000000..14174cf8ba465
 +}
 diff --git a/vanadium/android_config/proto/host/java/src/app/vanadium/config/host/ConfigGeneratorImpl.kt b/vanadium/android_config/proto/host/java/src/app/vanadium/config/host/ConfigGeneratorImpl.kt
 new file mode 100644
-index 0000000000000..24a3312d7b0e4
+index 0000000000000..bea22fdac1446
 --- /dev/null
 +++ b/vanadium/android_config/proto/host/java/src/app/vanadium/config/host/ConfigGeneratorImpl.kt
-@@ -0,0 +1,299 @@
+@@ -0,0 +1,300 @@
 +package app.vanadium.config.host
 +
 +import app.vanadium.config.common.Constants.CheckOsConfigsFeatures
@@ -365,17 +365,18 @@ index 0000000000000..24a3312d7b0e4
 +data class VanadiumVersion(
 +    val major: Int,
 +    val minor: Int,
-+    val archApkVariant: Int = 0
++    val archApkVariant: Int = 0,
++    val increment: Int = 0,
 +) {
 +    init {
 +        check(major > 0)
-+        check(minor in 0..999)
++        check((minor + increment) in 0..999)
 +        check(archApkVariant in 0..99)
 +    }
 +
-+    fun toLong() = major * 100_000L + minor * 100L + archApkVariant
++    fun toLong() = major * 100_000L + (minor + increment) * 100L + archApkVariant
 +    companion object {
-+        fun min() = VanadiumVersion(major = 6261, minor = 43 + 1)
++        fun min() = VanadiumVersion(major = 6261, minor = 43, increment = 1)
 +    }
 +}
 +
@@ -389,7 +390,7 @@ index 0000000000000..24a3312d7b0e4
 +        check(year > 0)
 +        check(month in 1..12)
 +        check(day in 1..31)
-+        check(increment in 0..100)
++        check(increment in 0..99)
 +    }
 +
 +    fun toLong() = year * 1_000_000L + month * 10_000L + day * 100L + increment
