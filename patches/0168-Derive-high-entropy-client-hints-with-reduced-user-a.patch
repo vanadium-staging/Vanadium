@@ -15,7 +15,7 @@ Android.
  4 files changed, 53 insertions(+)
 
 diff --git a/components/embedder_support/user_agent_utils.cc b/components/embedder_support/user_agent_utils.cc
-index a3730e93b8418..6c1c7ea37f2a6 100644
+index 73e134db9e58f..9bfd853bddcca 100644
 --- a/components/embedder_support/user_agent_utils.cc
 +++ b/components/embedder_support/user_agent_utils.cc
 @@ -655,6 +655,34 @@ blink::UserAgentMetadata GetUserAgentMetadata(bool only_low_entropy_ch) {
@@ -54,7 +54,7 @@ index a3730e93b8418..6c1c7ea37f2a6 100644
      return metadata;
    }
 diff --git a/content/browser/client_hints/client_hints.cc b/content/browser/client_hints/client_hints.cc
-index 1eae0a9aa962f..fc05f2d54f3a5 100644
+index ce04834fe1c08..4c0a8d8c89588 100644
 --- a/content/browser/client_hints/client_hints.cc
 +++ b/content/browser/client_hints/client_hints.cc
 @@ -874,6 +874,20 @@ void AddRequestClientHintsHeaders(
@@ -79,10 +79,10 @@ index 1eae0a9aa962f..fc05f2d54f3a5 100644
    if (ShouldAddClientHint(data, WebClientHintsType::kDeviceMemory_DEPRECATED)) {
      AddDeviceMemoryHeader(headers, /*use_deprecated_version*/ true);
 diff --git a/third_party/blink/common/features.cc b/third_party/blink/common/features.cc
-index 6dca1ba06fd1a..cb29d3318ada3 100644
+index 14f67982cf070..a13f77f4f06f5 100644
 --- a/third_party/blink/common/features.cc
 +++ b/third_party/blink/common/features.cc
-@@ -318,6 +318,14 @@ BASE_FEATURE(kCapStringBuilderLengthTo1GiB, base::FEATURE_ENABLED_BY_DEFAULT);
+@@ -322,6 +322,14 @@ BASE_FEATURE(kCapStringBuilderLengthTo1GiB, base::FEATURE_ENABLED_BY_DEFAULT);
  // of the renderer eviction reasons for Back/Forward Cache.
  BASE_FEATURE(kCaptureJSExecutionLocation, base::FEATURE_ENABLED_BY_DEFAULT);
  
@@ -98,10 +98,10 @@ index 6dca1ba06fd1a..cb29d3318ada3 100644
               base::FEATURE_ENABLED_BY_DEFAULT);
  
 diff --git a/third_party/blink/public/common/features.h b/third_party/blink/public/common/features.h
-index c5a2caebba7da..ac00153009fcf 100644
+index 0d4a1837ea9ef..3155f5397686d 100644
 --- a/third_party/blink/public/common/features.h
 +++ b/third_party/blink/public/common/features.h
-@@ -231,6 +231,9 @@ BLINK_COMMON_EXPORT BASE_DECLARE_FEATURE(kCapStringBuilderLengthTo1GiB);
+@@ -240,6 +240,9 @@ BLINK_COMMON_EXPORT BASE_DECLARE_FEATURE(kCapStringBuilderLengthTo1GiB);
  
  BLINK_COMMON_EXPORT BASE_DECLARE_FEATURE(kCaptureJSExecutionLocation);
  

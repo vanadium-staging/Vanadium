@@ -11,10 +11,10 @@ Subject: [PATCH] Reflect changes for removed settings in search
  create mode 100644 vanadium/chromium_src/chrome/android/java/src/org/chromium/chrome/browser/settings/search/SearchIndexProviderHooks.java
 
 diff --git a/chrome/android/java/src/org/chromium/chrome/browser/settings/search/SettingsSearchCoordinator.java b/chrome/android/java/src/org/chromium/chrome/browser/settings/search/SettingsSearchCoordinator.java
-index f914136e73810..7f67d09846981 100644
+index 09e5953252ccb..328b690f0e89d 100644
 --- a/chrome/android/java/src/org/chromium/chrome/browser/settings/search/SettingsSearchCoordinator.java
 +++ b/chrome/android/java/src/org/chromium/chrome/browser/settings/search/SettingsSearchCoordinator.java
-@@ -988,6 +988,8 @@ public class SettingsSearchCoordinator
+@@ -1218,6 +1218,8 @@ public class SettingsSearchCoordinator
              } else {
                  provider.updateDynamicPreferences(context, indexData);
              }
@@ -23,7 +23,7 @@ index f914136e73810..7f67d09846981 100644
          }
  
          // Some exceptions whose dynamic preferences cannot be updated via SearchIndexProvider
-@@ -1012,6 +1014,10 @@ public class SettingsSearchCoordinator
+@@ -1242,6 +1244,10 @@ public class SettingsSearchCoordinator
              List<SearchIndexProvider> providers) {
          Map<String, SearchIndexProvider> providerMap = new HashMap<>();
          for (SearchIndexProvider provider : providers) {

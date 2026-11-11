@@ -8,10 +8,10 @@ Subject: [PATCH] Skip pre-launch network activity for incognito external links
  1 file changed, 2 insertions(+)
 
 diff --git a/chrome/android/java/src/org/chromium/chrome/browser/LaunchIntentDispatcher.java b/chrome/android/java/src/org/chromium/chrome/browser/LaunchIntentDispatcher.java
-index 74d45e55339c9..1706559c59272 100644
+index 51c1f66d5eed3..dbc1a0fb0eaf0 100644
 --- a/chrome/android/java/src/org/chromium/chrome/browser/LaunchIntentDispatcher.java
 +++ b/chrome/android/java/src/org/chromium/chrome/browser/LaunchIntentDispatcher.java
-@@ -295,6 +295,7 @@ public class LaunchIntentDispatcher {
+@@ -315,6 +315,7 @@ public class LaunchIntentDispatcher {
  
      /** When started with an intent, maybe pre-resolve the domain. */
      private void maybePrefetchDnsInBackground() {
@@ -19,7 +19,7 @@ index 74d45e55339c9..1706559c59272 100644
          if (Intent.ACTION_VIEW.equals(mIntent.getAction())) {
              String maybeUrl = IntentHandler.getUrlFromIntent(mIntent);
              if (maybeUrl != null) {
-@@ -525,6 +526,7 @@ public class LaunchIntentDispatcher {
+@@ -545,6 +546,7 @@ public class LaunchIntentDispatcher {
  
      private boolean maybeStartNavigation() {
          if (!ProfileManager.isInitialized()) return false;

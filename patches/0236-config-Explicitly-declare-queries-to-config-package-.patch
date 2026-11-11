@@ -12,7 +12,7 @@ Subject: [PATCH] config: Explicitly declare queries to config package for
  4 files changed, 16 insertions(+)
 
 diff --git a/android_webview/nonembedded/java/AndroidManifest.xml b/android_webview/nonembedded/java/AndroidManifest.xml
-index 3139ca0aa0a1d..a23a259a195bc 100644
+index 20d6b621b8bd1..fc5e52003c003 100644
 --- a/android_webview/nonembedded/java/AndroidManifest.xml
 +++ b/android_webview/nonembedded/java/AndroidManifest.xml
 @@ -38,6 +38,12 @@ by a child template that "extends" this file.
@@ -29,47 +29,33 @@ index 3139ca0aa0a1d..a23a259a195bc 100644
                   android:icon="@{{manifest_package|default('com.android.webview')}}:drawable/icon_webview"
                   android:name="{{ application_name|default('org.chromium.android_webview.nonembedded.WebViewApkApplication') }}"
 diff --git a/android_webview/system_webview_apk_tmpl.gni b/android_webview/system_webview_apk_tmpl.gni
-index f1b13ef4ad44d..c2e41a669e4d1 100644
+index 7d48724bf828b..c4c2ae183a430 100644
 --- a/android_webview/system_webview_apk_tmpl.gni
 +++ b/android_webview/system_webview_apk_tmpl.gni
-@@ -14,6 +14,7 @@ import("//chrome/version.gni")
- import("//components/crash/android/silent_java_assert_reporting.gni")
- import("//device/vr/buildflags/buildflags.gni")
- import("//tools/v8_context_snapshot/v8_context_snapshot.gni")
-+import("//vanadium/android_config/config_apk_vars.gni")
- 
- declare_args() {
-   # Android package name to use when compiling the system_webview_apk
-@@ -89,6 +90,7 @@ template("system_webview_apk_or_module_tmpl") {
-     variables = [
-       "force_32_bit=$_force_32_bit",
-       "manifest_package=$_manifest_package",
-+      "config_apk_package=$config_apk_package",
-     ]
-     if (_is_trichrome) {
-       variables +=
+@@ -76,6 +76,8 @@ template("system_webview_apk_or_module_tmpl") {
+       includes += [ input ]
+       input = invoker.jinja_input
+     }
++    import("//vanadium/android_config/config_apk_vars.gni")
++    variables += [ "config_apk_package=$config_apk_package" ]
+     if (defined(invoker.jinja_extra_variables)) {
+       variables += invoker.jinja_extra_variables
+     }
 diff --git a/chrome/android/chrome_public_apk_tmpl.gni b/chrome/android/chrome_public_apk_tmpl.gni
-index 9eae22648bd02..ec73aee44e3a1 100644
+index 1f3bd38b356c7..428e81b6765fc 100644
 --- a/chrome/android/chrome_public_apk_tmpl.gni
 +++ b/chrome/android/chrome_public_apk_tmpl.gni
-@@ -20,6 +20,7 @@ import("//content/public/common/features.gni")
- import("//device/vr/buildflags/buildflags.gni")
- import("//media/media_options.gni")
- import("//third_party/blink/renderer/config.gni")
-+import("//vanadium/android_config/config_apk_vars.gni")
- import("channel.gni")
- 
- declare_args() {
-@@ -48,6 +49,7 @@ default_chrome_public_jinja_variables = [
-   "enable_dav1d_decoder=$enable_dav1d_decoder",
-   "enable_jxl_decoder=$enable_jxl_decoder",
-   "zygote_preload_class=org.chromium.content_public.app.ZygotePreload",
-+  "config_apk_package=$config_apk_package",
- ]
- 
- # Generates an AndroidManifest.xml along with an optional second manifest
+@@ -216,6 +216,8 @@ template("chrome_common_apk_or_module_tmpl") {
+       includes += [ input ]
+       input = invoker.jinja_input
+     }
++    import("//vanadium/android_config/config_apk_vars.gni")
++    variables += [ "config_apk_package=$config_apk_package" ]
+     if (defined(invoker.jinja_extra_variables)) {
+       variables += invoker.jinja_extra_variables
+     }
 diff --git a/chrome/android/java/AndroidManifest.xml b/chrome/android/java/AndroidManifest.xml
-index 9119c27023f17..dea66d93ed9a2 100644
+index 7c7d5729a6c32..e14ba7cf103c3 100644
 --- a/chrome/android/java/AndroidManifest.xml
 +++ b/chrome/android/java/AndroidManifest.xml
 @@ -218,6 +218,12 @@ by a child template that "extends" this file.

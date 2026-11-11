@@ -42,10 +42,10 @@ index a3a29f3ff5675..a908bfacc1f4a 100644
              case ContentSettingsType.ANTI_ABUSE:
                  return new ResourceItem(
 diff --git a/components/browser_ui/site_settings/android/java/src/org/chromium/components/browser_ui/site_settings/SingleWebsiteSettings.java b/components/browser_ui/site_settings/android/java/src/org/chromium/components/browser_ui/site_settings/SingleWebsiteSettings.java
-index bb2115e8d58e5..18d2f97c3a147 100644
+index 2fb82628fdc09..dc662410853eb 100644
 --- a/components/browser_ui/site_settings/android/java/src/org/chromium/components/browser_ui/site_settings/SingleWebsiteSettings.java
 +++ b/components/browser_ui/site_settings/android/java/src/org/chromium/components/browser_ui/site_settings/SingleWebsiteSettings.java
-@@ -1279,19 +1279,8 @@ public class SingleWebsiteSettings extends BaseSiteSettingsFragment
+@@ -1321,19 +1321,8 @@ public class SingleWebsiteSettings extends BaseSiteSettingsFragment
  
      @RequiresNonNull({"mSite"})
      private void setUpAdsInformationalBanner() {
@@ -68,10 +68,10 @@ index bb2115e8d58e5..18d2f97c3a147 100644
  
      @RequiresNonNull({"mSite"})
 diff --git a/components/browser_ui/site_settings/android/java/src/org/chromium/components/browser_ui/site_settings/SiteSettings.java b/components/browser_ui/site_settings/android/java/src/org/chromium/components/browser_ui/site_settings/SiteSettings.java
-index 16ac7c1c76e7d..b7205e72eb9de 100644
+index 0a8eff8358ef5..08009a83e37d9 100644
 --- a/components/browser_ui/site_settings/android/java/src/org/chromium/components/browser_ui/site_settings/SiteSettings.java
 +++ b/components/browser_ui/site_settings/android/java/src/org/chromium/components/browser_ui/site_settings/SiteSettings.java
-@@ -169,8 +169,6 @@ public class SiteSettings extends BaseSiteSettingsFragment
+@@ -199,8 +199,6 @@ public class SiteSettings extends BaseSiteSettingsFragment
                  p.setSummary(ContentSettingsResources.getGeolocationAllowedSummary());
              } else if (Type.CLIPBOARD == prefCategory && !checked) {
                  p.setSummary(ContentSettingsResources.getClipboardBlockedListSummary());
@@ -81,7 +81,7 @@ index 16ac7c1c76e7d..b7205e72eb9de 100644
                  p.setSummary(ContentSettingsResources.getSoundBlockedListSummary());
              } else if (Type.REQUEST_DESKTOP_SITE == prefCategory) {
 diff --git a/components/browser_ui/strings/android/site_settings.grdp b/components/browser_ui/strings/android/site_settings.grdp
-index 84bbc5d4236f5..7cc9ce2601d22 100644
+index 0e680db7608c5..c30051c201293 100644
 --- a/components/browser_ui/strings/android/site_settings.grdp
 +++ b/components/browser_ui/strings/android/site_settings.grdp
 @@ -16,6 +16,9 @@
@@ -110,7 +110,7 @@ index a4c1c51327f52..f306d7fc18300 100644
         IDS_SITE_SETTINGS_TYPE_SOUND_MID_SENTENCE},
        {ContentSettingsType::CLIPBOARD_READ_WRITE,
 diff --git a/components/site_settings_strings.grdp b/components/site_settings_strings.grdp
-index 9c8242817f69c..6c3475af620d6 100644
+index 9cead2043a5b3..43f8b0b5106c1 100644
 --- a/components/site_settings_strings.grdp
 +++ b/components/site_settings_strings.grdp
 @@ -7,6 +7,12 @@

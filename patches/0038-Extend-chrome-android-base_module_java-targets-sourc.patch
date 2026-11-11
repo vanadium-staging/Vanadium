@@ -13,12 +13,12 @@ Subject: [PATCH] Extend //chrome/android base_module_java targets sources and
  create mode 100644 vanadium/chromium_src/chrome/android/base_module_java_ext_sources.gni
 
 diff --git a/chrome/android/BUILD.gn b/chrome/android/BUILD.gn
-index 88d3fe569a65d..d971d402c3244 100644
+index 4c8903cb513b1..9f20fdee5f198 100644
 --- a/chrome/android/BUILD.gn
 +++ b/chrome/android/BUILD.gn
-@@ -2290,6 +2290,11 @@ if (_is_default_toolchain) {
-     # can provide their own implementations.
-     jar_excluded_patterns = [ "*/ProductConfig.class" ]
+@@ -2305,6 +2305,11 @@ if (_is_default_toolchain) {
+     # //content/public/android:content_main_dex_java instead.
+     assert_no_deps = [ "//content/public/android:content_full_java" ]
  
 +    import("//vanadium/chromium_src/chrome/android/base_module_java_ext_sources.gni")
 +    sources += base_module_java_ext_sources

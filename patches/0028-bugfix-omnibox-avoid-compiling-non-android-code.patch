@@ -8,10 +8,10 @@ Subject: [PATCH] [bugfix] omnibox: avoid compiling non-android code
  1 file changed, 4 insertions(+)
 
 diff --git a/chrome/browser/ui/omnibox/omnibox_edit_model.cc b/chrome/browser/ui/omnibox/omnibox_edit_model.cc
-index 7c03135dc2f3f..517eeb4f143a6 100644
+index c96bea42bbdff..44a363e4ec762 100644
 --- a/chrome/browser/ui/omnibox/omnibox_edit_model.cc
 +++ b/chrome/browser/ui/omnibox/omnibox_edit_model.cc
-@@ -2005,11 +2005,15 @@ gfx::Image OmniboxEditModel::GetMatchIcon(const AutocompleteMatch& match,
+@@ -2046,11 +2046,15 @@ gfx::Image OmniboxEditModel::GetMatchIcon(const AutocompleteMatch& match,
      }
    }
  

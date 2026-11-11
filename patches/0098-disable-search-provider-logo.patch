@@ -8,10 +8,10 @@ Subject: [PATCH] disable search provider logo
  1 file changed, 1 insertion(+), 23 deletions(-)
 
 diff --git a/components/search_engines/android/template_url_service_android.cc b/components/search_engines/android/template_url_service_android.cc
-index 8628ba9f55c47..0351d68b026c6 100644
+index bb27c75477ffd..a7a77050a3c2a 100644
 --- a/components/search_engines/android/template_url_service_android.cc
 +++ b/components/search_engines/android/template_url_service_android.cc
-@@ -183,29 +183,7 @@ bool TemplateUrlServiceAndroid::IsSearchByImageAvailable(JNIEnv* env) {
+@@ -184,29 +184,7 @@ bool TemplateUrlServiceAndroid::IsSearchByImageAvailable(JNIEnv* env) {
  }
  
  bool TemplateUrlServiceAndroid::DoesDefaultSearchEngineHaveLogo(JNIEnv* env) {

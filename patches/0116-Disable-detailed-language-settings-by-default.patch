@@ -8,7 +8,7 @@ Subject: [PATCH] Disable detailed language settings by default
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/components/language/core/common/language_experiments.cc b/components/language/core/common/language_experiments.cc
-index d9a556a9c8142..fb9eeffff136e 100644
+index 5a4108a9e4720..d05c3f75de9b9 100644
 --- a/components/language/core/common/language_experiments.cc
 +++ b/components/language/core/common/language_experiments.cc
 @@ -6,7 +6,7 @@

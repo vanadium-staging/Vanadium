@@ -13,7 +13,7 @@ Subject: [PATCH] Extend //components/page_info/android java target sources and
  create mode 100644 vanadium/chromium_src/components/page_info/android/page_info_android_java_ext_sources.gni
 
 diff --git a/components/page_info/android/BUILD.gn b/components/page_info/android/BUILD.gn
-index 9a39a68ca6c4c..d29e26d485be6 100644
+index d99dcfc3664cd..14aeeea6fe52e 100644
 --- a/components/page_info/android/BUILD.gn
 +++ b/components/page_info/android/BUILD.gn
 @@ -130,6 +130,11 @@ android_library("java") {
