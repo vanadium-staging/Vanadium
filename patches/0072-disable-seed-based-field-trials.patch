@@ -35,10 +35,10 @@ index e16aa29d55923..75e486dc22486 100644
 +  "+vanadium/chromium_src/components/variations/common_ext",
  ]
 diff --git a/components/variations/service/variations_field_trial_creator.cc b/components/variations/service/variations_field_trial_creator.cc
-index 42f411cf23644..1fbc76fb213e8 100644
+index fff84179f9b6e..d34f6848341f5 100644
 --- a/components/variations/service/variations_field_trial_creator.cc
 +++ b/components/variations/service/variations_field_trial_creator.cc
-@@ -60,6 +60,7 @@
+@@ -61,6 +61,7 @@
  #include "components/variations/variations_switches.h"
  #include "components/version_info/version_info.h"
  #include "ui/base/l10n/l10n_util.h"
@@ -46,7 +46,7 @@ index 42f411cf23644..1fbc76fb213e8 100644
  
  namespace variations {
  namespace {
-@@ -276,9 +277,15 @@ bool VariationsFieldTrialCreator::SetUpFieldTrials(
+@@ -277,9 +278,15 @@ bool VariationsFieldTrialCreator::SetUpFieldTrials(
  
    // Force the variation ids selected in chrome://flags and/or specified using
    // the command-line flag.
@@ -62,7 +62,7 @@ index 42f411cf23644..1fbc76fb213e8 100644
  
    switch (result) {
      case VariationsIdsProvider::ForceIdsResult::INVALID_SWITCH_ENTRY:
-@@ -356,27 +363,35 @@ bool VariationsFieldTrialCreator::SetUpFieldTrials(
+@@ -357,26 +364,34 @@ bool VariationsFieldTrialCreator::SetUpFieldTrials(
  
    CreateTrialsResult create_trials_result = {.applied_seed = false};
    if (!used_testing_config && client_filterable_state) {
@@ -81,13 +81,12 @@ index 42f411cf23644..1fbc76fb213e8 100644
 +#endif // BUILDFLAG(FIELDTRIAL_SEED_ENABLED)
    }
  
-   if (add_entropy_source_to_variations_ids &&
+   if (low_entropy_source_value.has_value() &&
        !create_trials_result.AppliedSeedHasActiveLimitedLayer()) {
 +#if BUILDFLAG(FIELDTRIAL_SEED_ENABLED)
      // TODO(crbug.com/424154785): Consider no longer transmitting LES values
      // alongside VariationsIDs.
-     http_header_provider->SetLowEntropySourceValue(
-         metrics_state_manager->GetLowEntropySource());
+     http_header_provider->SetLowEntropySourceValue(low_entropy_source_value);
 +#endif // BUILDFLAG(FIELDTRIAL_SEED_ENABLED)
    }
  

@@ -12,10 +12,10 @@ Subject: [PATCH] Extend //android_webview/browser cc target sources and deps
  create mode 100644 vanadium/chromium_src/android_webview/browser/browser_cc_ext_sources.gni
 
 diff --git a/android_webview/browser/BUILD.gn b/android_webview/browser/BUILD.gn
-index 9c6b59c427ec4..f65fcba47e7a2 100644
+index 9e1cc1b18b603..cf2c30374f038 100644
 --- a/android_webview/browser/BUILD.gn
 +++ b/android_webview/browser/BUILD.gn
-@@ -419,6 +419,11 @@ source_set("browser") {
+@@ -432,6 +432,11 @@ source_set("browser") {
      deps += [ "//components/spellcheck/browser" ]
    }
  

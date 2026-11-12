@@ -9,10 +9,10 @@ Subject: [PATCH] support redirecting barcode detection to downstream impl
  2 files changed, 35 insertions(+)
 
 diff --git a/services/shape_detection/BUILD.gn b/services/shape_detection/BUILD.gn
-index e55432dba076a..2b776bd7bd46c 100644
+index a6c5bcc85199a..1632868a1d4c2 100644
 --- a/services/shape_detection/BUILD.gn
 +++ b/services/shape_detection/BUILD.gn
-@@ -106,6 +106,15 @@ source_set("lib") {
+@@ -104,6 +104,15 @@ source_set("lib") {
  
    if (is_android) {
      deps += [ ":shape_detection_jni_headers" ]
@@ -28,7 +28,7 @@ index e55432dba076a..2b776bd7bd46c 100644
    } else if (is_chromeos || is_linux) {
      sources += [
        "shape_detection_sandbox_hook.cc",
-@@ -151,6 +160,18 @@ if (is_android) {
+@@ -149,6 +158,18 @@ if (is_android) {
        "//third_party/jni_zero:jni_zero_java",
        "//ui/gfx/geometry/mojom:mojom_java",
      ]

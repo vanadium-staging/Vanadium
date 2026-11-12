@@ -67,10 +67,10 @@ index f701773c29875..e344cf0e08238 100644
        std::move(login_db), behavior, prefs, os_crypt_async,
        std::move(affiliated_match_helper));
 diff --git a/components/password_manager/core/browser/password_store/BUILD.gn b/components/password_manager/core/browser/password_store/BUILD.gn
-index a2c8837d4309f..3ff3f1f836866 100644
+index bd6ad96d85623..d9c5f15023501 100644
 --- a/components/password_manager/core/browser/password_store/BUILD.gn
 +++ b/components/password_manager/core/browser/password_store/BUILD.gn
-@@ -87,33 +87,33 @@ source_set("password_store_impl") {
+@@ -86,33 +86,33 @@ source_set("password_store_impl") {
        "//components/sync/base",
        "//components/sync/service",
      ]
@@ -129,8 +129,8 @@ index a2c8837d4309f..3ff3f1f836866 100644
 +  if (is_win) {
 +    sources += [ "login_database_win.cc" ]
    }
-   configs += [ "//build/config/compiler:wexit_time_destructors" ]
  }
+ 
 diff --git a/components/password_manager/core/browser/password_store/login_database.cc b/components/password_manager/core/browser/password_store/login_database.cc
 index c6b604e881ef8..2ff2cbea46377 100644
 --- a/components/password_manager/core/browser/password_store/login_database.cc
@@ -187,10 +187,10 @@ index 423583d6492bd..19bb000ff4bc4 100644
                                       ? PasswordDecryptionResult::kSucceeded
                                       : PasswordDecryptionResult::kFailed);
 diff --git a/components/password_manager/core/browser/password_store/password_store_built_in_backend.cc b/components/password_manager/core/browser/password_store/password_store_built_in_backend.cc
-index 2aa2dfb47f73c..096a683e65249 100644
+index 5d2fdd7de92cf..a504630aaddb7 100644
 --- a/components/password_manager/core/browser/password_store/password_store_built_in_backend.cc
 +++ b/components/password_manager/core/browser/password_store/password_store_built_in_backend.cc
-@@ -230,7 +230,9 @@ void PasswordStoreBuiltInBackend::Shutdown(
+@@ -239,7 +239,9 @@ void PasswordStoreBuiltInBackend::Shutdown(
      base::OnceClosure shutdown_completed) {
    DCHECK_CALLED_ON_VALID_SEQUENCE(sequence_checker_);
    weak_ptr_factory_.InvalidateWeakPtrs();
@@ -199,8 +199,8 @@ index 2aa2dfb47f73c..096a683e65249 100644
 +    affiliated_match_helper_.reset();
 +  }
    sync_observation_.Reset();
-   if (helper_) {
-     background_task_runner_->DeleteSoon(FROM_HERE, std::move(helper_));
+   last_user_actionable_error_ = syncer::SyncService::UserActionableError::kNone;
+   last_password_sync_active_ = false;
 diff --git a/components/password_manager/core/browser/password_store_factory_util.cc b/components/password_manager/core/browser/password_store_factory_util.cc
 index 3dc7064967e4f..7aa4b63a33ea5 100644
 --- a/components/password_manager/core/browser/password_store_factory_util.cc

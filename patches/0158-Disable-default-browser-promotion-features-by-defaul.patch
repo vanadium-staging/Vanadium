@@ -9,22 +9,22 @@ Subject: [PATCH] Disable default browser promotion features by default
  2 files changed, 4 insertions(+), 3 deletions(-)
 
 diff --git a/chrome/android/java/src/org/chromium/chrome/browser/settings/MainSettings.java b/chrome/android/java/src/org/chromium/chrome/browser/settings/MainSettings.java
-index eccf6ef995a23..14ad809854a00 100644
+index 66ee56ddec672..7f97678dc58a5 100644
 --- a/chrome/android/java/src/org/chromium/chrome/browser/settings/MainSettings.java
 +++ b/chrome/android/java/src/org/chromium/chrome/browser/settings/MainSettings.java
-@@ -490,6 +490,7 @@ public class MainSettings extends ChromeBaseSettingsFragment
+@@ -507,6 +507,7 @@ public class MainSettings extends ChromeBaseSettingsFragment
          org.chromium.base.settings.SettingsExtUtils.safelyRemovePreference(this, PREF_SAFETY_HUB);
          org.chromium.base.settings.SettingsExtUtils.safelyRemovePreference(this, PREF_ACCOUNT_AND_GOOGLE_SERVICES_SECTION);
          org.chromium.base.settings.SettingsExtUtils.safelyRemovePreference(this, PREF_GOOGLE_SERVICES);
 +        org.chromium.base.settings.SettingsExtUtils.safelyRemovePreference(this, PREF_SETTINGS_PROMO_CARD);
      }
  
-     private static boolean shouldShowSafetyHubPref() {
+     protected void maybeAddSearchHeaderPreference() {
 diff --git a/chrome/browser/flags/android/chrome_feature_list.cc b/chrome/browser/flags/android/chrome_feature_list.cc
-index ce8e87cdf83fa..cff254dcc11e7 100644
+index f23164b9d87c2..50349e502e941 100644
 --- a/chrome/browser/flags/android/chrome_feature_list.cc
 +++ b/chrome/browser/flags/android/chrome_feature_list.cc
-@@ -825,9 +825,9 @@ BASE_FEATURE(kCrossDeviceTabPaneAndroid, base::FEATURE_DISABLED_BY_DEFAULT);
+@@ -863,9 +863,9 @@ BASE_FEATURE(kCrossDeviceTabPaneAndroid, base::FEATURE_DISABLED_BY_DEFAULT);
  BASE_FEATURE(kCrossDeviceTaskHandoff, base::FEATURE_ENABLED_BY_DEFAULT);
  BASE_FEATURE(kCrossWindowTabGroupOperations, base::FEATURE_ENABLED_BY_DEFAULT);
  BASE_FEATURE(kDebugToolbarPositioning, base::FEATURE_DISABLED_BY_DEFAULT);
@@ -34,6 +34,6 @@ index ce8e87cdf83fa..cff254dcc11e7 100644
 +BASE_FEATURE(kDefaultBrowserPromoAndroid2, base::FEATURE_DISABLED_BY_DEFAULT);
 +BASE_FEATURE(kDefaultBrowserPromoEntryPoint, base::FEATURE_DISABLED_BY_DEFAULT);
 +BASE_FEATURE(kDefaultBrowserPromoFre, base::FEATURE_DISABLED_BY_DEFAULT);
+ BASE_FEATURE(kDeferArchivedTabModelCreation, base::FEATURE_DISABLED_BY_DEFAULT);
  BASE_FEATURE(kDeferDetachedNativePageFreeze, base::FEATURE_ENABLED_BY_DEFAULT);
  BASE_FEATURE(kDeferNavigationStateChanged, base::FEATURE_ENABLED_BY_DEFAULT);
- BASE_FEATURE(kDesktopAndroidBackgroundTabLoading, base::FEATURE_DISABLED_BY_DEFAULT);

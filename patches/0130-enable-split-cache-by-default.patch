@@ -8,10 +8,10 @@ Subject: [PATCH] enable split cache by default
  1 file changed, 3 insertions(+), 3 deletions(-)
 
 diff --git a/net/base/features.cc b/net/base/features.cc
-index 59c6ac9e17906..ff33335975be8 100644
+index b38ed8ffee7d9..a47a17e412886 100644
 --- a/net/base/features.cc
 +++ b/net/base/features.cc
-@@ -208,13 +208,13 @@ const base::FeatureParam<base::TimeDelta>
+@@ -225,13 +225,13 @@ const base::FeatureParam<base::TimeDelta>
          "EffectiveConnectionTypeRecomputationInterval", base::Seconds(10)};
  
  BASE_FEATURE(kSplitCacheByIncludeCredentials,
