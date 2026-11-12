@@ -8,7 +8,7 @@ Subject: [PATCH] disable sensors access by default
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/components/content_settings/core/browser/content_settings_registry.cc b/components/content_settings/core/browser/content_settings_registry.cc
-index 4091c86646b54..9b735dd3f45ed 100644
+index 7a3aac5ef2154..ec3414f74d33c 100644
 --- a/components/content_settings/core/browser/content_settings_registry.cc
 +++ b/components/content_settings/core/browser/content_settings_registry.cc
 @@ -338,7 +338,7 @@ void ContentSettingsRegistry::Init() {

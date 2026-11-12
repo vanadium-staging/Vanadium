@@ -8,10 +8,10 @@ Subject: [PATCH] Disable WebGPU in Android by default
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/gpu/config/gpu_finch_features.cc b/gpu/config/gpu_finch_features.cc
-index bf394625ffab6..65d41654b7607 100644
+index 07d65f7feb856..5b38e4e642ed2 100644
 --- a/gpu/config/gpu_finch_features.cc
 +++ b/gpu/config/gpu_finch_features.cc
-@@ -282,7 +282,7 @@ BASE_FEATURE(kEnableDrDc,
+@@ -286,7 +286,7 @@ BASE_FEATURE(kEnableDrDc,
  // Enable WebGPU on gpu service side only. This is used with origin trial and
  // enabled by default on supported platforms.
  #if BUILDFLAG(IS_APPLE) || BUILDFLAG(IS_WIN) || BUILDFLAG(IS_CHROMEOS) || \

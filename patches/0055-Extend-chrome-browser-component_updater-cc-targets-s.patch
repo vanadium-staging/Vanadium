@@ -17,12 +17,12 @@ Subject: [PATCH] Extend //chrome/browser/component_updater cc targets sources
  create mode 100644 vanadium/chromium_src/chrome/browser/component_updater/component_updater_impl_cc_ext_sources.gni
 
 diff --git a/chrome/browser/component_updater/BUILD.gn b/chrome/browser/component_updater/BUILD.gn
-index 094cdcd785d9a..fc394df593445 100644
+index c0ab68c0b3bd7..35d555abd861e 100644
 --- a/chrome/browser/component_updater/BUILD.gn
 +++ b/chrome/browser/component_updater/BUILD.gn
-@@ -110,6 +110,11 @@ source_set("component_updater") {
+@@ -114,6 +114,11 @@ source_set("component_updater") {
    if (enable_extensions_core) {
-     public += [ "aim_eligibility_component_installer.h" ]
+     public += [ "component_extension_installer.h" ]
    }
 +
 +  import("//vanadium/chromium_src/chrome/browser/component_updater/component_updater_cc_ext_public.gni")
@@ -32,7 +32,7 @@ index 094cdcd785d9a..fc394df593445 100644
  }
  
  # Implementation target. Only .cc/.mm files.
-@@ -323,6 +328,11 @@ source_set("impl") {
+@@ -327,6 +332,11 @@ source_set("impl") {
    if (enable_request_header_integrity) {
      deps += [ "//chrome/browser/request_header_integrity" ]
    }
@@ -43,7 +43,7 @@ index 094cdcd785d9a..fc394df593445 100644
 +  deps += component_updater_impl_cc_ext_deps
  }
  
- source_set("test_support") {
+ source_set("unit_tests") {
 diff --git a/vanadium/chromium_src/chrome/browser/component_updater/component_updater_cc_ext_public.gni b/vanadium/chromium_src/chrome/browser/component_updater/component_updater_cc_ext_public.gni
 new file mode 100644
 index 0000000000000..f691690e6ff54

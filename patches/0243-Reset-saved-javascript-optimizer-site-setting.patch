@@ -20,10 +20,10 @@ https://chromium-review.googlesource.com/c/chromium/src/+/5840556
  2 files changed, 50 insertions(+)
 
 diff --git a/components/content_settings/core/browser/content_settings_default_provider.cc b/components/content_settings/core/browser/content_settings_default_provider.cc
-index 319f01cb2096a..e823724172833 100644
+index 06221e047541e..b3a822c038d5c 100644
 --- a/components/content_settings/core/browser/content_settings_default_provider.cc
 +++ b/components/content_settings/core/browser/content_settings_default_provider.cc
-@@ -121,6 +121,20 @@ const std::string& GetPrefName(ContentSettingsType type) {
+@@ -125,6 +125,20 @@ const std::string& GetPrefName(ContentSettingsType type) {
  
  }  // namespace
  
@@ -44,7 +44,7 @@ index 319f01cb2096a..e823724172833 100644
  // static
  void DefaultProvider::RegisterProfilePrefs(
      user_prefs::PrefRegistrySyncable* registry) {
-@@ -177,6 +191,10 @@ void DefaultProvider::RegisterProfilePrefs(
+@@ -182,6 +196,10 @@ void DefaultProvider::RegisterProfilePrefs(
    registry->RegisterBooleanPref(kBug364820109AlreadyWorkedAroundPref, false);
  #endif  // !BUILDFLAG(IS_ANDROID)
  #endif  // !BUILDFLAG(IS_IOS)
@@ -55,7 +55,7 @@ index 319f01cb2096a..e823724172833 100644
  }
  
  DefaultProvider::DefaultProvider(PrefService* prefs,
-@@ -435,6 +453,13 @@ void DefaultProvider::DiscardOrMigrateObsoletePreferences() {
+@@ -441,6 +459,13 @@ void DefaultProvider::DiscardOrMigrateObsoletePreferences() {
    prefs_->ClearPref(kBug364820109AlreadyWorkedAroundPref);
  #endif  // !BUILDFLAG(IS_ANDROID)
  #endif  // !BUILDFLAG(IS_IOS)
@@ -70,10 +70,10 @@ index 319f01cb2096a..e823724172833 100644
  
  void DefaultProvider::MigrateGeolocationDefaultValue() {
 diff --git a/components/content_settings/core/browser/content_settings_pref_provider.cc b/components/content_settings/core/browser/content_settings_pref_provider.cc
-index dc252eec8c1a2..9585cfcfb5660 100644
+index 7ae6e2ba334e7..9f777afb21077 100644
 --- a/components/content_settings/core/browser/content_settings_pref_provider.cc
 +++ b/components/content_settings/core/browser/content_settings_pref_provider.cc
-@@ -92,6 +92,20 @@ constexpr char kObsoleteTrackingProtectionExceptionsPref[] =
+@@ -95,6 +95,20 @@ constexpr char kObsoleteTrackingProtectionExceptionsPref[] =
  
  }  // namespace
  
@@ -94,7 +94,7 @@ index dc252eec8c1a2..9585cfcfb5660 100644
  // ////////////////////////////////////////////////////////////////////////////
  // PrefProvider:
  //
-@@ -142,6 +156,10 @@ void PrefProvider::RegisterProfilePrefs(
+@@ -147,6 +161,10 @@ void PrefProvider::RegisterProfilePrefs(
    registry->RegisterBooleanPref(kLocalNetworkAccessMigrateExceptionsPref,
                                  false);
  #endif  // !BUILDFLAG(IS_IOS)
@@ -105,7 +105,7 @@ index dc252eec8c1a2..9585cfcfb5660 100644
  }
  
  PrefProvider::PrefProvider(PrefService* prefs,
-@@ -535,6 +553,13 @@ void PrefProvider::DiscardOrMigrateObsoletePreferences() {
+@@ -541,6 +559,13 @@ void PrefProvider::DiscardOrMigrateObsoletePreferences() {
    prefs_->ClearPref(kBug364820109AlreadyWorkedAroundPref);
  #endif  // !BUILDFLAG(IS_ANDROID)
  #endif  // !BUILDFLAG(IS_IOS)

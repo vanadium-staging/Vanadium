@@ -12,10 +12,10 @@ that privacy is preserved.
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/components/safe_browsing/core/common/safe_browsing_prefs.cc b/components/safe_browsing/core/common/safe_browsing_prefs.cc
-index 34123564029b1..cb5a91fe377d4 100644
+index 0b6fdda0b85ce..e976ed01109da 100644
 --- a/components/safe_browsing/core/common/safe_browsing_prefs.cc
 +++ b/components/safe_browsing/core/common/safe_browsing_prefs.cc
-@@ -276,7 +276,7 @@ void RegisterProfilePrefs(PrefRegistrySimple* registry) {
+@@ -362,7 +362,7 @@ void RegisterProfilePrefs(PrefRegistrySimple* registry) {
    registry->RegisterTimePref(
        prefs::kSafeBrowsingEsbProtegoPingWithoutTokenLastLogTime, base::Time());
    registry->RegisterBooleanPref(

@@ -31,10 +31,10 @@ Test: tools/autotest.py -C out/Default \
  2 files changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/android_webview/common/aw_features.cc b/android_webview/common/aw_features.cc
-index b9acf89f74153..74700c56dab0f 100644
+index 26a08ac2a23e0..081be97b25fe0 100644
 --- a/android_webview/common/aw_features.cc
 +++ b/android_webview/common/aw_features.cc
-@@ -148,7 +148,7 @@ const base::FeatureParam<bool> kWebViewEnableDnsPlatformNoSystem{
+@@ -152,7 +152,7 @@ const base::FeatureParam<bool> kWebViewEnableDnsPlatformNoSystem{
  // When enabled, the default user agent string is fetched more quickly without
  // waiting for chromium startup to complete.
  BASE_FEATURE(kWebViewFasterGetDefaultUserAgent,
@@ -44,7 +44,7 @@ index b9acf89f74153..74700c56dab0f 100644
  // Enable JS FileSystemAccess API.
  // This flag is set by WebView internal code based on an app's targetSdkVersion.
 diff --git a/android_webview/java/src/org/chromium/android_webview/common/WebViewCachedFlags.java b/android_webview/java/src/org/chromium/android_webview/common/WebViewCachedFlags.java
-index 104d59478607d..ce2cef745eb6c 100644
+index 5cdaf5f38e6d0..babad86425a1f 100644
 --- a/android_webview/java/src/org/chromium/android_webview/common/WebViewCachedFlags.java
 +++ b/android_webview/java/src/org/chromium/android_webview/common/WebViewCachedFlags.java
 @@ -132,7 +132,7 @@ public class WebViewCachedFlags {

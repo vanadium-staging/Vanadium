@@ -9,10 +9,10 @@ Subject: [PATCH] disable browser sign in feature by default
  2 files changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/chrome/browser/signin/account_consistency_mode_manager.cc b/chrome/browser/signin/account_consistency_mode_manager.cc
-index 7d4c893cbcd99..d3ed03dd7dfaa 100644
+index 04b273a20e8cf..7d73f1a2fcc03 100644
 --- a/chrome/browser/signin/account_consistency_mode_manager.cc
 +++ b/chrome/browser/signin/account_consistency_mode_manager.cc
-@@ -146,7 +146,7 @@ AccountConsistencyModeManager::~AccountConsistencyModeManager() = default;
+@@ -148,7 +148,7 @@ AccountConsistencyModeManager::~AccountConsistencyModeManager() = default;
  // static
  void AccountConsistencyModeManager::RegisterProfilePrefs(
      user_prefs::PrefRegistrySyncable* registry) {
@@ -22,10 +22,10 @@ index 7d4c893cbcd99..d3ed03dd7dfaa 100644
  
  // static
 diff --git a/components/signin/internal/identity_manager/primary_account_manager.cc b/components/signin/internal/identity_manager/primary_account_manager.cc
-index cb7399be2cc65..1739d4477ef3c 100644
+index 5cad965e8620c..c93f3043e4857 100644
 --- a/components/signin/internal/identity_manager/primary_account_manager.cc
 +++ b/components/signin/internal/identity_manager/primary_account_manager.cc
-@@ -391,7 +391,7 @@ void PrimaryAccountManager::RegisterProfilePrefs(PrefRegistrySimple* registry) {
+@@ -332,7 +332,7 @@ void PrimaryAccountManager::RegisterProfilePrefs(PrefRegistrySimple* registry) {
        prefs::kGoogleServicesSyncingUsernameMigratedToSignedIn, std::string());
    registry->RegisterIntegerPref(prefs::kGoogleServicesSyncingUserMigrationType,
                                  /*SyncToSigninMigrationType::kUnknown=*/0);

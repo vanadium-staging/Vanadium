@@ -4,36 +4,57 @@ Date: Sat, 6 Jun 2026 05:42:26 +0000
 Subject: [PATCH] Disable default browser promotion features by default
 
 ---
- .../org/chromium/chrome/browser/settings/MainSettings.java  | 1 +
- chrome/browser/flags/android/chrome_feature_list.cc         | 6 +++---
- 2 files changed, 4 insertions(+), 3 deletions(-)
+ .../org/chromium/chrome/browser/settings/MainSettings.java    | 1 +
+ chrome/browser/flags/android/chrome_feature_list.cc           | 4 ++--
+ .../org/chromium/chrome/browser/flags/ChromeFeatureList.java  | 4 ++--
+ 3 files changed, 5 insertions(+), 4 deletions(-)
 
 diff --git a/chrome/android/java/src/org/chromium/chrome/browser/settings/MainSettings.java b/chrome/android/java/src/org/chromium/chrome/browser/settings/MainSettings.java
-index eccf6ef995a23..14ad809854a00 100644
+index 4d82ed5e1790f..19be434644b97 100644
 --- a/chrome/android/java/src/org/chromium/chrome/browser/settings/MainSettings.java
 +++ b/chrome/android/java/src/org/chromium/chrome/browser/settings/MainSettings.java
-@@ -490,6 +490,7 @@ public class MainSettings extends ChromeBaseSettingsFragment
+@@ -504,6 +504,7 @@ public class MainSettings extends ChromeBaseSettingsFragment
          org.chromium.base.settings.SettingsExtUtils.safelyRemovePreference(this, PREF_SAFETY_HUB);
          org.chromium.base.settings.SettingsExtUtils.safelyRemovePreference(this, PREF_ACCOUNT_AND_GOOGLE_SERVICES_SECTION);
          org.chromium.base.settings.SettingsExtUtils.safelyRemovePreference(this, PREF_GOOGLE_SERVICES);
 +        org.chromium.base.settings.SettingsExtUtils.safelyRemovePreference(this, PREF_SETTINGS_PROMO_CARD);
      }
  
-     private static boolean shouldShowSafetyHubPref() {
+     protected void maybeAddSearchHeaderPreference() {
 diff --git a/chrome/browser/flags/android/chrome_feature_list.cc b/chrome/browser/flags/android/chrome_feature_list.cc
-index ce8e87cdf83fa..cff254dcc11e7 100644
+index f5f23a61284e2..e2faac727663d 100644
 --- a/chrome/browser/flags/android/chrome_feature_list.cc
 +++ b/chrome/browser/flags/android/chrome_feature_list.cc
-@@ -825,9 +825,9 @@ BASE_FEATURE(kCrossDeviceTabPaneAndroid, base::FEATURE_DISABLED_BY_DEFAULT);
+@@ -855,8 +855,8 @@ BASE_FEATURE(kCrossDeviceTabPaneAndroid, base::FEATURE_DISABLED_BY_DEFAULT);
  BASE_FEATURE(kCrossDeviceTaskHandoff, base::FEATURE_ENABLED_BY_DEFAULT);
  BASE_FEATURE(kCrossWindowTabGroupOperations, base::FEATURE_ENABLED_BY_DEFAULT);
  BASE_FEATURE(kDebugToolbarPositioning, base::FEATURE_DISABLED_BY_DEFAULT);
--BASE_FEATURE(kDefaultBrowserPromoAndroid2, base::FEATURE_ENABLED_BY_DEFAULT);
 -BASE_FEATURE(kDefaultBrowserPromoEntryPoint, base::FEATURE_ENABLED_BY_DEFAULT);
 -BASE_FEATURE(kDefaultBrowserPromoFre, base::FEATURE_ENABLED_BY_DEFAULT);
-+BASE_FEATURE(kDefaultBrowserPromoAndroid2, base::FEATURE_DISABLED_BY_DEFAULT);
 +BASE_FEATURE(kDefaultBrowserPromoEntryPoint, base::FEATURE_DISABLED_BY_DEFAULT);
 +BASE_FEATURE(kDefaultBrowserPromoFre, base::FEATURE_DISABLED_BY_DEFAULT);
+ BASE_FEATURE(kDeferArchivedTabModelCreation, base::FEATURE_DISABLED_BY_DEFAULT);
  BASE_FEATURE(kDeferDetachedNativePageFreeze, base::FEATURE_ENABLED_BY_DEFAULT);
  BASE_FEATURE(kDeferNavigationStateChanged, base::FEATURE_ENABLED_BY_DEFAULT);
- BASE_FEATURE(kDesktopAndroidBackgroundTabLoading, base::FEATURE_DISABLED_BY_DEFAULT);
+diff --git a/chrome/browser/flags/android/java/src/org/chromium/chrome/browser/flags/ChromeFeatureList.java b/chrome/browser/flags/android/java/src/org/chromium/chrome/browser/flags/ChromeFeatureList.java
+index aeae24fa080c4..5d8ce659c6239 100644
+--- a/chrome/browser/flags/android/java/src/org/chromium/chrome/browser/flags/ChromeFeatureList.java
++++ b/chrome/browser/flags/android/java/src/org/chromium/chrome/browser/flags/ChromeFeatureList.java
+@@ -1219,7 +1219,7 @@ public abstract class ChromeFeatureList {
+     public static final CachedFlag sDefaultBrowserPromoEntryPoint =
+             newCachedFlag(
+                     DEFAULT_BROWSER_PROMO_ENTRY_POINT,
+-                    /* defaultValue= */ true,
++                    /* defaultValue= */ false,
+                     /* defaultValueInTests= */ true);
+     public static final CachedFlag sDeferArchivedTabModelCreation =
+             newCachedFlag(
+@@ -1831,7 +1831,7 @@ public abstract class ChromeFeatureList {
+     public static final MutableFlagWithSafeDefault sDebugToolbarPositioning =
+             newMutableFlagWithSafeDefault(DEBUG_TOOLBAR_POSITIONING, false);
+     public static final MutableFlagWithSafeDefault sDefaultBrowserPromoFre =
+-            newMutableFlagWithSafeDefault(DEFAULT_BROWSER_PROMO_FRE, true);
++            newMutableFlagWithSafeDefault(DEFAULT_BROWSER_PROMO_FRE, false);
+     public static final MutableFlagWithSafeDefault sDeferDetachedNativePageFreeze =
+             newMutableFlagWithSafeDefault(DEFER_DETACHED_NATIVE_PAGE_FREEZE, true);
+     public static final MutableFlagWithSafeDefault sDisableGridTabSwitcher =

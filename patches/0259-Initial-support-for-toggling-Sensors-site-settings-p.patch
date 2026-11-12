@@ -4,20 +4,20 @@ Date: Mon, 19 Jan 2026 14:36:41 +0000
 Subject: [PATCH] Initial support for toggling Sensors site settings per-site
 
 ---
- .../site_settings/SensorsSettingsHooks.java   | 196 ++++++++++++++++++
+ .../site_settings/SensorsSettingsHooks.java   | 206 ++++++++++++++++++
  .../SiteSettingsHooksRegistry.java            |   5 +
  .../site_settings_android_java_ext_deps.gni   |   1 +
  ...site_settings_android_java_ext_sources.gni |   1 +
  .../strings/android/site_settings_ext.grdp    |   6 +
- 5 files changed, 209 insertions(+)
+ 5 files changed, 219 insertions(+)
  create mode 100644 vanadium/chromium_src/components/browser_ui/site_settings/android/java/src/org/chromium/components/browser_ui/site_settings/SensorsSettingsHooks.java
 
 diff --git a/vanadium/chromium_src/components/browser_ui/site_settings/android/java/src/org/chromium/components/browser_ui/site_settings/SensorsSettingsHooks.java b/vanadium/chromium_src/components/browser_ui/site_settings/android/java/src/org/chromium/components/browser_ui/site_settings/SensorsSettingsHooks.java
 new file mode 100644
-index 0000000000000..74074faf96629
+index 0000000000000..355416fbeac96
 --- /dev/null
 +++ b/vanadium/chromium_src/components/browser_ui/site_settings/android/java/src/org/chromium/components/browser_ui/site_settings/SensorsSettingsHooks.java
-@@ -0,0 +1,196 @@
+@@ -0,0 +1,206 @@
 +package org.chromium.components.browser_ui.site_settings;
 +
 +import android.content.Context;
@@ -34,6 +34,7 @@ index 0000000000000..74074faf96629
 +import org.chromium.build.annotations.NullMarked;
 +import org.chromium.build.annotations.Nullable;
 +import org.chromium.components.content_settings.ContentSetting;
++import org.chromium.components.content_settings.ContentSettingSource;
 +import org.chromium.components.content_settings.ContentSettingsType;
 +import org.chromium.components.embedder_support.util.Origin;
 +import org.chromium.components.embedder_support.util.UrlConstants;
@@ -192,13 +193,22 @@ index 0000000000000..74074faf96629
 +                @Nullable PermissionSetting setting,
 +                @ContentSettingsType.EnumType int contentType) {
 +            if (isPermissionExistingAndRevoked()) {
-+                return new PermissionSetting(null, ContentSetting.BLOCK, false);
++                @ContentSetting
++                int value = ContentSetting.BLOCK;
++                @ContentSettingSource
++                int source = ContentSettingSource.NONE;
++                return new PermissionSetting(null, value, false, source);
 +            }
 +            if (setting == null) {
 +                boolean isEnabled = WebsitePreferenceBridge.isContentSettingEnabled(
 +                        browserContextHandle, contentType);
++                @ContentSetting
 +                int value = isEnabled ? ContentSetting.ALLOW : ContentSetting.BLOCK;
-+                return new PermissionSetting(null, value, false);
++                @ContentSettingSource
++                int source =
++                        WebsitePreferenceBridge.getDefaultContentSettingProviderSource(
++                                browserContextHandle, contentType);
++                return new PermissionSetting(null, value, false, source);
 +            }
 +            return setting;
 +        }

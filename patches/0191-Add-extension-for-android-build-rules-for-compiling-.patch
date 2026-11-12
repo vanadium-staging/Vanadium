@@ -10,12 +10,12 @@ Subject: [PATCH] Add extension for android build rules for compiling apps
  create mode 100644 vanadium/chromium_src/build/config/android/rules_ext.gni
 
 diff --git a/build/config/android/rules.gni b/build/config/android/rules.gni
-index 27523619df263..ac9e92337501d 100644
+index e401c98caac15..c4db4456271c3 100644
 --- a/build/config/android/rules.gni
 +++ b/build/config/android/rules.gni
-@@ -2713,6 +2713,12 @@ if (!is_robolectric && enable_java_templates) {
-     _enable_lint = defined(invoker.enable_lint) && invoker.enable_lint &&
-                    !disable_android_lint
+@@ -2737,6 +2737,12 @@ if (!is_robolectric && enable_java_templates) {
+         !_is_bundle_module && tiered_dex_assembly && !_proguard_enabled &&
+         _min_sdk_version >= default_min_sdk_version
  
 +    import("//vanadium/chromium_src/build/config/android/rules_ext.gni")
 +    _srcjar_deps += android_apk_or_module_srcjar_deps_common

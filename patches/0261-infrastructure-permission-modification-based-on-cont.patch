@@ -35,10 +35,10 @@ index 4afa9e1a404c8..f3aead02b16e4 100644
              this.name = name;
              this.nameMidSentence = nameMidSentence;
 diff --git a/components/permissions/android/java/src/org/chromium/components/permissions/PermissionUtil.java b/components/permissions/android/java/src/org/chromium/components/permissions/PermissionUtil.java
-index aa19ec454dc62..dbfa50012ccf8 100644
+index 7cd46d73c4134..035b966fc0e2e 100644
 --- a/components/permissions/android/java/src/org/chromium/components/permissions/PermissionUtil.java
 +++ b/components/permissions/android/java/src/org/chromium/components/permissions/PermissionUtil.java
-@@ -139,6 +139,15 @@ public class PermissionUtil {
+@@ -143,6 +143,15 @@ public class PermissionUtil {
      @CalledByNative
      @JniType("std::vector<std::string>")
      public static String[] getRequiredAndroidPermissionsForContentSetting(int contentSettingType) {

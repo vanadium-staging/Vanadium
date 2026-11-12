@@ -13,10 +13,10 @@ Subject: [PATCH] Extend //chrome/browser/language/android java target deps and
  create mode 100644 vanadium/chromium_src/chrome/browser/language/android/language_java_ext_sources.gni
 
 diff --git a/chrome/browser/language/android/BUILD.gn b/chrome/browser/language/android/BUILD.gn
-index 0f9ad09c71458..bde7e627b0fcf 100644
+index ef5a46da50920..a1d7c1a1cd6e1 100644
 --- a/chrome/browser/language/android/BUILD.gn
 +++ b/chrome/browser/language/android/BUILD.gn
-@@ -85,6 +85,12 @@ android_library("java") {
+@@ -87,6 +87,12 @@ android_library("java") {
      "//ui/android:ui_full_java",
      "//ui/android:ui_no_recycler_view_java",
    ]

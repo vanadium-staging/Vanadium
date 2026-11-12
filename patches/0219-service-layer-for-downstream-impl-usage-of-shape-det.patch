@@ -8,11 +8,11 @@ Subject: [PATCH] service layer for downstream impl usage of shape detection
  .../downstream/shape_detection/android/DEPS   |   3 +
  .../shape_detection/android/features.cc       |  72 ++++
  .../shape_detection/android/features.h        |  18 +
- .../shape_detection/DownstreamImpls.java      | 111 +++++++
+ .../shape_detection/DownstreamImpls.java      | 113 +++++++
  .../DownstreamImplsFeatureList.java           |  57 ++++
  .../DownstreamImplsFeatureMap.java            |  42 +++
  .../ZxingBarcodeDetectionImpl.java            | 314 ++++++++++++++++++
- 8 files changed, 711 insertions(+)
+ 8 files changed, 713 insertions(+)
  create mode 100644 vanadium/chromium_src/services/downstream/shape_detection/android/BUILD.gn
  create mode 100644 vanadium/chromium_src/services/downstream/shape_detection/android/DEPS
  create mode 100644 vanadium/chromium_src/services/downstream/shape_detection/android/features.cc
@@ -235,10 +235,10 @@ index 0000000000000..a6f6d07e22114
 +
 diff --git a/vanadium/chromium_src/services/downstream/shape_detection/android/java/src/org/chromium/shape_detection/DownstreamImpls.java b/vanadium/chromium_src/services/downstream/shape_detection/android/java/src/org/chromium/shape_detection/DownstreamImpls.java
 new file mode 100644
-index 0000000000000..792c96eec87fb
+index 0000000000000..c5ad0fa7481fc
 --- /dev/null
 +++ b/vanadium/chromium_src/services/downstream/shape_detection/android/java/src/org/chromium/shape_detection/DownstreamImpls.java
-@@ -0,0 +1,111 @@
+@@ -0,0 +1,113 @@
 +package org.chromium.shape_detection;
 +
 +import android.content.Context;
@@ -273,6 +273,7 @@ index 0000000000000..792c96eec87fb
 +        int downstreamImplUsageMode = sUseBarcodeDetectionImplUsageMode.getValue();
 +        return switch (downstreamImplUsageMode) {
 +            case DownstreamImplUsageMode.IF_NO_GMS -> {
++                Log.i(TAG, "Enabling downstream barcode detection if no GMS");
 +                yield !ChromiumPlayServicesAvailability.isGooglePlayServicesAvailable(appCtx);
 +            }
 +
@@ -305,6 +306,7 @@ index 0000000000000..792c96eec87fb
 +        int downstreamImplUsageMode = sUseTextDetectionImplUsageMode.getValue();
 +        return switch (downstreamImplUsageMode) {
 +            case DownstreamImplUsageMode.IF_NO_GMS -> {
++                Log.i(TAG, "Enabling downstream text detection if no GMS");
 +                yield !ChromiumPlayServicesAvailability.isGooglePlayServicesAvailable(appCtx);
 +            }
 +
