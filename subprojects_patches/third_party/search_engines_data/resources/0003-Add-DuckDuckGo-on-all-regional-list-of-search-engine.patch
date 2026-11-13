@@ -13,11 +13,11 @@ engines in json, in order:
 
 ```
 ---
- definitions/regional_settings.json | 301 +++++++++++++++--------------
- 1 file changed, 156 insertions(+), 145 deletions(-)
+ definitions/regional_settings.json | 303 +++++++++++++++--------------
+ 1 file changed, 157 insertions(+), 146 deletions(-)
 
 diff --git a/definitions/regional_settings.json b/definitions/regional_settings.json
-index ef6d399..9879b2f 100644
+index 39d2afb..dfada17 100644
 --- a/definitions/regional_settings.json
 +++ b/definitions/regional_settings.json
 @@ -132,63 +132,63 @@
@@ -674,9 +674,10 @@ index ef6d399..9879b2f 100644
 +        "&duckduckgo",
          "&google",
          "&yahoo_jp",
-         "&bing",
--        "&duckduckgo",
-         "&ecosia"
+         "&perplexity",
+-        "&bing",
+-        "&duckduckgo"
++        "&bing"
        ]
      },
      "KE": {
