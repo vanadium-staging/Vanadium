@@ -12,10 +12,10 @@ Subject: [PATCH] Add hooks for ChromeApplicationImpl to initialize
  create mode 100644 vanadium/chromium_src/chrome/android/java/src/org/chromium/chrome/browser/ChromeApplicationImplHooks.java
 
 diff --git a/chrome/android/java/src/org/chromium/chrome/browser/ChromeApplicationImpl.java b/chrome/android/java/src/org/chromium/chrome/browser/ChromeApplicationImpl.java
-index 13ce932accfe3..b11ba335a283b 100644
+index 1ee4c2d5200c3..508897dc9d89a 100644
 --- a/chrome/android/java/src/org/chromium/chrome/browser/ChromeApplicationImpl.java
 +++ b/chrome/android/java/src/org/chromium/chrome/browser/ChromeApplicationImpl.java
-@@ -43,10 +43,17 @@ import org.chromium.url.GURL;
+@@ -44,10 +44,17 @@ import org.chromium.url.GURL;
  public class ChromeApplicationImpl extends SplitCompatApplication.Impl {
      public ChromeApplicationImpl() {}
  
@@ -33,12 +33,12 @@ index 13ce932accfe3..b11ba335a283b 100644
          // This Impl is only instantiated in the browser process; SplitChromeApplication uses the
          // base Impl for all other processes so that the chrome split is never loaded there.
          assert SplitCompatApplication.isBrowserProcess();
-@@ -110,6 +117,8 @@ public class ChromeApplicationImpl extends SplitCompatApplication.Impl {
+@@ -111,6 +118,8 @@ public class ChromeApplicationImpl extends SplitCompatApplication.Impl {
      @Override
      public void onConfigurationChanged(Configuration newConfig) {
          super.onConfigurationChanged(newConfig);
 +
-+        ChromeApplicationImplHooks.onConfigurationChanged(newConfig);
++        ChromeApplicationImplHooks.onConfigurationChanged();
          // TODO(huayinz): Add observer pattern for application configuration changes.
          SystemNightModeMonitor.getInstance().onApplicationConfigurationChanged();
      }
@@ -56,7 +56,7 @@ index 3b559cb448cf6..9e82309253caa 100644
    "java/src/org/chromium/chrome/browser/privacy/settings/PrivacySettingsExt.java",
 diff --git a/vanadium/chromium_src/chrome/android/java/src/org/chromium/chrome/browser/ChromeApplicationImplHooks.java b/vanadium/chromium_src/chrome/android/java/src/org/chromium/chrome/browser/ChromeApplicationImplHooks.java
 new file mode 100644
-index 0000000000000..a3e9c5bfcd61e
+index 0000000000000..67c1baff99321
 --- /dev/null
 +++ b/vanadium/chromium_src/chrome/android/java/src/org/chromium/chrome/browser/ChromeApplicationImplHooks.java
 @@ -0,0 +1,20 @@
@@ -77,6 +77,6 @@ index 0000000000000..a3e9c5bfcd61e
 +    public static void onCreate() {
 +    }
 +
-+    public static void onConfigurationChanged(Configuration oldConfig) {
++    public static void onConfigurationChanged() {
 +    }
 +}

@@ -16,10 +16,10 @@ Subject: [PATCH] Extend //chrome/browser/net cc target sources and deps
  create mode 100644 vanadium/chromium_src/chrome/browser/net/net_impl_cc_ext_sources.gni
 
 diff --git a/chrome/browser/net/BUILD.gn b/chrome/browser/net/BUILD.gn
-index 7124ad616de45..05b622c710cb5 100644
+index 57a160ece55bd..a457a603e7dbb 100644
 --- a/chrome/browser/net/BUILD.gn
 +++ b/chrome/browser/net/BUILD.gn
-@@ -134,6 +134,11 @@ source_set("net") {
+@@ -133,6 +133,11 @@ source_set("net") {
      public += [ "server_certificate_database_service_factory.h" ]
      public_deps += [ "//components/server_certificate_database" ]
    }

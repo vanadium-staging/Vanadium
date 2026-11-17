@@ -1,31 +1,32 @@
 From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: quh4gko8 <88831734+quh4gko8@users.noreply.github.com>
-Date: Sun, 20 Sep 2026 15:41:40 +0000
-Subject: [PATCH] [config] Disable new tab appearance customization feature
+Date: Tue, 18 Aug 2026 14:31:32 +0000
+Subject: [PATCH] [config] Enable stubbed safe browsing callback for WebView
 
 ---
- .../vanadium/config/host/ConfigGeneratorImpl.kt  | 16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
+ .../vanadium/config/host/ConfigGeneratorImpl.kt | 17 +++++++++++++++++
+ 1 file changed, 17 insertions(+)
 
 diff --git a/vanadium/android_config/proto/host/java/src/app/vanadium/config/host/ConfigGeneratorImpl.kt b/vanadium/android_config/proto/host/java/src/app/vanadium/config/host/ConfigGeneratorImpl.kt
-index d9e3de4d369ca..dfa33973da499 100644
+index b847f1997502c..93c952571d4b5 100644
 --- a/vanadium/android_config/proto/host/java/src/app/vanadium/config/host/ConfigGeneratorImpl.kt
 +++ b/vanadium/android_config/proto/host/java/src/app/vanadium/config/host/ConfigGeneratorImpl.kt
-@@ -502,6 +502,22 @@ private fun unsortedConfigs(): List<Config> {
-         )
+@@ -485,6 +485,23 @@ private fun unsortedConfigs(): List<Config> {
+         addAllFlags(enabledJavalessRendererFlags)
      }
  
 +    configs += config {
 +        setSpec(spec {
-+            specTypes(
-+                SpecType.BROWSER,
++            specTypesWithVersionBounds(
++                specTypesList = listOf(SpecType.WEBVIEW),
++                minVanadiumVersion = VanadiumVersion(major = 7977, minor = 54)
 +            )
 +        })
 +        addAllFlags(
 +            flags(
 +                flag {
-+                    flagName = "NewTabPageCustomizationV2"
-+                    flagType = FlagType.DISABLED_FEATURE
++                    flagName = "WebViewStubSafeBrowsingCallback"
++                    flagType = FlagType.ENABLED_FEATURE
 +                }
 +            )
 +        )

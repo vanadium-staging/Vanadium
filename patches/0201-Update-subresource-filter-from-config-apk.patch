@@ -11,13 +11,13 @@ updates
  2 files changed, 2 insertions(+)
 
 diff --git a/chrome/android/java/src/org/chromium/chrome/browser/init/ProcessInitializationHandler.java b/chrome/android/java/src/org/chromium/chrome/browser/init/ProcessInitializationHandler.java
-index f56da3a25bc83..b90bdd1b6c2ff 100644
+index acfd11dc025e9..e3d0f2d4a2632 100644
 --- a/chrome/android/java/src/org/chromium/chrome/browser/init/ProcessInitializationHandler.java
 +++ b/chrome/android/java/src/org/chromium/chrome/browser/init/ProcessInitializationHandler.java
-@@ -715,6 +715,7 @@ public class ProcessInitializationHandler {
-                     SearchWidgetProvider.initialize();
-                     QuickActionSearchWidgetProvider.initialize();
+@@ -735,6 +735,7 @@ public class ProcessInitializationHandler {
+                             new ApplicationStatusAccessibilityStateVisibilityManager());
                  });
+         tasks.add(TabPersistentStoreImpl::onDeferredStartup);
 +        tasks.add(org.chromium.chrome.browser.subresource_filter.RulesetUpdater::init);
      }
  

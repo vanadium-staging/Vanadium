@@ -6,10 +6,23 @@ Subject: [PATCH] disable unused histogram checks for adding site settings
 Added NUM_TYPES_CHROMIUM to indicate the content setting type boundary
 to avoid the need to update the histogram map.
 ---
+ .../pwc/pwc_content_settings_policy.cc        |  1 +
  .../core/browser/content_settings_uma_util.cc | 19 +++++++++++++++++--
  .../core/common/content_settings_types.mojom  |  7 +++++++
- 2 files changed, 24 insertions(+), 2 deletions(-)
+ 3 files changed, 25 insertions(+), 2 deletions(-)
 
+diff --git a/chrome/browser/pwc/pwc_content_settings_policy.cc b/chrome/browser/pwc/pwc_content_settings_policy.cc
+index 02596fffe903d..3e33008ab6629 100644
+--- a/chrome/browser/pwc/pwc_content_settings_policy.cc
++++ b/chrome/browser/pwc/pwc_content_settings_policy.cc
+@@ -154,6 +154,7 @@ PwcContentSettingPolicy GetPwcContentSettingPolicy(ContentSettingsType type) {
+     case ContentSettingsType::SUSPICIOUS_NOTIFICATION_SHOW_ORIGINAL:
+     case ContentSettingsType::SUSPICIOUS_SITE_WARNING_DATA:
+     case ContentSettingsType::WEBAUTHN_AMBIENT_SIGNIN_DATA:
++    case ContentSettingsType::NUM_TYPES_CHROMIUM:
+       return PwcContentSettingPolicy::kBlocked;
+   }
+ }
 diff --git a/components/content_settings/core/browser/content_settings_uma_util.cc b/components/content_settings/core/browser/content_settings_uma_util.cc
 index a920b1dd191cb..4c69eb48ed8f1 100644
 --- a/components/content_settings/core/browser/content_settings_uma_util.cc
@@ -56,13 +69,13 @@ index a920b1dd191cb..4c69eb48ed8f1 100644
      case CONTENT_SETTING_ALLOW:
        content_settings_uma_util::RecordContentSettingsHistogram(
 diff --git a/components/content_settings/core/common/content_settings_types.mojom b/components/content_settings/core/common/content_settings_types.mojom
-index 26387f4dc488c..f02b922225aaa 100644
+index 91dce1a3b1a5e..f212a6ea2dce7 100644
 --- a/components/content_settings/core/common/content_settings_types.mojom
 +++ b/components/content_settings/core/common/content_settings_types.mojom
-@@ -483,5 +483,12 @@ enum ContentSettingsType {
- 
-   // Stores allowlist decisions for Suspicious Site Warnings.
-   SUSPICIOUS_SITE_WARNING_DATA,
+@@ -457,5 +457,12 @@ enum ContentSettingsType {
+   // Website setting which stores per-site dismissal metadata for the WebAuthn
+   // ambient sign-in prompt.
+   WEBAUTHN_AMBIENT_SIGNIN_DATA,
 +
 +  // Indicator for latest upstream content settings type.
 +  // Currently, histograms are unused and planned to be stubbed in the near future.
