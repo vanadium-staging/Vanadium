@@ -11,10 +11,10 @@ implementations.
  1 file changed, 4 insertions(+), 4 deletions(-)
 
 diff --git a/chrome/browser/ui/android/omnibox/java/src/org/chromium/chrome/browser/omnibox/UrlBar.java b/chrome/browser/ui/android/omnibox/java/src/org/chromium/chrome/browser/omnibox/UrlBar.java
-index e76ea76fd836c..6bc183432ce79 100644
+index abdd532ec4d1a..50baddefb2e9b 100644
 --- a/chrome/browser/ui/android/omnibox/java/src/org/chromium/chrome/browser/omnibox/UrlBar.java
 +++ b/chrome/browser/ui/android/omnibox/java/src/org/chromium/chrome/browser/omnibox/UrlBar.java
-@@ -723,10 +723,10 @@ public class UrlBar extends AutocompleteEditText {
+@@ -759,10 +759,10 @@ public class UrlBar extends AutocompleteEditText {
          // the domain changes. We restore this behavior by mimicking the relevant part of
          // TextView.notifyListeningManagersAfterTextChanged().
          // https://cs.android.com/android/platform/superproject/+/5d123b67756dffcfdebdb936ab2de2b29c799321:frameworks/base/core/java/android/widget/TextView.java;l=10618;drc=master;bpv=0

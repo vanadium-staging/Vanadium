@@ -9,10 +9,10 @@ Subject: [PATCH] [bugfix] Resolve //chrome/browser:core deps when
  1 file changed, 1 deletion(-)
 
 diff --git a/chrome/browser/BUILD.gn b/chrome/browser/BUILD.gn
-index 814b9d649a316..0d72c62445a77 100644
+index 668ab11f76ac1..569e1ab25a3bc 100644
 --- a/chrome/browser/BUILD.gn
 +++ b/chrome/browser/BUILD.gn
-@@ -1859,7 +1859,6 @@ source_set("core") {
+@@ -1494,7 +1494,6 @@ source_set("core") {
        "//chrome/browser/commerce",
        "//chrome/browser/commerce/android:shopping_service_jni",
        "//chrome/browser/composeplate/android:jni_headers",

@@ -8,10 +8,10 @@ Subject: [PATCH] [tmp] Disable workaround for Imagination vendor GPU for WebGL
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/gpu/config/gpu_driver_bug_list.json b/gpu/config/gpu_driver_bug_list.json
-index cbcd25002b09d..c33e30acc8527 100644
+index a9baafa75457f..26df86cb218a5 100644
 --- a/gpu/config/gpu_driver_bug_list.json
 +++ b/gpu/config/gpu_driver_bug_list.json
-@@ -3283,7 +3283,7 @@
+@@ -3086,7 +3086,7 @@
        "os": {
          "type": "android"
        },

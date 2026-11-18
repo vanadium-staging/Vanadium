@@ -12,10 +12,10 @@ Subject: [PATCH] Extend android webview glue_java target sources and deps
  create mode 100644 vanadium/chromium_src/android_webview/glue/glue_java_ext_sources.gni
 
 diff --git a/android_webview/glue/BUILD.gn b/android_webview/glue/BUILD.gn
-index bc4cf33725c5f..169b5f9b5f852 100644
+index 65abfe4d45e5a..d21583dc7ef02 100644
 --- a/android_webview/glue/BUILD.gn
 +++ b/android_webview/glue/BUILD.gn
-@@ -98,4 +98,9 @@ android_library("glue_java") {
+@@ -96,4 +96,9 @@ android_library("glue_java") {
      "java/src/com/android/webview/chromium/WebViewRenderProcessClientAdapter.java",
      "java/src/com/android/webview/chromium/WebkitToSharedGlueConverter.java",
    ]

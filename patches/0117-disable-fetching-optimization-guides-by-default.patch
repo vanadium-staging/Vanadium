@@ -8,10 +8,10 @@ Subject: [PATCH] disable fetching optimization guides by default
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/components/optimization_guide/core/optimization_guide_features.cc b/components/optimization_guide/core/optimization_guide_features.cc
-index 377cfa80b09ca..ca2b6f72fa9cc 100644
+index d9cc43fb19b27..74fa7a935fd9d 100644
 --- a/components/optimization_guide/core/optimization_guide_features.cc
 +++ b/components/optimization_guide/core/optimization_guide_features.cc
-@@ -84,7 +84,7 @@ BASE_FEATURE(kBuildTFLiteModelExecutionTaskOnLoadingThread,
+@@ -74,7 +74,7 @@ BASE_FEATURE(kBuildTFLiteModelExecutionTaskOnLoadingThread,
  // Service.
  BASE_FEATURE(kOptimizationGuideFetchingForSRP,
               "OptimizationHintsFetchingSRP",
