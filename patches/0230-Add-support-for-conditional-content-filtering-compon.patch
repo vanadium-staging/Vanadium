@@ -6,8 +6,8 @@ Subject: [PATCH] Add support for conditional content filtering component based
 
 ---
  .../chrome/android/chrome_java_ext_deps.gni   |  2 +
- .../browser/ChromeApplicationImplHooks.java   | 69 +++++++++++++++++++
- 2 files changed, 71 insertions(+)
+ .../browser/ChromeApplicationImplHooks.java   | 57 +++++++++++++++++++
+ 2 files changed, 59 insertions(+)
 
 diff --git a/vanadium/chromium_src/chrome/android/chrome_java_ext_deps.gni b/vanadium/chromium_src/chrome/android/chrome_java_ext_deps.gni
 index b60fcdd75998b..ed9820c13f80c 100644
@@ -23,10 +23,10 @@ index b60fcdd75998b..ed9820c13f80c 100644
    "//vanadium/chromium_src/chrome/browser/flags/ext/android:feature_map_java",
    "//vanadium/chromium_src/chrome/browser/referrer/android:cross_origin_referrer_settings_java",
 diff --git a/vanadium/chromium_src/chrome/android/java/src/org/chromium/chrome/browser/ChromeApplicationImplHooks.java b/vanadium/chromium_src/chrome/android/java/src/org/chromium/chrome/browser/ChromeApplicationImplHooks.java
-index a3e9c5bfcd61e..354f0f85237f7 100644
+index a3e9c5bfcd61e..2771dffbc2731 100644
 --- a/vanadium/chromium_src/chrome/android/java/src/org/chromium/chrome/browser/ChromeApplicationImplHooks.java
 +++ b/vanadium/chromium_src/chrome/android/java/src/org/chromium/chrome/browser/ChromeApplicationImplHooks.java
-@@ -2,7 +2,22 @@ package org.chromium.chrome.browser;
+@@ -2,7 +2,21 @@ package org.chromium.chrome.browser;
  
  import android.content.res.Configuration;
  
@@ -38,7 +38,6 @@ index a3e9c5bfcd61e..354f0f85237f7 100644
 +import org.chromium.chrome.browser.language.settings.LanguagesManager;
 +import org.chromium.chrome.browser.profiles.Profile;
 +import org.chromium.chrome.browser.profiles.ProfileManager;
-+import org.chromium.chrome.browser.subresource_filter.RulesetUpdater;
 +
 +import java.util.ArrayList;
 +import java.util.List;
@@ -49,7 +48,7 @@ index a3e9c5bfcd61e..354f0f85237f7 100644
  
  @NullMarked
  final class ChromeApplicationImplHooks {
-@@ -10,11 +25,65 @@ final class ChromeApplicationImplHooks {
+@@ -10,6 +24,49 @@ final class ChromeApplicationImplHooks {
      private static final String TAG = "ChromeApplicationImplHooks";
  
      public static void postAttachBaseContext() {
@@ -99,19 +98,3 @@ index a3e9c5bfcd61e..354f0f85237f7 100644
      }
  
      public static void onCreate() {
-     }
- 
-     public static void onConfigurationChanged(Configuration oldConfig) {
-+        if (!SplitCompatApplication.isBrowserProcess()) {
-+            Log.i(TAG, "Update only runs on browser process");
-+            return;
-+        }
-+
-+        if (!ProfileManager.isInitialized()) {
-+            Log.i(TAG, "ProfileManager's native code is not yet loaded");
-+            return;
-+        }
-+
-+        RulesetUpdater.update(/* ignoreVersionCheck */ true);
-     }
- }

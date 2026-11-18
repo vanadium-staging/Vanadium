@@ -237,7 +237,7 @@ index 0000000000000..f90f9d7231ff9
 +</PreferenceScreen>
 diff --git a/vanadium/chromium_src/chrome/browser/webrtc/android/java/src/org/chromium/chrome/browser/webrtc/settings/WebRtcPolicyPreference.java b/vanadium/chromium_src/chrome/browser/webrtc/android/java/src/org/chromium/chrome/browser/webrtc/settings/WebRtcPolicyPreference.java
 new file mode 100644
-index 0000000000000..424e9cb41a904
+index 0000000000000..5640a0e353ab7
 --- /dev/null
 +++ b/vanadium/chromium_src/chrome/browser/webrtc/android/java/src/org/chromium/chrome/browser/webrtc/settings/WebRtcPolicyPreference.java
 @@ -0,0 +1,101 @@
@@ -287,7 +287,7 @@ index 0000000000000..424e9cb41a904
 +    private RadioButtonWithDescription mSettingRadioButton;
 +    @Nullable
 +    private RadioButtonWithDescriptionLayout mGroup;
-+    private final ArrayList<RadioButtonWithDescription> mButtons;
++    private final ArrayList<@Nullable RadioButtonWithDescription> mButtons;
 +
 +    @SuppressLint("WrongConstant")
 +    public WebRtcPolicyPreference(Context context, AttributeSet attrs) {
@@ -323,7 +323,7 @@ index 0000000000000..424e9cb41a904
 +                        R.id.webrtc_policy_disable_non_proxied_udp));
 +
 +        mSettingRadioButton = mButtons.get(mSetting);
-+        mSettingRadioButton.setChecked(true);
++        assumeNonNull(mSettingRadioButton).setChecked(true);
 +    }
 +
 +    @SuppressLint("WrongConstant")

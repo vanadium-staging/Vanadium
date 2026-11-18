@@ -8,7 +8,7 @@ Subject: [PATCH] Enable usage of Android Autofill by default
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/components/autofill/core/common/autofill_prefs.cc b/components/autofill/core/common/autofill_prefs.cc
-index 65f5face93a71..142353e763c5b 100644
+index 7220f12bf6559..f9c35b3380fcf 100644
 --- a/components/autofill/core/common/autofill_prefs.cc
 +++ b/components/autofill/core/common/autofill_prefs.cc
 @@ -141,7 +141,7 @@ void RegisterProfilePrefs(user_prefs::PrefRegistrySyncable* registry) {

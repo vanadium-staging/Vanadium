@@ -56,13 +56,13 @@ index a920b1dd191cb..4c69eb48ed8f1 100644
      case CONTENT_SETTING_ALLOW:
        content_settings_uma_util::RecordContentSettingsHistogram(
 diff --git a/components/content_settings/core/common/content_settings_types.mojom b/components/content_settings/core/common/content_settings_types.mojom
-index 26387f4dc488c..f02b922225aaa 100644
+index 9a77a8fb00ef4..f736b441c7b91 100644
 --- a/components/content_settings/core/common/content_settings_types.mojom
 +++ b/components/content_settings/core/common/content_settings_types.mojom
-@@ -483,5 +483,12 @@ enum ContentSettingsType {
- 
-   // Stores allowlist decisions for Suspicious Site Warnings.
-   SUSPICIOUS_SITE_WARNING_DATA,
+@@ -461,5 +461,12 @@ enum ContentSettingsType {
+   // Website setting which stores per-site dismissal metadata for the WebAuthn
+   // ambient sign-in prompt.
+   WEBAUTHN_AMBIENT_SIGNIN_DATA,
 +
 +  // Indicator for latest upstream content settings type.
 +  // Currently, histograms are unused and planned to be stubbed in the near future.

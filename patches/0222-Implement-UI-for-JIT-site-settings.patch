@@ -10,17 +10,17 @@ Subject: [PATCH] Implement UI for JIT site settings
  .../android/page_info_controller_android.cc   |   3 +
  components/page_info/page_info.cc             |   6 +
  components/page_info/page_info_ui.cc          |   2 +
- .../JavascriptJitSettingsHooks.java           | 250 ++++++++++++++++++
+ .../JavascriptJitSettingsHooks.java           | 260 ++++++++++++++++++
  .../SiteSettingsHooksRegistry.java            |   6 +
  .../site_settings_android_java_ext_deps.gni   |   1 +
  ...site_settings_android_java_ext_sources.gni |   1 +
  .../strings/android/site_settings_ext.grdp    |  28 ++
  .../components/site_settings_strings_ext.grdp |   6 +
- 12 files changed, 314 insertions(+), 2 deletions(-)
+ 12 files changed, 324 insertions(+), 2 deletions(-)
  create mode 100644 vanadium/chromium_src/components/browser_ui/site_settings/android/java/src/org/chromium/components/browser_ui/site_settings/JavascriptJitSettingsHooks.java
 
 diff --git a/components/browser_ui/site_settings/android/java/src/org/chromium/components/browser_ui/site_settings/SiteSettingsCategory.java b/components/browser_ui/site_settings/android/java/src/org/chromium/components/browser_ui/site_settings/SiteSettingsCategory.java
-index 4d5b4abaf4a62..45563a79e27ee 100644
+index 190756393ad67..76ac9bfac9510 100644
 --- a/components/browser_ui/site_settings/android/java/src/org/chromium/components/browser_ui/site_settings/SiteSettingsCategory.java
 +++ b/components/browser_ui/site_settings/android/java/src/org/chromium/components/browser_ui/site_settings/SiteSettingsCategory.java
 @@ -86,6 +86,10 @@ public class SiteSettingsCategory {
@@ -48,10 +48,10 @@ index 4d5b4abaf4a62..45563a79e27ee 100644
          // Three lines of placeholder comment to minimize cascading conflicts.
          // Three lines of placeholder comment to minimize cascading conflicts.
 diff --git a/components/browser_ui/site_settings/android/website_preference_bridge.cc b/components/browser_ui/site_settings/android/website_preference_bridge.cc
-index c70accf64ea18..bd34f92eff96a 100644
+index ca5be2efe80eb..3eec0cacaa37c 100644
 --- a/components/browser_ui/site_settings/android/website_preference_bridge.cc
 +++ b/components/browser_ui/site_settings/android/website_preference_bridge.cc
-@@ -1090,6 +1090,7 @@ static void JNI_WebsitePreferenceBridge_SetContentSettingEnabled(
+@@ -1091,6 +1091,7 @@ static void JNI_WebsitePreferenceBridge_SetContentSettingEnabled(
        case ContentSettingsType::FEDERATED_IDENTITY_API:
        case ContentSettingsType::JAVASCRIPT:
        case ContentSettingsType::JAVASCRIPT_OPTIMIZER:
@@ -60,10 +60,10 @@ index c70accf64ea18..bd34f92eff96a 100644
        case ContentSettingsType::REQUEST_DESKTOP_SITE:
        case ContentSettingsType::SENSORS:
 diff --git a/components/content_settings/core/browser/content_settings_registry.cc b/components/content_settings/core/browser/content_settings_registry.cc
-index 3469f1dcc5042..6ff9bf4bed00f 100644
+index 87ce83d6f12cc..1a9f8ccecca7b 100644
 --- a/components/content_settings/core/browser/content_settings_registry.cc
 +++ b/components/content_settings/core/browser/content_settings_registry.cc
-@@ -559,7 +559,7 @@ void ContentSettingsRegistry::Init() {
+@@ -549,7 +549,7 @@ void ContentSettingsRegistry::Init() {
             PermissionSettingsInfo::EXCEPTIONS_ON_SECURE_ORIGINS_ONLY);
  
    Register(ContentSettingsType::JAVASCRIPT_JIT, "javascript-jit",
@@ -73,10 +73,10 @@ index 3469f1dcc5042..6ff9bf4bed00f 100644
             /*valid_settings=*/{CONTENT_SETTING_ALLOW, CONTENT_SETTING_BLOCK},
             WebsiteSettingsInfo::TOP_ORIGIN_ONLY_SCOPE,
 diff --git a/components/page_info/android/page_info_controller_android.cc b/components/page_info/android/page_info_controller_android.cc
-index 4c7bf5a6b0baf..20367bdee652d 100644
+index 2fcf8ec7d6864..c29ac443d5799 100644
 --- a/components/page_info/android/page_info_controller_android.cc
 +++ b/components/page_info/android/page_info_controller_android.cc
-@@ -207,6 +207,7 @@ void PageInfoControllerAndroid::SetPermissionInfo(
+@@ -203,6 +203,7 @@ void PageInfoControllerAndroid::SetPermissionInfo(
    permissions_to_display.push_back(ContentSettingsType::IDLE_DETECTION);
    permissions_to_display.push_back(ContentSettingsType::IMAGES);
    permissions_to_display.push_back(ContentSettingsType::JAVASCRIPT);
@@ -84,7 +84,7 @@ index 4c7bf5a6b0baf..20367bdee652d 100644
    permissions_to_display.push_back(ContentSettingsType::POPUPS);
    if (base::FeatureList::IsEnabled(
            permissions::features::kAndroidWindowManagementWebApi)) {
-@@ -337,6 +338,8 @@ std::optional<PermissionSetting> PageInfoControllerAndroid::GetSettingToDisplay(
+@@ -333,6 +334,8 @@ std::optional<PermissionSetting> PageInfoControllerAndroid::GetSettingToDisplay(
      // The javascript content setting should show up if it is blocked globally
      // to give users an easy way to create exceptions.
      return permission.default_setting;
@@ -94,10 +94,10 @@ index 4c7bf5a6b0baf..20367bdee652d 100644
      // Notifications permission should be displayed while it is being requested.
      return permission.default_setting;
 diff --git a/components/page_info/page_info.cc b/components/page_info/page_info.cc
-index e56071dd2f9f0..3549ca52406ee 100644
+index 929a3b29eedf1..8ff8ba6b5c435 100644
 --- a/components/page_info/page_info.cc
 +++ b/components/page_info/page_info.cc
-@@ -122,6 +122,7 @@ ContentSettingsType kPermissionType[] = {
+@@ -123,6 +123,7 @@ ContentSettingsType kPermissionType[] = {
      ContentSettingsType::SENSORS,
      ContentSettingsType::NOTIFICATIONS,
      ContentSettingsType::JAVASCRIPT,
@@ -132,10 +132,10 @@ index f306d7fc18300..1ebbb53527319 100644
        {ContentSettingsType::GEOLOCATION, IDS_SITE_SETTINGS_TYPE_LOCATION,
 diff --git a/vanadium/chromium_src/components/browser_ui/site_settings/android/java/src/org/chromium/components/browser_ui/site_settings/JavascriptJitSettingsHooks.java b/vanadium/chromium_src/components/browser_ui/site_settings/android/java/src/org/chromium/components/browser_ui/site_settings/JavascriptJitSettingsHooks.java
 new file mode 100644
-index 0000000000000..316febd7af11a
+index 0000000000000..c37f30b3b0fd2
 --- /dev/null
 +++ b/vanadium/chromium_src/components/browser_ui/site_settings/android/java/src/org/chromium/components/browser_ui/site_settings/JavascriptJitSettingsHooks.java
-@@ -0,0 +1,250 @@
+@@ -0,0 +1,260 @@
 +package org.chromium.components.browser_ui.site_settings;
 +
 +import android.content.Context;
@@ -153,6 +153,7 @@ index 0000000000000..316febd7af11a
 +import org.chromium.components.browser_ui.settings.ChromeBasePreference;
 +import org.chromium.components.browser_ui.styles.SemanticColorUtils;
 +import org.chromium.components.content_settings.ContentSetting;
++import org.chromium.components.content_settings.ContentSettingSource;
 +import org.chromium.components.content_settings.ContentSettingsType;
 +import org.chromium.content_public.browser.BrowserContextHandle;
 +
@@ -362,14 +363,23 @@ index 0000000000000..316febd7af11a
 +                @Nullable PermissionSetting setting,
 +                @ContentSettingsType.EnumType int contentType) {
 +            if (isSettingsDisabled()) {
-+                return new PermissionSetting(null, ContentSetting.BLOCK, false);
++                @ContentSetting
++                int value = ContentSetting.BLOCK;
++                @ContentSettingSource
++                int source = ContentSettingSource.NONE;
++                return new PermissionSetting(null, value, false, source);
 +            }
 +
 +            if (setting == null) {
 +                boolean isEnabled = WebsitePreferenceBridge.isContentSettingEnabled(
 +                        browserContextHandle, contentType);
++                @ContentSetting
 +                int value = isEnabled ? ContentSetting.ALLOW : ContentSetting.BLOCK;
-+                return new PermissionSetting(null, value, false);
++                @ContentSettingSource
++                int source =
++                        WebsitePreferenceBridge.getDefaultContentSettingProviderSource(
++                                browserContextHandle, contentType);
++                return new PermissionSetting(null, value, false, source);
 +            }
 +
 +            return setting;

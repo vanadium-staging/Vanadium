@@ -8,7 +8,7 @@ Subject: [PATCH] Disable WebGPU in Android by default
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/gpu/config/gpu_finch_features.cc b/gpu/config/gpu_finch_features.cc
-index bf394625ffab6..65d41654b7607 100644
+index b94375c3eabfd..f40dd61d93db2 100644
 --- a/gpu/config/gpu_finch_features.cc
 +++ b/gpu/config/gpu_finch_features.cc
 @@ -282,7 +282,7 @@ BASE_FEATURE(kEnableDrDc,

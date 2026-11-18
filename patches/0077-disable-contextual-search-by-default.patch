@@ -22,10 +22,10 @@ index bc058a67b3c56..19d8d83c10910 100644
  
      /**
 diff --git a/chrome/browser/profiles/profile.cc b/chrome/browser/profiles/profile.cc
-index f5c9ae68aaf4a..cde0c20cab1e0 100644
+index dbd3336c4d09b..8f61c25a70b68 100644
 --- a/chrome/browser/profiles/profile.cc
 +++ b/chrome/browser/profiles/profile.cc
-@@ -334,7 +334,7 @@ void Profile::RegisterProfilePrefs(user_prefs::PrefRegistrySyncable* registry) {
+@@ -337,7 +337,7 @@ void Profile::RegisterProfilePrefs(user_prefs::PrefRegistrySyncable* registry) {
  #if BUILDFLAG(IS_ANDROID)
    registry->RegisterStringPref(
        prefs::kContextualSearchEnabled,

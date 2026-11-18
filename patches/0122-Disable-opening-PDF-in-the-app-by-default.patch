@@ -14,10 +14,10 @@ Subject: [PATCH] Disable opening PDF in the app by default
  7 files changed, 26 insertions(+), 2 deletions(-)
 
 diff --git a/chrome/android/java/src/org/chromium/chrome/browser/customtabs/CustomTabAppMenuPropertiesDelegate.java b/chrome/android/java/src/org/chromium/chrome/browser/customtabs/CustomTabAppMenuPropertiesDelegate.java
-index 7140335570bae..4a473f672866e 100644
+index 18e7196573c48..b748a21ad99c7 100644
 --- a/chrome/android/java/src/org/chromium/chrome/browser/customtabs/CustomTabAppMenuPropertiesDelegate.java
 +++ b/chrome/android/java/src/org/chromium/chrome/browser/customtabs/CustomTabAppMenuPropertiesDelegate.java
-@@ -231,8 +231,10 @@ public class CustomTabAppMenuPropertiesDelegate extends AppMenuPropertiesDelegat
+@@ -240,8 +240,10 @@ public class CustomTabAppMenuPropertiesDelegate extends AppMenuPropertiesDelegat
          boolean isContentScheme = url.getScheme().equals(UrlConstants.CONTENT_SCHEME);
          // TODO(crbug.com/384992232): Hide open in Chrome for blob and data url until such view
          //  intent can be handled.
@@ -53,10 +53,10 @@ index fb18dd4f45000..e6b09e51926dc 100644
      @Rule public final MockitoRule mMockitoRule = MockitoJUnit.rule();
      @Mock private Tab mTab;
 diff --git a/chrome/browser/ui/android/pdf/java/src/org/chromium/chrome/browser/pdf/PdfUtils.java b/chrome/browser/ui/android/pdf/java/src/org/chromium/chrome/browser/pdf/PdfUtils.java
-index 029f9208c50ec..598b063ca4497 100644
+index 87ef1cc869c77..07ac5f64472a8 100644
 --- a/chrome/browser/ui/android/pdf/java/src/org/chromium/chrome/browser/pdf/PdfUtils.java
 +++ b/chrome/browser/ui/android/pdf/java/src/org/chromium/chrome/browser/pdf/PdfUtils.java
-@@ -234,6 +234,10 @@ public class PdfUtils {
+@@ -255,6 +255,10 @@ public class PdfUtils {
      }
  
      private static boolean isPlatformSupported() {
