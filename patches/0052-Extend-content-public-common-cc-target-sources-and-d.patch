@@ -12,10 +12,10 @@ Subject: [PATCH] Extend //content/public/common cc target sources and deps
  create mode 100644 vanadium/chromium_src/content/public/common/common_sources_cc_ext_sources.gni
 
 diff --git a/content/public/common/BUILD.gn b/content/public/common/BUILD.gn
-index fb155147cac4b..28f5309e9e777 100644
+index 107fa4f21c4db..1eb4928a7fbf3 100644
 --- a/content/public/common/BUILD.gn
 +++ b/content/public/common/BUILD.gn
-@@ -358,6 +358,11 @@ source_set("common_sources") {
+@@ -354,6 +354,11 @@ source_set("common_sources") {
    if (use_clang_profiling_inside_sandbox) {
      sources += [ "profiling_utils.h" ]
    }

@@ -15,10 +15,10 @@ for more detail.
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/content/public/common/content_features.cc b/content/public/common/content_features.cc
-index 71b25d1f89c33..5a92b3ace174d 100644
+index 12c055af6d850..12949b82d6428 100644
 --- a/content/public/common/content_features.cc
 +++ b/content/public/common/content_features.cc
-@@ -1249,7 +1249,7 @@ BASE_FEATURE(kSpareRendererForSitePerProcess, base::FEATURE_ENABLED_BY_DEFAULT);
+@@ -1281,7 +1281,7 @@ BASE_FEATURE(kSpareRendererForSitePerProcess, base::FEATURE_ENABLED_BY_DEFAULT);
  
  // Controls whether site isolation should use origins instead of scheme and
  // eTLD+1.

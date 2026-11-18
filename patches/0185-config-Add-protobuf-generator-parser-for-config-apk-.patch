@@ -7,10 +7,10 @@ Subject: [PATCH] config: Add protobuf generator, parser for config apk
 ---
  vanadium/android_config/proto/host/BUILD.gn   |  55 +++
  .../vanadium/config/host/ConfigGenerator.java |  10 +
- .../config/host/ConfigGeneratorImpl.kt        | 397 ++++++++++++++++++
+ .../config/host/ConfigGeneratorImpl.kt        | 398 ++++++++++++++++++
  .../vanadium/config/host/ConfigParser.java    |  31 ++
  .../config/android/internal_rules_ext.gni     |   2 +
- 5 files changed, 495 insertions(+)
+ 5 files changed, 496 insertions(+)
  create mode 100644 vanadium/android_config/proto/host/BUILD.gn
  create mode 100644 vanadium/android_config/proto/host/java/src/app/vanadium/config/host/ConfigGenerator.java
  create mode 100644 vanadium/android_config/proto/host/java/src/app/vanadium/config/host/ConfigGeneratorImpl.kt
@@ -18,7 +18,7 @@ Subject: [PATCH] config: Add protobuf generator, parser for config apk
 
 diff --git a/vanadium/android_config/proto/host/BUILD.gn b/vanadium/android_config/proto/host/BUILD.gn
 new file mode 100644
-index 0000000000000..41b5d289ebde9
+index 0000000000000..53df8c9480dd1
 --- /dev/null
 +++ b/vanadium/android_config/proto/host/BUILD.gn
 @@ -0,0 +1,55 @@
@@ -55,7 +55,7 @@ index 0000000000000..41b5d289ebde9
 +  deps = [
 +    "//vanadium/android_config/common:common_config_constants_java",
 +    "//vanadium/android_config/proto:config_proto_java",
-+    "//third_party/kotlin_stdlib:kotlin_stdlib_java",
++    "//third_party/android_deps:kotlin_stdlib_java",
 +    "//third_party/android_deps:protobuf_lite_runtime_java",
 +  ]
 +  # No need to enable checks for unused methods here.
@@ -95,10 +95,10 @@ index 0000000000000..14174cf8ba465
 +}
 diff --git a/vanadium/android_config/proto/host/java/src/app/vanadium/config/host/ConfigGeneratorImpl.kt b/vanadium/android_config/proto/host/java/src/app/vanadium/config/host/ConfigGeneratorImpl.kt
 new file mode 100644
-index 0000000000000..57a5b63a9b549
+index 0000000000000..a0f573b5421b7
 --- /dev/null
 +++ b/vanadium/android_config/proto/host/java/src/app/vanadium/config/host/ConfigGeneratorImpl.kt
-@@ -0,0 +1,397 @@
+@@ -0,0 +1,398 @@
 +package app.vanadium.config.host
 +
 +import app.vanadium.config.common.Constants.CheckOsConfigsFeatures
@@ -288,12 +288,13 @@ index 0000000000000..57a5b63a9b549
 +                    errorMsg("unknown or unrecognized component type $suffixMsg")
 +                }
 +                additionalComponentsList.forEachIndexed { index, additionalComponent ->
-+                    val suffixMsg = "for additional component at index $index"
++                    val suffixMsg = "for additional component at index $index, $suffixMsg"
 +                    additionalComponent.run {
 +                        check(componentFileName.isNotEmpty()) {
 +                            errorMsg("empty component file name $suffixMsg")
 +                        }
-+                        conditionsList.forEach { condition ->
++                        conditionsList.forEachIndexed { index, condition ->
++                            val suffixMsg = "for language at index $index, $suffixMsg"
 +                            check(condition.language.isNotEmpty()) {
 +                                errorMsg("empty language $suffixMsg")
 +                            }

@@ -8,7 +8,7 @@ Subject: [PATCH] Remove javascript optimizer settings UI
  1 file changed, 2 insertions(+)
 
 diff --git a/chrome/android/java/src/org/chromium/chrome/browser/site_settings/ChromeSiteSettingsDelegate.java b/chrome/android/java/src/org/chromium/chrome/browser/site_settings/ChromeSiteSettingsDelegate.java
-index 0fdcdea91ebf2..740c9f12254ff 100644
+index 7ade6fc56523d..e1a18d7915edc 100644
 --- a/chrome/android/java/src/org/chromium/chrome/browser/site_settings/ChromeSiteSettingsDelegate.java
 +++ b/chrome/android/java/src/org/chromium/chrome/browser/site_settings/ChromeSiteSettingsDelegate.java
 @@ -167,6 +167,8 @@ public class ChromeSiteSettingsDelegate implements SiteSettingsDelegate {

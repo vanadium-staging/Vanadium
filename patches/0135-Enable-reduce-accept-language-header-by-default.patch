@@ -3,20 +3,21 @@ From: quh4gko8 <88831734+quh4gko8@users.noreply.github.com>
 Date: Tue, 14 Feb 2023 21:35:28 +0000
 Subject: [PATCH] Enable reduce accept language header by default
 
+This now reduces accept language count to 2.
 ---
- services/network/public/cpp/features.cc | 2 +-
+ components/language/core/common/language_experiments.cc | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/services/network/public/cpp/features.cc b/services/network/public/cpp/features.cc
-index 2b87df3015891..1b4bc76029c07 100644
---- a/services/network/public/cpp/features.cc
-+++ b/services/network/public/cpp/features.cc
-@@ -190,7 +190,7 @@ BASE_FEATURE(kOmitCorsClientCert, base::FEATURE_DISABLED_BY_DEFAULT);
+diff --git a/components/language/core/common/language_experiments.cc b/components/language/core/common/language_experiments.cc
+index e9de3d9fa61f4..1568dc53b68f2 100644
+--- a/components/language/core/common/language_experiments.cc
++++ b/components/language/core/common/language_experiments.cc
+@@ -26,7 +26,7 @@ BASE_FEATURE_PARAM(int,
+                    kMaxAcceptLanguage,
+                    &kReduceAcceptLanguageCount,
+                    /*name=*/"MaxAcceptLanguage",
+-                   /*default_value=*/10);
++                   /*default_value=*/2);
  
- // Enables support for the `Variants` response header and reduce
- // accept-language. https://github.com/Tanych/accept-language
--BASE_FEATURE(kReduceAcceptLanguage, base::FEATURE_DISABLED_BY_DEFAULT);
-+BASE_FEATURE(kReduceAcceptLanguage, base::FEATURE_ENABLED_BY_DEFAULT);
+ BASE_FEATURE(kGrammaticalGenderLocalization, base::FEATURE_DISABLED_BY_DEFAULT);
  
- BASE_FEATURE_PARAM(base::TimeDelta,
-                    kReduceAcceptLanguageCacheDuration,

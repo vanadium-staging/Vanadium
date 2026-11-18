@@ -13,10 +13,10 @@ Subject: [PATCH] Extend //components/permissions/android java target sources
  create mode 100644 vanadium/chromium_src/components/permissions/android/permissions_android_java_ext_sources.gni
 
 diff --git a/components/permissions/android/BUILD.gn b/components/permissions/android/BUILD.gn
-index 0448c17cfb056..f6890ce07bf44 100644
+index 94c41019bd87e..d1b5a2512e677 100644
 --- a/components/permissions/android/BUILD.gn
 +++ b/components/permissions/android/BUILD.gn
-@@ -225,6 +225,11 @@ android_library("java") {
+@@ -215,6 +215,11 @@ android_library("java") {
      "//ui/android:ui_java",
      "//url:gurl_java",
    ]

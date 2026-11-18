@@ -14,7 +14,7 @@ Subject: [PATCH] Extend site site settings UI java target sources and deps
  create mode 100644 vanadium/chromium_src/components/browser_ui/site_settings/android/site_settings_android_java_ext_srcjar_deps.gni
 
 diff --git a/components/browser_ui/site_settings/android/BUILD.gn b/components/browser_ui/site_settings/android/BUILD.gn
-index e91f024a25b53..19f0710d2403b 100644
+index d831092dd6aa9..c8c39b7a321ad 100644
 --- a/components/browser_ui/site_settings/android/BUILD.gn
 +++ b/components/browser_ui/site_settings/android/BUILD.gn
 @@ -160,6 +160,13 @@ android_library("java") {
@@ -30,7 +30,7 @@ index e91f024a25b53..19f0710d2403b 100644
 +  srcjar_deps += site_settings_android_java_ext_srcjar_deps
  }
  
- android_library("javatests") {
+ android_library("unit_device_javatests") {
 diff --git a/vanadium/chromium_src/components/browser_ui/site_settings/android/site_settings_android_java_ext_deps.gni b/vanadium/chromium_src/components/browser_ui/site_settings/android/site_settings_android_java_ext_deps.gni
 new file mode 100644
 index 0000000000000..5691edee51869

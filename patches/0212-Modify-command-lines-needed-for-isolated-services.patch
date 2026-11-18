@@ -16,15 +16,15 @@ javascript and wasm in JITless mode.
  create mode 100644 vanadium/chromium_src/content/public/child_process/android/java/src/org/chromium/content/browser/ChildProcessLauncherHelperImplHooks.java
 
 diff --git a/content/public/android/java/src/org/chromium/content/browser/ChildProcessLauncherHelperImpl.java b/content/public/android/java/src/org/chromium/content/browser/ChildProcessLauncherHelperImpl.java
-index c81828ed67143..bd07a45d6839a 100644
+index 9353f49db5979..14c7116668496 100644
 --- a/content/public/android/java/src/org/chromium/content/browser/ChildProcessLauncherHelperImpl.java
 +++ b/content/public/android/java/src/org/chromium/content/browser/ChildProcessLauncherHelperImpl.java
-@@ -430,6 +430,12 @@ public final class ChildProcessLauncherHelperImpl {
+@@ -453,6 +453,12 @@ public final class ChildProcessLauncherHelperImpl {
              }
          }
  
 +        String[] newCommandLine = ChildProcessLauncherHelperImplHooks.maybeModifyCommandLine(
-+                commandLine, sandboxed);
++                commandLine, serviceType == ServiceType.SANDBOXED);
 +        if (newCommandLine != null) {
 +            commandLine = newCommandLine;
 +        }

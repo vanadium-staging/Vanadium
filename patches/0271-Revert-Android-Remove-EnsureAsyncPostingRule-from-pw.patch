@@ -1,0 +1,104 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: quh4gko8 <88831734+quh4gko8@users.noreply.github.com>
+Date: Sat, 14 Nov 2026 04:25:28 +0000
+Subject: [PATCH] Revert "[Android] Remove EnsureAsyncPostingRule from
+ pwm_disabled tests"
+
+This reverts commit a21bf0a2be75bf19e5471b8e32516117dc3ba6b2.
+---
+ .../android/pwm_disabled/BUILD.gn             |  1 +
+ .../pwm_disabled/EnsureAsyncPostingRule.java  | 45 +++++++++++++++++++
+ .../SingleThreadBarrierClosureTest.java       |  2 +
+ .../TimedCallbackDelayerTest.java             |  2 +
+ 4 files changed, 50 insertions(+)
+ create mode 100644 chrome/browser/password_manager/android/pwm_disabled/java/src/org/chromium/chrome/browser/pwm_disabled/EnsureAsyncPostingRule.java
+
+diff --git a/chrome/browser/password_manager/android/pwm_disabled/BUILD.gn b/chrome/browser/password_manager/android/pwm_disabled/BUILD.gn
+index 09be0eac2fa3f..68706e65d6b4a 100644
+--- a/chrome/browser/password_manager/android/pwm_disabled/BUILD.gn
++++ b/chrome/browser/password_manager/android/pwm_disabled/BUILD.gn
+@@ -62,6 +62,7 @@ robolectric_library("junit") {
+ 
+   sources = [
+     "java/src/org/chromium/chrome/browser/pwm_disabled/DialogManagerTest.java",
++    "java/src/org/chromium/chrome/browser/pwm_disabled/EnsureAsyncPostingRule.java",
+     "java/src/org/chromium/chrome/browser/pwm_disabled/ManualCallbackDelayer.java",
+     "java/src/org/chromium/chrome/browser/pwm_disabled/PasswordCsvDownloadDialogTest.java",
+     "java/src/org/chromium/chrome/browser/pwm_disabled/PasswordCsvDownloadFlowControllerTest.java",
+diff --git a/chrome/browser/password_manager/android/pwm_disabled/java/src/org/chromium/chrome/browser/pwm_disabled/EnsureAsyncPostingRule.java b/chrome/browser/password_manager/android/pwm_disabled/java/src/org/chromium/chrome/browser/pwm_disabled/EnsureAsyncPostingRule.java
+new file mode 100644
+index 0000000000000..ed2aea8567c2d
+--- /dev/null
++++ b/chrome/browser/password_manager/android/pwm_disabled/java/src/org/chromium/chrome/browser/pwm_disabled/EnsureAsyncPostingRule.java
+@@ -0,0 +1,45 @@
++// Copyright 2018 The Chromium Authors
++// Use of this source code is governed by a BSD-style license that can be
++// found in the LICENSE file.
++
++package org.chromium.chrome.browser.pwm_disabled;
++
++import static org.robolectric.Shadows.shadowOf;
++
++import android.os.Looper;
++
++import org.junit.rules.ExternalResource;
++import org.robolectric.shadows.ShadowLooper;
++
++import org.chromium.build.annotations.NullMarked;
++import org.chromium.build.annotations.Nullable;
++
++/**
++ * A Rule for ensuring that posted tasks are run asynchronously (and on demand). To do so, the rule
++ * pauses the main looper before running the test and restores its state afterwards.
++ */
++@NullMarked
++class EnsureAsyncPostingRule extends ExternalResource {
++    /** Remembers the paused state of the main looper so that it can be restored after the test. */
++    private boolean mWasLooperPaused;
++
++    /** The main looper, which needs to be paused. */
++    private @Nullable ShadowLooper mMainLooper;
++
++    @Override
++    protected void before() {
++        mMainLooper = shadowOf(Looper.getMainLooper());
++        mWasLooperPaused = mMainLooper.isPaused();
++        // Pause the main looper, otherwise tasks which should run asynchronously will run
++        // synchronously and confuse the tests.
++        mMainLooper.pause();
++    }
++
++    @Override
++    protected void after() {
++        if (!mWasLooperPaused) {
++            assert mMainLooper != null;
++            mMainLooper.unPause();
++        }
++    }
++}
+diff --git a/chrome/browser/password_manager/android/pwm_disabled/java/src/org/chromium/chrome/browser/pwm_disabled/SingleThreadBarrierClosureTest.java b/chrome/browser/password_manager/android/pwm_disabled/java/src/org/chromium/chrome/browser/pwm_disabled/SingleThreadBarrierClosureTest.java
+index 17390ae6f42f9..233d42162a534 100644
+--- a/chrome/browser/password_manager/android/pwm_disabled/java/src/org/chromium/chrome/browser/pwm_disabled/SingleThreadBarrierClosureTest.java
++++ b/chrome/browser/password_manager/android/pwm_disabled/java/src/org/chromium/chrome/browser/pwm_disabled/SingleThreadBarrierClosureTest.java
+@@ -22,6 +22,8 @@ import org.chromium.base.test.BaseRobolectricTestRunner;
+ public class SingleThreadBarrierClosureTest {
+     @Rule public final MockitoRule mMockitoRule = MockitoJUnit.rule();
+ 
++    @Rule public final EnsureAsyncPostingRule mPostingRule = new EnsureAsyncPostingRule();
++
+     /** Check that the callback is posted after as many signals as specified. */
+     @Test
+     public void testCallbackPosted() {
+diff --git a/chrome/browser/password_manager/android/pwm_disabled/java/src/org/chromium/chrome/browser/pwm_disabled/TimedCallbackDelayerTest.java b/chrome/browser/password_manager/android/pwm_disabled/java/src/org/chromium/chrome/browser/pwm_disabled/TimedCallbackDelayerTest.java
+index e426dfe6a2adb..90201ee790ebc 100644
+--- a/chrome/browser/password_manager/android/pwm_disabled/java/src/org/chromium/chrome/browser/pwm_disabled/TimedCallbackDelayerTest.java
++++ b/chrome/browser/password_manager/android/pwm_disabled/java/src/org/chromium/chrome/browser/pwm_disabled/TimedCallbackDelayerTest.java
+@@ -23,6 +23,8 @@ import org.chromium.base.test.BaseRobolectricTestRunner;
+ public class TimedCallbackDelayerTest {
+     @Rule public final MockitoRule mMockitoRule = MockitoJUnit.rule();
+ 
++    @Rule public final EnsureAsyncPostingRule mPostingRule = new EnsureAsyncPostingRule();
++
+     /** Check that the callback is eventually called. */
+     @Test
+     public void testCallbackCalled() {

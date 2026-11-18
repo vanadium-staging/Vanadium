@@ -8,7 +8,7 @@ Subject: [PATCH] Disable predictive back gesture for Vanadium
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/chrome/android/java/AndroidManifest.xml b/chrome/android/java/AndroidManifest.xml
-index dea66d93ed9a2..3f5baf1545c9c 100644
+index 9c3358280f63d..9f56ff7759012 100644
 --- a/chrome/android/java/AndroidManifest.xml
 +++ b/chrome/android/java/AndroidManifest.xml
 @@ -245,7 +245,7 @@ by a child template that "extends" this file.

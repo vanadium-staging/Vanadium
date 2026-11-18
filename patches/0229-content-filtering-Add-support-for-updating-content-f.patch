@@ -5,11 +5,25 @@ Subject: [PATCH] content-filtering: Add support for updating content filtering
  when accept-language is changed
 
 ---
+ .../chrome/browser/ChromeActivitySessionTracker.java         | 2 ++
  .../language/settings/ContentLanguagesPreference.java        | 1 +
  .../browser/language/settings/LanguageSettingsExt.java       | 5 +++++
  .../browser/language/android/language_java_ext_deps.gni      | 1 +
- 3 files changed, 7 insertions(+)
+ 4 files changed, 9 insertions(+)
 
+diff --git a/chrome/android/java/src/org/chromium/chrome/browser/ChromeActivitySessionTracker.java b/chrome/android/java/src/org/chromium/chrome/browser/ChromeActivitySessionTracker.java
+index ae305dddda0ae..7ddfc873e0467 100644
+--- a/chrome/android/java/src/org/chromium/chrome/browser/ChromeActivitySessionTracker.java
++++ b/chrome/android/java/src/org/chromium/chrome/browser/ChromeActivitySessionTracker.java
+@@ -250,6 +250,8 @@ public class ChromeActivitySessionTracker {
+                     .writeString(ChromePreferenceKeys.APP_LOCALE, currentLocale);
+             TranslateBridge.resetAcceptLanguages(profile, currentLocale);
+             if (previousLocale != null) {
++                org.chromium.chrome.browser.subresource_filter
++                        .RulesetUpdater.update(/* ignoreVersionCheck */ true);
+                 // Clear cache so that accept-languages change can be applied immediately.
+                 // TODO(changwan): The underlying BrowsingDataRemover::Remove() is an asynchronous
+                 // call. So cache-clearing may not be effective if URL rendering can happen before
 diff --git a/chrome/browser/language/android/java/src/org/chromium/chrome/browser/language/settings/ContentLanguagesPreference.java b/chrome/browser/language/android/java/src/org/chromium/chrome/browser/language/settings/ContentLanguagesPreference.java
 index c295f71087e9b..1c0305db464bf 100644
 --- a/chrome/browser/language/android/java/src/org/chromium/chrome/browser/language/settings/ContentLanguagesPreference.java
