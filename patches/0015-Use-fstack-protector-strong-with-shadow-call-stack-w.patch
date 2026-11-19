@@ -9,7 +9,7 @@ Subject: [PATCH] Use -fstack-protector-strong with shadow-call-stack when
  1 file changed, 4 insertions(+), 1 deletion(-)
 
 diff --git a/build/config/compiler/BUILD.gn b/build/config/compiler/BUILD.gn
-index e602805163457..e2d566c6bd4de 100644
+index a5c91f76e84ac..4a8575a05a457 100644
 --- a/build/config/compiler/BUILD.gn
 +++ b/build/config/compiler/BUILD.gn
 @@ -459,7 +459,10 @@ config("compiler") {

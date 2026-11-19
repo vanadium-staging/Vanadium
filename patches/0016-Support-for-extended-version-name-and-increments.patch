@@ -10,10 +10,10 @@ Subject: [PATCH] Support for extended version name and increments
  3 files changed, 38 insertions(+), 5 deletions(-)
 
 diff --git a/build/util/android_chrome_version.py b/build/util/android_chrome_version.py
-index 3dde8dffb3a8b..85ce778100c50 100755
+index 26c6feea0a727..5e7736c57d63a 100755
 --- a/build/util/android_chrome_version.py
 +++ b/build/util/android_chrome_version.py
-@@ -358,7 +358,7 @@ def TranslateVersionCode(version_code, is_webview=False):
+@@ -360,7 +360,7 @@ def TranslateVersionCode(version_code, is_webview=False):
      )
  
  
@@ -22,7 +22,7 @@ index 3dde8dffb3a8b..85ce778100c50 100755
      """Build dict of version codes for the specified build architecture. Eg:
  
      {
-@@ -381,7 +381,7 @@ def GenerateVersionCodes(build_number, patch_number, arch):
+@@ -383,7 +383,7 @@ def GenerateVersionCodes(build_number, patch_number, arch):
  
      Thus, this method is responsible for the final two digits of versionCode.
      """
@@ -31,7 +31,7 @@ index 3dde8dffb3a8b..85ce778100c50 100755
  
      mfg, bitness = _ARCH_TO_MFG_AND_BITNESS[arch]
  
-@@ -423,8 +423,8 @@ def main():
+@@ -425,8 +425,8 @@ def main():
      elif args.version_name:
          if not args.arch:
              parser.error('Required --arch')
@@ -71,7 +71,7 @@ index a5611af802974..8775e292ccd66 100755
          )
          values.update(android_chrome_version_codes)
 diff --git a/chrome/version.gni b/chrome/version.gni
-index c95eb599295a2..20512a0de31c1 100644
+index e6fd0b9311bce..4b352f2cd4b60 100644
 --- a/chrome/version.gni
 +++ b/chrome/version.gni
 @@ -41,6 +41,33 @@ if (target_os == "android") {

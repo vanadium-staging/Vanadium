@@ -1,0 +1,21 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: quh4gko8 <88831734+quh4gko8@users.noreply.github.com>
+Date: Thu, 4 Jul 2024 08:05:03 +0000
+Subject: [PATCH] Document more needed removals for protobuf
+
+---
+ build/android/gyp/proto/README.md | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/build/android/gyp/proto/README.md b/build/android/gyp/proto/README.md
+index bd3c056405011..cb816f47d48f4 100644
+--- a/build/android/gyp/proto/README.md
++++ b/build/android/gyp/proto/README.md
+@@ -17,3 +17,7 @@ Turbine's `--output_deps` `.jdeps` output):
+ 
+    //third_party/android_build_tools/protoc/cipd/protoc \
+       --python_out=build/android/gyp/proto deps.proto
++
++# Additional notes from downstream, for newer protobuf versions
++Additionally, remove the runtime version imports and its usage to check
++protobuf runtime version, which is currently unsupported at upstream.
