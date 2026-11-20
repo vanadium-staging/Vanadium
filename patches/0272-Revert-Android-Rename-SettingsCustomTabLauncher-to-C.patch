@@ -1,0 +1,2626 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: quh4gko8 <88831734+quh4gko8@users.noreply.github.com>
+Date: Sat, 14 Nov 2026 04:25:39 +0000
+Subject: [PATCH] Revert "[Android] Rename SettingsCustomTabLauncher to
+ CustomTabLauncher"
+
+This reverts commit 1e2548b11b6d1e43e1c891eb7f07238f3817f65b.
+---
+ chrome/android/chrome_java_sources.gni        |  2 +-
+ .../tab_management/TabsSettingsUnitTest.java  |  4 +-
+ .../PasswordCheckupLauncher.java              |  4 +-
+ .../PasswordManagerLauncher.java              |  4 +-
+ .../settings/FragmentDependencyProvider.java  | 11 ++-
+ .../chrome/browser/settings/MainSettings.java | 17 ++--
+ .../SettingsCustomTabLauncherImpl.java}       |  6 +-
+ ...ninAndHistorySyncActivityLauncherImpl.java |  4 +-
+ .../ui/PassphraseCreationDialogFragment.java  |  4 +-
+ .../sync/ui/PassphraseDialogFragment.java     |  4 +-
+ .../sync/ui/PassphraseTypeDialogFragment.java |  4 +-
+ .../browser/sync/ui/SyncErrorMessage.java     |  4 +-
+ .../tabbed_mode/TabbedRootUiCoordinator.java  |  4 +-
+ .../ClearBrowsingDataFragmentTest.java        |  4 +-
+ .../UniversalOptOutSettingsFragmentTest.java  |  4 +-
+ .../sync/settings/SyncSettingsUtilsTest.java  |  4 +-
+ chrome/browser/autofill/android/BUILD.gn      |  1 -
+ .../AutofillPersonalContextMediator.java      |  6 +-
+ .../AutofillPersonalContextTest.java          |  4 +-
+ .../glic/settings/GlicNavigationUtils.java    | 17 ++--
+ .../browser/glic/settings/GlicSettings.java   |  6 +-
+ .../glic/settings/GlicSettingsUnitTest.java   |  4 +-
+ .../ui/GlicBottomSheetComponentProvider.java  |  4 +-
+ ...cBottomSheetComponentProviderUnitTest.java |  4 +-
+ .../glic/ui/GlicBottomSheetContent.java       |  4 +-
+ .../ui/GlicBottomSheetContentUnitTest.java    |  4 +-
+ .../ui/GlicBottomSheetFreCoordinator.java     |  6 +-
+ ...GlicBottomSheetFreCoordinatorUnitTest.java |  4 +-
+ .../browser/password_manager/android/BUILD.gn |  2 -
+ .../PasswordManagerHelper.java                | 43 +++++-----
+ .../PasswordManagerCheckupHelperTest.java     | 80 +++++++++----------
+ .../PasswordManagerHelperTest.java            | 36 ++++-----
+ .../android/pwm_disabled/BUILD.gn             |  4 +-
+ .../PasswordCsvDownloadDialogController.java  | 10 +--
+ .../PasswordCsvDownloadDialogTest.java        | 33 +++++---
+ .../PasswordCsvDownloadFlowController.java    |  6 +-
+ ...PasswordCsvDownloadFlowControllerTest.java | 34 +++++---
+ chrome/browser/privacy_guide/android/BUILD.gn |  1 -
+ .../privacy_guide/PrivacyGuideBasePage.java   | 11 +--
+ chrome/browser/safety_check/android/BUILD.gn  |  2 -
+ .../safety_check/SafetyCheckCoordinator.java  | 14 ++--
+ .../safety_check/SafetyCheckMediator.java     | 12 +--
+ .../safety_check/SafetyCheckMediatorTest.java |  6 +-
+ chrome/browser/safety_hub/android/BUILD.gn    |  1 -
+ .../SafetyHubMagicStackMediator.java          |  4 +-
+ .../SafetyHubModuleDelegateImpl.java          | 16 ++--
+ .../browser/safety_hub/SafetyHubUtils.java    | 10 +--
+ .../SafetyHubModuleDelegateTest.java          |  6 +-
+ .../browser/search_engines/android/BUILD.gn   |  1 -
+ .../ExtensionSearchEngineCoordinator.java     |  4 +-
+ .../ExtensionSearchEngineCoordinatorImpl.java | 10 ++-
+ .../ExtensionSearchEngineMediator.java        | 11 +--
+ ...ensionSearchEngineCoordinatorUnitTest.java |  8 +-
+ ...ExtensionSearchEngineMediatorUnitTest.java | 13 ++-
+ chrome/browser/settings/BUILD.gn              |  1 -
+ .../settings/ChromeBaseSettingsFragment.java  | 10 +--
+ chrome/browser/sync/android/BUILD.gn          |  2 +-
+ .../browser/sync/SyncSettingsUtils.java       | 12 +--
+ .../browser_ui/settings/android/BUILD.gn      |  1 +
+ .../settings/SettingsCustomTabLauncher.java}  | 14 ++--
+ components/browser_ui/util/android/BUILD.gn   |  1 -
+ 61 files changed, 300 insertions(+), 267 deletions(-)
+ rename chrome/android/java/src/org/chromium/chrome/browser/{customtabs/CustomTabLauncherImpl.java => settings/SettingsCustomTabLauncherImpl.java} (84%)
+ rename components/browser_ui/{util/android/java/src/org/chromium/components/browser_ui/util/CustomTabLauncher.java => settings/android/java/src/org/chromium/components/browser_ui/settings/SettingsCustomTabLauncher.java} (52%)
+
+diff --git a/chrome/android/chrome_java_sources.gni b/chrome/android/chrome_java_sources.gni
+index 6618c33ecf5ac..8d9f724c20269 100644
+--- a/chrome/android/chrome_java_sources.gni
++++ b/chrome/android/chrome_java_sources.gni
+@@ -528,7 +528,6 @@ chrome_java_sources = [
+   "java/src/org/chromium/chrome/browser/customtabs/CustomTabIncognitoManager.java",
+   "java/src/org/chromium/chrome/browser/customtabs/CustomTabIntentDataProvider.java",
+   "java/src/org/chromium/chrome/browser/customtabs/CustomTabLaunchCauseMetrics.java",
+-  "java/src/org/chromium/chrome/browser/customtabs/CustomTabLauncherImpl.java",
+   "java/src/org/chromium/chrome/browser/customtabs/CustomTabLocator.java",
+   "java/src/org/chromium/chrome/browser/customtabs/CustomTabNavigationEventObserver.java",
+   "java/src/org/chromium/chrome/browser/customtabs/CustomTabNightModeStateController.java",
+@@ -1102,6 +1101,7 @@ chrome_java_sources = [
+   "java/src/org/chromium/chrome/browser/settings/SelectionDecoration.java",
+   "java/src/org/chromium/chrome/browser/settings/SettingsActivity.java",
+   "java/src/org/chromium/chrome/browser/settings/SettingsBreadcrumbUtil.java",
++  "java/src/org/chromium/chrome/browser/settings/SettingsCustomTabLauncherImpl.java",
+   "java/src/org/chromium/chrome/browser/settings/SettingsFragmentRegistry.java",
+   "java/src/org/chromium/chrome/browser/settings/SettingsHostFragment.java",
+   "java/src/org/chromium/chrome/browser/settings/SettingsIaArmHelper.java",
+diff --git a/chrome/android/features/tab_ui/java/src/org/chromium/chrome/browser/tasks/tab_management/TabsSettingsUnitTest.java b/chrome/android/features/tab_ui/java/src/org/chromium/chrome/browser/tasks/tab_management/TabsSettingsUnitTest.java
+index 4c7e996a1adb6..276badd60b5e0 100644
+--- a/chrome/android/features/tab_ui/java/src/org/chromium/chrome/browser/tasks/tab_management/TabsSettingsUnitTest.java
++++ b/chrome/android/features/tab_ui/java/src/org/chromium/chrome/browser/tasks/tab_management/TabsSettingsUnitTest.java
+@@ -58,9 +58,9 @@ import org.chromium.chrome.browser.tab.TabArchiveSettings;
+ import org.chromium.chrome.browser.tab_group_sync.TabGroupSyncFeatures;
+ import org.chromium.chrome.browser.tab_group_sync.TabGroupSyncFeaturesJni;
+ import org.chromium.components.browser_ui.settings.ChromeSwitchPreference;
++import org.chromium.components.browser_ui.settings.SettingsCustomTabLauncher;
+ import org.chromium.components.browser_ui.settings.TextMessagePreference;
+ import org.chromium.components.browser_ui.settings.search.SettingsIndexData;
+-import org.chromium.components.browser_ui.util.CustomTabLauncher;
+ import org.chromium.components.prefs.PrefService;
+ import org.chromium.components.user_prefs.UserPrefs;
+ import org.chromium.components.user_prefs.UserPrefsJni;
+@@ -84,7 +84,7 @@ public class TabsSettingsUnitTest {
+     @Mock private PrefService mPrefServiceMock;
+     @Mock private TabGroupSyncFeatures.Natives mTabGroupSyncFeaturesJniMock;
+     @Mock private HomeModulesRankingHelper.Natives mHomeModulesRankingHelperJniMock;
+-    @Mock private CustomTabLauncher mCustomTabLauncher;
++    @Mock private SettingsCustomTabLauncher mCustomTabLauncher;
+     @Mock private SettingsIndexData mSearchIndexDataMock;
+     @Mock private AuxiliarySearchHooks mAuxiliarySearchHooksMock;
+ 
+diff --git a/chrome/android/java/src/org/chromium/chrome/browser/password_manager/PasswordCheckupLauncher.java b/chrome/android/java/src/org/chromium/chrome/browser/password_manager/PasswordCheckupLauncher.java
+index 62b3d119c6f12..f4a64798b1f5b 100644
+--- a/chrome/android/java/src/org/chromium/chrome/browser/password_manager/PasswordCheckupLauncher.java
++++ b/chrome/android/java/src/org/chromium/chrome/browser/password_manager/PasswordCheckupLauncher.java
+@@ -9,9 +9,9 @@ import org.jni_zero.CalledByNative;
+ import org.jni_zero.JniType;
+ 
+ import org.chromium.build.annotations.NullMarked;
+-import org.chromium.chrome.browser.customtabs.CustomTabLauncherImpl;
+ import org.chromium.chrome.browser.profiles.Profile;
+ import org.chromium.chrome.browser.safety_check.SafetyCheckSettingsFragment;
++import org.chromium.chrome.browser.settings.SettingsCustomTabLauncherImpl;
+ import org.chromium.chrome.browser.settings.SettingsNavigationFactory;
+ import org.chromium.components.browser_ui.settings.SettingsNavigation.SettingsFragment;
+ import org.chromium.ui.base.WindowAndroid;
+@@ -38,7 +38,7 @@ public class PasswordCheckupLauncher {
+                 passwordCheckReferrer,
+                 () -> assertNonNull(windowAndroid.getModalDialogManager()),
+                 accountEmail.isEmpty() ? null : accountEmail,
+-                new CustomTabLauncherImpl());
++                new SettingsCustomTabLauncherImpl());
+     }
+ 
+     @CalledByNative
+diff --git a/chrome/android/java/src/org/chromium/chrome/browser/password_manager/PasswordManagerLauncher.java b/chrome/android/java/src/org/chromium/chrome/browser/password_manager/PasswordManagerLauncher.java
+index 58edaa40002ef..e88e7cb49435c 100644
+--- a/chrome/android/java/src/org/chromium/chrome/browser/password_manager/PasswordManagerLauncher.java
++++ b/chrome/android/java/src/org/chromium/chrome/browser/password_manager/PasswordManagerLauncher.java
+@@ -13,8 +13,8 @@ import android.content.Context;
+ import org.jni_zero.CalledByNative;
+ 
+ import org.chromium.build.annotations.NullMarked;
+-import org.chromium.chrome.browser.customtabs.CustomTabLauncherImpl;
+ import org.chromium.chrome.browser.profiles.Profile;
++import org.chromium.chrome.browser.settings.SettingsCustomTabLauncherImpl;
+ import org.chromium.chrome.browser.sync.SyncServiceFactory;
+ import org.chromium.components.signin.base.CoreAccountInfo;
+ import org.chromium.components.sync.SyncService;
+@@ -56,7 +56,7 @@ public class PasswordManagerLauncher {
+                         modalDialogManager,
+                         managePasskeys,
+                         account,
+-                        new CustomTabLauncherImpl());
++                        new SettingsCustomTabLauncherImpl());
+     }
+ 
+     @CalledByNative
+diff --git a/chrome/android/java/src/org/chromium/chrome/browser/settings/FragmentDependencyProvider.java b/chrome/android/java/src/org/chromium/chrome/browser/settings/FragmentDependencyProvider.java
+index 3e444cc051906..245cf9b6ef701 100644
+--- a/chrome/android/java/src/org/chromium/chrome/browser/settings/FragmentDependencyProvider.java
++++ b/chrome/android/java/src/org/chromium/chrome/browser/settings/FragmentDependencyProvider.java
+@@ -25,7 +25,6 @@ import org.chromium.chrome.browser.autofill.settings.options.AutofillOptionsCoor
+ import org.chromium.chrome.browser.autofill.settings.options.AutofillOptionsFragment;
+ import org.chromium.chrome.browser.autofill.settings.personal_context.AutofillPersonalContextCoordinator;
+ import org.chromium.chrome.browser.autofill.settings.personal_context.AutofillPersonalContextFragment;
+-import org.chromium.chrome.browser.customtabs.CustomTabLauncherImpl;
+ import org.chromium.chrome.browser.device_lock.DeviceLockActivityLauncherImpl;
+ import org.chromium.chrome.browser.image_descriptions.ImageDescriptionsController;
+ import org.chromium.chrome.browser.image_descriptions.ImageDescriptionsSettings;
+@@ -56,9 +55,9 @@ import org.chromium.components.browser_ui.accessibility.AccessibilitySettings;
+ import org.chromium.components.browser_ui.bottomsheet.BottomSheetController;
+ import org.chromium.components.browser_ui.settings.FragmentSettingsNavigation;
+ import org.chromium.components.browser_ui.settings.SearchViewProvider;
++import org.chromium.components.browser_ui.settings.SettingsCustomTabLauncher;
+ import org.chromium.components.browser_ui.settings.SettingsNavigation;
+ import org.chromium.components.browser_ui.site_settings.BaseSiteSettingsFragment;
+-import org.chromium.components.browser_ui.util.CustomTabLauncher;
+ import org.chromium.ui.base.ActivityResultTracker;
+ import org.chromium.ui.base.WindowAndroid;
+ import org.chromium.ui.modaldialog.ModalDialogManager;
+@@ -208,8 +207,8 @@ public class FragmentDependencyProvider extends FragmentManager.FragmentLifecycl
+                             : SettingsNavigationFactory.createSettingsNavigation(mActivity);
+             fragmentSettingsNavigation.setSettingsNavigation(settingsNavigation);
+         }
+-        if (fragment instanceof CustomTabLauncher.CustomTabLauncherClient client) {
+-            client.setCustomTabLauncher(new CustomTabLauncherImpl());
++        if (fragment instanceof SettingsCustomTabLauncher.SettingsCustomTabLauncherClient client) {
++            client.setCustomTabLauncher(new SettingsCustomTabLauncherImpl());
+         }
+ 
+         if (!mShownInTab) {
+@@ -249,7 +248,7 @@ public class FragmentDependencyProvider extends FragmentManager.FragmentLifecycl
+                     SyncServiceFactory.getForProfile(mProfile),
+                     new PasswordStoreBridge(mProfile),
+                     PasswordManagerHelper.getForProfile(mProfile),
+-                    new CustomTabLauncherImpl());
++                    new SettingsCustomTabLauncherImpl());
+         }
+         if (fragment instanceof SearchEngineSettings settings) {
+             settings.setDisableAutoSwitchRunnable(
+@@ -306,7 +305,7 @@ public class FragmentDependencyProvider extends FragmentManager.FragmentLifecycl
+                             mBottomSheetControllerSupplier,
+                             mModalDialogManagerSupplier,
+                             SigninAndHistorySyncActivityLauncherImpl.get(),
+-                            new CustomTabLauncherImpl()));
++                            new SettingsCustomTabLauncherImpl()));
+         }
+         if (fragment instanceof AccountManagementFragment accountManagementFragment) {
+             accountManagementFragment.setSnackbarManagerSupplier(mSnackbarManagerSupplier);
+diff --git a/chrome/android/java/src/org/chromium/chrome/browser/settings/MainSettings.java b/chrome/android/java/src/org/chromium/chrome/browser/settings/MainSettings.java
+index 48437d29165c3..325666f751fd7 100644
+--- a/chrome/android/java/src/org/chromium/chrome/browser/settings/MainSettings.java
++++ b/chrome/android/java/src/org/chromium/chrome/browser/settings/MainSettings.java
+@@ -74,9 +74,9 @@ import org.chromium.chrome.browser.ui.signin.SignOutCoordinator;
+ import org.chromium.components.browser_ui.bottomsheet.BottomSheetController;
+ import org.chromium.components.browser_ui.settings.ChromeBasePreference;
+ import org.chromium.components.browser_ui.settings.ManagedPreferenceDelegate;
++import org.chromium.components.browser_ui.settings.SettingsCustomTabLauncher;
+ import org.chromium.components.browser_ui.settings.SettingsUtils;
+ import org.chromium.components.browser_ui.settings.search.SettingsIndexData;
+-import org.chromium.components.browser_ui.util.CustomTabLauncher;
+ import org.chromium.components.browser_ui.widget.containment.SectionIdProvider;
+ import org.chromium.components.search_engines.TemplateUrl;
+ import org.chromium.components.search_engines.TemplateUrlService;
+@@ -108,7 +108,7 @@ public class MainSettings extends ChromeBaseSettingsFragment
+                 SigninManager.SignInStateObserver,
+                 HomepageManager.HomepageStateListener,
+                 SectionIdProvider,
+-                CustomTabLauncher.CustomTabLauncherClient {
++                SettingsCustomTabLauncher.SettingsCustomTabLauncherClient {
+     private final CallbackController mCallbackController = new CallbackController();
+     public static final String PREF_SEARCH_HEADER = "settings_search_header";
+     public static final String PREF_SETTINGS_PROMO_CARD = "settings_promo_card";
+@@ -158,7 +158,7 @@ public class MainSettings extends ChromeBaseSettingsFragment
+     private boolean mShouldShowSnackbar;
+     private final SettableMonotonicObservableSupplier<String> mPageTitle =
+             ObservableSuppliers.createMonotonic();
+-    private CustomTabLauncher mCustomTabLauncher;
++    private SettingsCustomTabLauncher mSettingsCustomTabLauncher;
+ 
+     private @Nullable MultiColumnSettings mMultiColumnSettings;
+     private @Nullable SelectionDecoration mSelectionDecoration;
+@@ -381,8 +381,8 @@ public class MainSettings extends ChromeBaseSettingsFragment
+     }
+ 
+     @Override
+-    public void setCustomTabLauncher(CustomTabLauncher customTabLauncher) {
+-        mCustomTabLauncher = customTabLauncher;
++    public void setCustomTabLauncher(SettingsCustomTabLauncher customTabLauncher) {
++        mSettingsCustomTabLauncher = customTabLauncher;
+     }
+ 
+     @Initializer
+@@ -811,10 +811,11 @@ public class MainSettings extends ChromeBaseSettingsFragment
+                         && getArguments().containsKey(PasswordExportLauncher.START_PASSWORDS_EXPORT)
+                         && getArguments().getBoolean(PasswordExportLauncher.START_PASSWORDS_EXPORT);
+         if (startPasswordsExportFlow) {
+-            assert mCustomTabLauncher != null
+-                    : "The CSV download flow dialog requires a non-null CustomTabLauncher.";
++            assert mSettingsCustomTabLauncher != null
++                    : "The CSV download flow dialog requires a non-null"
++                            + " SettingsCustomTabLauncher.";
+             PasswordManagerHelper.getForProfile(getProfile())
+-                    .launchDownloadPasswordsCsvFlow(getContext(), mCustomTabLauncher);
++                    .launchDownloadPasswordsCsvFlow(getContext(), mSettingsCustomTabLauncher);
+             getArguments().putBoolean(PasswordExportLauncher.START_PASSWORDS_EXPORT, false);
+         }
+     }
+diff --git a/chrome/android/java/src/org/chromium/chrome/browser/customtabs/CustomTabLauncherImpl.java b/chrome/android/java/src/org/chromium/chrome/browser/settings/SettingsCustomTabLauncherImpl.java
+similarity index 84%
+rename from chrome/android/java/src/org/chromium/chrome/browser/customtabs/CustomTabLauncherImpl.java
+rename to chrome/android/java/src/org/chromium/chrome/browser/settings/SettingsCustomTabLauncherImpl.java
+index 2341f1d6adefe..75b4d46a5cfc3 100644
+--- a/chrome/android/java/src/org/chromium/chrome/browser/customtabs/CustomTabLauncherImpl.java
++++ b/chrome/android/java/src/org/chromium/chrome/browser/settings/SettingsCustomTabLauncherImpl.java
+@@ -2,7 +2,7 @@
+ // Use of this source code is governed by a BSD-style license that can be
+ // found in the LICENSE file.
+ 
+-package org.chromium.chrome.browser.customtabs;
++package org.chromium.chrome.browser.settings;
+ 
+ import android.content.Context;
+ import android.content.Intent;
+@@ -14,10 +14,10 @@ import androidx.browser.customtabs.CustomTabsIntent;
+ import org.chromium.base.IntentUtils;
+ import org.chromium.build.annotations.NullMarked;
+ import org.chromium.chrome.browser.LaunchIntentDispatcher;
+-import org.chromium.components.browser_ui.util.CustomTabLauncher;
++import org.chromium.components.browser_ui.settings.SettingsCustomTabLauncher;
+ 
+ @NullMarked
+-public class CustomTabLauncherImpl implements CustomTabLauncher {
++public class SettingsCustomTabLauncherImpl implements SettingsCustomTabLauncher {
+     @Override
+     public void openUrlInCct(Context context, String url) {
+         CustomTabsIntent customTabIntent =
+diff --git a/chrome/android/java/src/org/chromium/chrome/browser/signin/SigninAndHistorySyncActivityLauncherImpl.java b/chrome/android/java/src/org/chromium/chrome/browser/signin/SigninAndHistorySyncActivityLauncherImpl.java
+index 9dc657d7fed01..a102e2f0f1e33 100644
+--- a/chrome/android/java/src/org/chromium/chrome/browser/signin/SigninAndHistorySyncActivityLauncherImpl.java
++++ b/chrome/android/java/src/org/chromium/chrome/browser/signin/SigninAndHistorySyncActivityLauncherImpl.java
+@@ -15,8 +15,8 @@ import org.chromium.base.ThreadUtils;
+ import org.chromium.base.supplier.OneshotSupplier;
+ import org.chromium.build.annotations.NullMarked;
+ import org.chromium.build.annotations.Nullable;
+-import org.chromium.chrome.browser.customtabs.CustomTabLauncherImpl;
+ import org.chromium.chrome.browser.profiles.Profile;
++import org.chromium.chrome.browser.settings.SettingsCustomTabLauncherImpl;
+ import org.chromium.chrome.browser.ui.messages.snackbar.SnackbarManager;
+ import org.chromium.chrome.browser.ui.signin.BottomSheetSigninAndHistorySyncConfig;
+ import org.chromium.chrome.browser.ui.signin.BottomSheetSigninAndHistorySyncCoordinator;
+@@ -151,6 +151,6 @@ public final class SigninAndHistorySyncActivityLauncherImpl
+     @MainThread
+     @Override
+     public void openManageGoogleAccount(Context context) {
+-        new CustomTabLauncherImpl().openUrlInCct(context, MY_ACCOUNT_URL);
++        new SettingsCustomTabLauncherImpl().openUrlInCct(context, MY_ACCOUNT_URL);
+     }
+ }
+diff --git a/chrome/android/java/src/org/chromium/chrome/browser/sync/ui/PassphraseCreationDialogFragment.java b/chrome/android/java/src/org/chromium/chrome/browser/sync/ui/PassphraseCreationDialogFragment.java
+index a449ad2577f3e..78e8685720cec 100644
+--- a/chrome/android/java/src/org/chromium/chrome/browser/sync/ui/PassphraseCreationDialogFragment.java
++++ b/chrome/android/java/src/org/chromium/chrome/browser/sync/ui/PassphraseCreationDialogFragment.java
+@@ -26,9 +26,9 @@ import org.chromium.build.annotations.Initializer;
+ import org.chromium.build.annotations.NullMarked;
+ import org.chromium.build.annotations.Nullable;
+ import org.chromium.chrome.R;
+-import org.chromium.chrome.browser.customtabs.CustomTabLauncherImpl;
+ import org.chromium.chrome.browser.profiles.Profile;
+ import org.chromium.chrome.browser.settings.ProfileDependentSetting;
++import org.chromium.chrome.browser.settings.SettingsCustomTabLauncherImpl;
+ import org.chromium.chrome.browser.sync.SyncSettingsUtils;
+ import org.chromium.ui.text.SpanApplier;
+ import org.chromium.ui.text.SpanApplier.SpanInfo;
+@@ -93,7 +93,7 @@ public class PassphraseCreationDialogFragment extends DialogFragment
+                             @Override
+                             public void onClick(View view) {
+                                 SyncSettingsUtils.openSyncDashboard(
+-                                        getContext(), new CustomTabLauncherImpl());
++                                        getContext(), new SettingsCustomTabLauncherImpl());
+                             }
+                         }));
+     }
+diff --git a/chrome/android/java/src/org/chromium/chrome/browser/sync/ui/PassphraseDialogFragment.java b/chrome/android/java/src/org/chromium/chrome/browser/sync/ui/PassphraseDialogFragment.java
+index 8aa808e1e789e..b3d3bb3c394d7 100644
+--- a/chrome/android/java/src/org/chromium/chrome/browser/sync/ui/PassphraseDialogFragment.java
++++ b/chrome/android/java/src/org/chromium/chrome/browser/sync/ui/PassphraseDialogFragment.java
+@@ -29,8 +29,8 @@ import org.chromium.build.annotations.Initializer;
+ import org.chromium.build.annotations.NullMarked;
+ import org.chromium.build.annotations.Nullable;
+ import org.chromium.chrome.R;
+-import org.chromium.chrome.browser.customtabs.CustomTabLauncherImpl;
+ import org.chromium.chrome.browser.profiles.Profile;
++import org.chromium.chrome.browser.settings.SettingsCustomTabLauncherImpl;
+ import org.chromium.chrome.browser.sync.SyncServiceFactory;
+ import org.chromium.chrome.browser.sync.SyncSettingsUtils;
+ import org.chromium.components.sync.SyncService;
+@@ -165,7 +165,7 @@ public class PassphraseDialogFragment extends DialogFragment {
+                             @Override
+                             public void onClick(View view) {
+                                 SyncSettingsUtils.openSyncDashboard(
+-                                        getContext(), new CustomTabLauncherImpl());
++                                        getContext(), new SettingsCustomTabLauncherImpl());
+                             }
+                         }));
+     }
+diff --git a/chrome/android/java/src/org/chromium/chrome/browser/sync/ui/PassphraseTypeDialogFragment.java b/chrome/android/java/src/org/chromium/chrome/browser/sync/ui/PassphraseTypeDialogFragment.java
+index 81502b3501257..ef1d590275174 100644
+--- a/chrome/android/java/src/org/chromium/chrome/browser/sync/ui/PassphraseTypeDialogFragment.java
++++ b/chrome/android/java/src/org/chromium/chrome/browser/sync/ui/PassphraseTypeDialogFragment.java
+@@ -22,7 +22,7 @@ import androidx.fragment.app.DialogFragment;
+ import org.chromium.build.annotations.NullMarked;
+ import org.chromium.build.annotations.Nullable;
+ import org.chromium.chrome.R;
+-import org.chromium.chrome.browser.customtabs.CustomTabLauncherImpl;
++import org.chromium.chrome.browser.settings.SettingsCustomTabLauncherImpl;
+ import org.chromium.chrome.browser.sync.SyncSettingsUtils;
+ import org.chromium.components.sync.PassphraseType;
+ import org.chromium.ui.text.SpanApplier;
+@@ -104,7 +104,7 @@ public class PassphraseTypeDialogFragment extends DialogFragment
+                             @Override
+                             public void onClick(View view) {
+                                 SyncSettingsUtils.openSyncDashboard(
+-                                        getContext(), new CustomTabLauncherImpl());
++                                        getContext(), new SettingsCustomTabLauncherImpl());
+                             }
+                         }));
+     }
+diff --git a/chrome/android/java/src/org/chromium/chrome/browser/sync/ui/SyncErrorMessage.java b/chrome/android/java/src/org/chromium/chrome/browser/sync/ui/SyncErrorMessage.java
+index 47794f5b6f99d..5585472d52eea 100644
+--- a/chrome/android/java/src/org/chromium/chrome/browser/sync/ui/SyncErrorMessage.java
++++ b/chrome/android/java/src/org/chromium/chrome/browser/sync/ui/SyncErrorMessage.java
+@@ -26,9 +26,9 @@ import org.chromium.base.metrics.RecordHistogram;
+ import org.chromium.build.annotations.NullMarked;
+ import org.chromium.build.annotations.Nullable;
+ import org.chromium.chrome.R;
+-import org.chromium.chrome.browser.customtabs.CustomTabLauncherImpl;
+ import org.chromium.chrome.browser.flags.ChromeFeatureList;
+ import org.chromium.chrome.browser.profiles.Profile;
++import org.chromium.chrome.browser.settings.SettingsCustomTabLauncherImpl;
+ import org.chromium.chrome.browser.settings.SettingsNavigationFactory;
+ import org.chromium.chrome.browser.signin.services.IdentityServicesProvider;
+ import org.chromium.chrome.browser.sync.SyncServiceFactory;
+@@ -353,7 +353,7 @@ public class SyncErrorMessage implements SyncService.SyncStateChangedListener {
+                 mActivity,
+                 mSyncService,
+                 BookmarksLimitExceededHelpClickedSource.SYNC_ERROR_MESSAGE,
+-                new CustomTabLauncherImpl());
++                new SettingsCustomTabLauncherImpl());
+     }
+ 
+     private void openTrustedVaultKeyRetrievalActivity() {
+diff --git a/chrome/android/java/src/org/chromium/chrome/browser/tabbed_mode/TabbedRootUiCoordinator.java b/chrome/android/java/src/org/chromium/chrome/browser/tabbed_mode/TabbedRootUiCoordinator.java
+index 2ce4a4c0f0c07..8d01219819673 100644
+--- a/chrome/android/java/src/org/chromium/chrome/browser/tabbed_mode/TabbedRootUiCoordinator.java
++++ b/chrome/android/java/src/org/chromium/chrome/browser/tabbed_mode/TabbedRootUiCoordinator.java
+@@ -99,7 +99,6 @@ import org.chromium.chrome.browser.contextmenu.ChromeContextMenuPopulatorFactory
+ import org.chromium.chrome.browser.contextual_tasks.ContextualTasksBridgeRegistrar;
+ import org.chromium.chrome.browser.contextual_tasks.ContextualTasksUtils;
+ import org.chromium.chrome.browser.customtabs.CustomTabActivity;
+-import org.chromium.chrome.browser.customtabs.CustomTabLauncherImpl;
+ import org.chromium.chrome.browser.data_sharing.DataSharingNotificationManager;
+ import org.chromium.chrome.browser.data_sharing.DataSharingServiceFactory;
+ import org.chromium.chrome.browser.data_sharing.DataSharingTabGroupUtils;
+@@ -191,6 +190,7 @@ import org.chromium.chrome.browser.reader_mode.ReaderModeIphController;
+ import org.chromium.chrome.browser.safe_browsing.AdvancedProtectionCoordinator;
+ import org.chromium.chrome.browser.search_engines.choice_screen.ChoiceDialogCoordinator;
+ import org.chromium.chrome.browser.selection.ChromeSelectionDropdownMenuDelegate;
++import org.chromium.chrome.browser.settings.SettingsCustomTabLauncherImpl;
+ import org.chromium.chrome.browser.share.ShareDelegate;
+ import org.chromium.chrome.browser.share.link_to_text.LinkToTextIphController;
+ import org.chromium.chrome.browser.share.send_tab_to_self.SendTabToSelfOmniboxIphController;
+@@ -1498,7 +1498,7 @@ public class TabbedRootUiCoordinator extends RootUiCoordinator {
+         boolean isGlicEnabledByFlags = GlicEnabling.isEnabledByFlags();
+         if (isGlicEnabledByFlags) {
+             GlicNavigationUtils.setLauncher(SigninAndHistorySyncActivityLauncherImpl::get);
+-            GlicNavigationUtils.setCustomTabLauncher(CustomTabLauncherImpl::new);
++            GlicNavigationUtils.setCustomTabLauncher(SettingsCustomTabLauncherImpl::new);
+         }
+ 
+         initializeTabBottomSheetManagers();
+diff --git a/chrome/android/javatests/src/org/chromium/chrome/browser/browsing_data/ClearBrowsingDataFragmentTest.java b/chrome/android/javatests/src/org/chromium/chrome/browser/browsing_data/ClearBrowsingDataFragmentTest.java
+index 721c345bf142e..69349758d966f 100644
+--- a/chrome/android/javatests/src/org/chromium/chrome/browser/browsing_data/ClearBrowsingDataFragmentTest.java
++++ b/chrome/android/javatests/src/org/chromium/chrome/browser/browsing_data/ClearBrowsingDataFragmentTest.java
+@@ -122,10 +122,10 @@ import org.chromium.chrome.test.ChromeJUnit4ClassRunner;
+ import org.chromium.chrome.test.transit.ChromeTransitTestRules;
+ import org.chromium.chrome.test.transit.FreshCtaTransitTestRule;
+ import org.chromium.chrome.test.util.browser.signin.SigninTestRule;
++import org.chromium.components.browser_ui.settings.SettingsCustomTabLauncher;
+ import org.chromium.components.browser_ui.settings.SettingsNavigation;
+ import org.chromium.components.browser_ui.settings.SpinnerPreference;
+ import org.chromium.components.browser_ui.settings.search.SettingsIndexData;
+-import org.chromium.components.browser_ui.util.CustomTabLauncher;
+ import org.chromium.components.browsing_data.DeleteBrowsingDataAction;
+ import org.chromium.components.embedder_support.util.UrlConstants;
+ import org.chromium.components.search_engines.TemplateUrl;
+@@ -161,7 +161,7 @@ public class ClearBrowsingDataFragmentTest {
+ 
+     @Mock private SettingsIndexData mSearchIndexDataMock;
+ 
+-    @Mock private CustomTabLauncher mCustomTabLauncherMock;
++    @Mock private SettingsCustomTabLauncher mCustomTabLauncherMock;
+ 
+     @Mock private TemplateUrlService mTemplateUrlServiceMock;
+ 
+diff --git a/chrome/android/javatests/src/org/chromium/chrome/browser/privacy/settings/UniversalOptOutSettingsFragmentTest.java b/chrome/android/javatests/src/org/chromium/chrome/browser/privacy/settings/UniversalOptOutSettingsFragmentTest.java
+index 12aea2ec17f3a..cd2772e0deaa4 100644
+--- a/chrome/android/javatests/src/org/chromium/chrome/browser/privacy/settings/UniversalOptOutSettingsFragmentTest.java
++++ b/chrome/android/javatests/src/org/chromium/chrome/browser/privacy/settings/UniversalOptOutSettingsFragmentTest.java
+@@ -55,8 +55,8 @@ import org.chromium.chrome.browser.profiles.ProfileManager;
+ import org.chromium.chrome.browser.settings.SettingsActivityTestRule;
+ import org.chromium.chrome.test.ChromeJUnit4ClassRunner;
+ import org.chromium.components.browser_ui.settings.ChromeSwitchPreference;
++import org.chromium.components.browser_ui.settings.SettingsCustomTabLauncher;
+ import org.chromium.components.browser_ui.settings.search.SettingsIndexData;
+-import org.chromium.components.browser_ui.util.CustomTabLauncher;
+ import org.chromium.components.prefs.PrefService;
+ import org.chromium.components.user_prefs.UserPrefs;
+ import org.chromium.content_public.browser.test.NativeLibraryTestUtils;
+@@ -75,7 +75,7 @@ public class UniversalOptOutSettingsFragmentTest {
+ 
+     private UserActionTester mActionTester;
+     @Mock private SettingsIndexData mSearchIndexDataMock;
+-    @Mock private CustomTabLauncher mCustomTabLauncherMock;
++    @Mock private SettingsCustomTabLauncher mCustomTabLauncherMock;
+     @Mock private PrivacyPreferencesManagerImpl.Natives mPrivacyPreferencesManagerJniMock;
+ 
+     @Before
+diff --git a/chrome/android/javatests/src/org/chromium/chrome/browser/sync/settings/SyncSettingsUtilsTest.java b/chrome/android/javatests/src/org/chromium/chrome/browser/sync/settings/SyncSettingsUtilsTest.java
+index 5644a577311a0..470ea0687f07f 100644
+--- a/chrome/android/javatests/src/org/chromium/chrome/browser/sync/settings/SyncSettingsUtilsTest.java
++++ b/chrome/android/javatests/src/org/chromium/chrome/browser/sync/settings/SyncSettingsUtilsTest.java
+@@ -27,7 +27,7 @@ import org.chromium.chrome.browser.profiles.Profile;
+ import org.chromium.chrome.browser.sync.SyncServiceFactory;
+ import org.chromium.chrome.browser.sync.SyncSettingsUtils;
+ import org.chromium.chrome.test.ChromeJUnit4ClassRunner;
+-import org.chromium.components.browser_ui.util.CustomTabLauncher;
++import org.chromium.components.browser_ui.settings.SettingsCustomTabLauncher;
+ import org.chromium.components.sync.BookmarksLimitExceededHelpClickedSource;
+ import org.chromium.components.sync.SyncService;
+ import org.chromium.components.sync.UserActionableError;
+@@ -47,7 +47,7 @@ public class SyncSettingsUtilsTest {
+ 
+     @Mock private SyncService mSyncService;
+ 
+-    @Mock private CustomTabLauncher mCustomTabLauncher;
++    @Mock private SettingsCustomTabLauncher mCustomTabLauncher;
+ 
+     @Before
+     public void setUp() {
+diff --git a/chrome/browser/autofill/android/BUILD.gn b/chrome/browser/autofill/android/BUILD.gn
+index 58342b0e05952..26e35c429ed0f 100644
+--- a/chrome/browser/autofill/android/BUILD.gn
++++ b/chrome/browser/autofill/android/BUILD.gn
+@@ -418,7 +418,6 @@ robolectric_library("junit") {
+     "//components/browser_ui/bottomsheet/android:manager_java",
+     "//components/browser_ui/settings/android:java",
+     "//components/browser_ui/styles/android:java",
+-    "//components/browser_ui/util/android:java",
+     "//components/browser_ui/widget/android:java",
+     "//components/device_reauth:device_reauth_java_enums",
+     "//components/prefs/android:java",
+diff --git a/chrome/browser/autofill/android/java/src/org/chromium/chrome/browser/autofill/settings/personal_context/AutofillPersonalContextMediator.java b/chrome/browser/autofill/android/java/src/org/chromium/chrome/browser/autofill/settings/personal_context/AutofillPersonalContextMediator.java
+index 033a48c225d6d..2ea900bf0be85 100644
+--- a/chrome/browser/autofill/android/java/src/org/chromium/chrome/browser/autofill/settings/personal_context/AutofillPersonalContextMediator.java
++++ b/chrome/browser/autofill/android/java/src/org/chromium/chrome/browser/autofill/settings/personal_context/AutofillPersonalContextMediator.java
+@@ -15,7 +15,7 @@ import org.chromium.build.annotations.NullMarked;
+ import org.chromium.chrome.browser.autofill.autofill_ai.EntityDataManager;
+ import org.chromium.chrome.browser.autofill.autofill_ai.EntityDataManagerFactory;
+ import org.chromium.chrome.browser.profiles.Profile;
+-import org.chromium.components.browser_ui.util.CustomTabLauncher;
++import org.chromium.components.browser_ui.settings.SettingsCustomTabLauncher;
+ import org.chromium.ui.modelutil.PropertyModel;
+ 
+ /** Mediator for Autofill Personal Context settings. */
+@@ -23,11 +23,11 @@ import org.chromium.ui.modelutil.PropertyModel;
+ class AutofillPersonalContextMediator {
+     private final Context mContext;
+     private final Profile mProfile;
+-    private final CustomTabLauncher mCustomTabLauncher;
++    private final SettingsCustomTabLauncher mCustomTabLauncher;
+     private final PropertyModel mModel;
+ 
+     AutofillPersonalContextMediator(
+-            Context context, Profile profile, CustomTabLauncher customTabLauncher) {
++            Context context, Profile profile, SettingsCustomTabLauncher customTabLauncher) {
+         mContext = context;
+         mProfile = profile;
+         mCustomTabLauncher = customTabLauncher;
+diff --git a/chrome/browser/autofill/android/junit/src/org/chromium/chrome/browser/autofill/settings/personal_context/AutofillPersonalContextTest.java b/chrome/browser/autofill/android/junit/src/org/chromium/chrome/browser/autofill/settings/personal_context/AutofillPersonalContextTest.java
+index b5f1ec2a2734f..859682ad95167 100644
+--- a/chrome/browser/autofill/android/junit/src/org/chromium/chrome/browser/autofill/settings/personal_context/AutofillPersonalContextTest.java
++++ b/chrome/browser/autofill/android/junit/src/org/chromium/chrome/browser/autofill/settings/personal_context/AutofillPersonalContextTest.java
+@@ -30,8 +30,8 @@ import org.chromium.chrome.browser.autofill.autofill_ai.EntityDataManagerJni;
+ import org.chromium.chrome.browser.flags.ChromeFeatureList;
+ import org.chromium.chrome.browser.profiles.Profile;
+ import org.chromium.chrome.browser.profiles.ProfileManager;
++import org.chromium.components.browser_ui.settings.SettingsCustomTabLauncher;
+ import org.chromium.components.browser_ui.settings.search.SettingsIndexData;
+-import org.chromium.components.browser_ui.util.CustomTabLauncher;
+ 
+ /** Unit tests for {@link AutofillPersonalContextFragment}. */
+ @RunWith(BaseRobolectricTestRunner.class)
+@@ -44,7 +44,7 @@ public class AutofillPersonalContextTest {
+     @Mock private EntityDataManager.Natives mMockEntityDataManagerJni;
+     @Mock private Profile mProfile;
+     @Mock private SettingsIndexData mSearchIndexDataMock;
+-    @Mock private CustomTabLauncher mMockCustomTabLauncher;
++    @Mock private SettingsCustomTabLauncher mMockCustomTabLauncher;
+ 
+     private AutofillPersonalContextFragment mFragment;
+     private UserActionTester mActionTester;
+diff --git a/chrome/browser/glic/android/java/src/org/chromium/chrome/browser/glic/settings/GlicNavigationUtils.java b/chrome/browser/glic/android/java/src/org/chromium/chrome/browser/glic/settings/GlicNavigationUtils.java
+index 39e8c0c3480f9..fbc991ecbad00 100644
+--- a/chrome/browser/glic/android/java/src/org/chromium/chrome/browser/glic/settings/GlicNavigationUtils.java
++++ b/chrome/browser/glic/android/java/src/org/chromium/chrome/browser/glic/settings/GlicNavigationUtils.java
+@@ -31,8 +31,8 @@ import org.chromium.chrome.browser.ui.signin.BottomSheetSigninAndHistorySyncConf
+ import org.chromium.chrome.browser.ui.signin.SigninAndHistorySyncActivityLauncher;
+ import org.chromium.chrome.browser.ui.signin.account_picker.AccountPickerBottomSheetStrings;
+ import org.chromium.chrome.browser.ui.signin.history_sync.HistorySyncConfig;
++import org.chromium.components.browser_ui.settings.SettingsCustomTabLauncher;
+ import org.chromium.components.browser_ui.settings.SettingsNavigation;
+-import org.chromium.components.browser_ui.util.CustomTabLauncher;
+ import org.chromium.components.signin.AccountManagerFacadeProvider;
+ import org.chromium.components.signin.base.AccountInfo;
+ import org.chromium.components.signin.identitymanager.IdentityManager;
+@@ -49,7 +49,7 @@ public class GlicNavigationUtils {
+     public static final String FIELD_LOCATION_PERMISSION = "location_permission";
+     public static final String FIELD_MICROPHONE_PERMISSION = "microphone_permission";
+     private static @Nullable Supplier<SigninAndHistorySyncActivityLauncher> sLauncherSupplier;
+-    private static @Nullable Supplier<CustomTabLauncher> sCustomTabLauncherSupplier;
++    private static @Nullable Supplier<SettingsCustomTabLauncher> sCustomTabLauncherSupplier;
+ 
+     /**
+      * Sets the launcher supplier used to trigger the bottom sheet sign-in and history sync flow.
+@@ -65,21 +65,22 @@ public class GlicNavigationUtils {
+         return sLauncherSupplier != null ? sLauncherSupplier.get() : null;
+     }
+ 
+-    /** Sets the supplier for the {@link CustomTabLauncher} used by the native FRE. */
+-    public static void setCustomTabLauncher(Supplier<CustomTabLauncher> customTabLauncherSupplier) {
++    /** Sets the supplier for the {@link SettingsCustomTabLauncher} used by the native FRE. */
++    public static void setCustomTabLauncher(
++            Supplier<SettingsCustomTabLauncher> customTabLauncherSupplier) {
+         sCustomTabLauncherSupplier = customTabLauncherSupplier;
+     }
+ 
+-    /** Sets the {@link CustomTabLauncher} supplier for testing. */
++    /** Sets the {@link SettingsCustomTabLauncher} supplier for testing. */
+     public static void setCustomTabLauncherForTesting(
+-            @Nullable Supplier<CustomTabLauncher> customTabLauncherSupplier) {
++            @Nullable Supplier<SettingsCustomTabLauncher> customTabLauncherSupplier) {
+         var oldValue = sCustomTabLauncherSupplier;
+         sCustomTabLauncherSupplier = customTabLauncherSupplier;
+         ResettersForTesting.register(() -> sCustomTabLauncherSupplier = oldValue);
+     }
+ 
+-    /** Returns the {@link CustomTabLauncher} for the native FRE, if set. */
+-    public static @Nullable CustomTabLauncher getCustomTabLauncher() {
++    /** Returns the {@link SettingsCustomTabLauncher} for the native FRE, if set. */
++    public static @Nullable SettingsCustomTabLauncher getCustomTabLauncher() {
+         return sCustomTabLauncherSupplier != null ? sCustomTabLauncherSupplier.get() : null;
+     }
+ 
+diff --git a/chrome/browser/glic/android/java/src/org/chromium/chrome/browser/glic/settings/GlicSettings.java b/chrome/browser/glic/android/java/src/org/chromium/chrome/browser/glic/settings/GlicSettings.java
+index 4dbe1feaed90b..8f47070f2dea3 100644
+--- a/chrome/browser/glic/android/java/src/org/chromium/chrome/browser/glic/settings/GlicSettings.java
++++ b/chrome/browser/glic/android/java/src/org/chromium/chrome/browser/glic/settings/GlicSettings.java
+@@ -56,11 +56,11 @@ import org.chromium.chrome.browser.ui.bottombar.BottomBarActionEligibility;
+ import org.chromium.chrome.browser.ui.bottombar.BottomBarConfigUtils;
+ import org.chromium.components.browser_ui.settings.ChromeExpandableSwitchPreference;
+ import org.chromium.components.browser_ui.settings.ChromeSwitchPreference;
++import org.chromium.components.browser_ui.settings.SettingsCustomTabLauncher;
+ import org.chromium.components.browser_ui.settings.SettingsFragment;
+ import org.chromium.components.browser_ui.settings.SettingsNavigation;
+ import org.chromium.components.browser_ui.settings.SettingsUtils;
+ import org.chromium.components.browser_ui.settings.search.SettingsIndexData;
+-import org.chromium.components.browser_ui.util.CustomTabLauncher;
+ import org.chromium.components.browser_ui.widget.containment.ContainerStyle;
+ import org.chromium.components.browser_ui.widget.containment.ContainmentItemDecoration;
+ import org.chromium.components.browser_ui.widget.highlight.ViewHighlighter;
+@@ -196,7 +196,7 @@ public class GlicSettings extends ChromeBaseSettingsFragment {
+         SettingsUtils.addPreferencesFromResource(this, R.xml.glic_settings);
+         mPageTitle.set(getString(R.string.glic_setting_label));
+ 
+-        CustomTabLauncher customTabLauncher = getCustomTabLauncher();
++        SettingsCustomTabLauncher customTabLauncher = getCustomTabLauncher();
+ 
+         PrefService prefService = UserPrefs.get(getProfile());
+         mPrefChangeRegistrar = new PrefChangeRegistrar(prefService);
+@@ -895,7 +895,7 @@ public class GlicSettings extends ChromeBaseSettingsFragment {
+ 
+     private SpanApplier.SpanInfo createSpanInfo(
+             String openTag, String url, ChromeExpandableSwitchPreference pref) {
+-        CustomTabLauncher customTabLauncher = getCustomTabLauncher();
++        SettingsCustomTabLauncher customTabLauncher = getCustomTabLauncher();
+         int color;
+         if (GlicEnabling.isDisabledByPolicy(getProfile())) {
+             color = pref.getDisabledColor();
+diff --git a/chrome/browser/glic/android/java/src/org/chromium/chrome/browser/glic/settings/GlicSettingsUnitTest.java b/chrome/browser/glic/android/java/src/org/chromium/chrome/browser/glic/settings/GlicSettingsUnitTest.java
+index d80718eaa6f23..7c2cd060ec136 100644
+--- a/chrome/browser/glic/android/java/src/org/chromium/chrome/browser/glic/settings/GlicSettingsUnitTest.java
++++ b/chrome/browser/glic/android/java/src/org/chromium/chrome/browser/glic/settings/GlicSettingsUnitTest.java
+@@ -73,9 +73,9 @@ import org.chromium.chrome.browser.ui.bottombar.BottomBarActionEligibility;
+ import org.chromium.chrome.browser.ui.bottombar.BottomBarConfigUtils;
+ import org.chromium.components.browser_ui.settings.ChromeExpandableSwitchPreference;
+ import org.chromium.components.browser_ui.settings.ChromeSwitchPreference;
++import org.chromium.components.browser_ui.settings.SettingsCustomTabLauncher;
+ import org.chromium.components.browser_ui.settings.SettingsNavigation;
+ import org.chromium.components.browser_ui.settings.search.SettingsIndexData;
+-import org.chromium.components.browser_ui.util.CustomTabLauncher;
+ import org.chromium.components.prefs.PrefChangeRegistrar;
+ import org.chromium.components.prefs.PrefChangeRegistrarJni;
+ import org.chromium.components.prefs.PrefService;
+@@ -107,7 +107,7 @@ public class GlicSettingsUnitTest {
+     @Mock private Profile mProfileMock;
+     @Mock private UserPrefs.Natives mUserPrefsJniMock;
+     @Mock private PrefService mPrefServiceMock;
+-    @Mock private CustomTabLauncher mCustomTabLauncher;
++    @Mock private SettingsCustomTabLauncher mCustomTabLauncher;
+     @Mock private PrefChangeRegistrar.Natives mPrefChangeRegistrarJniMock;
+     @Mock private GlicKeyedService mGlicKeyedServiceMock;
+     @Mock private GlicEnabling.Natives mGlicEnablingJniMock;
+diff --git a/chrome/browser/glic/android/java/src/org/chromium/chrome/browser/glic/ui/GlicBottomSheetComponentProvider.java b/chrome/browser/glic/android/java/src/org/chromium/chrome/browser/glic/ui/GlicBottomSheetComponentProvider.java
+index ad5eca8fcca88..787bbbca2cae6 100644
+--- a/chrome/browser/glic/android/java/src/org/chromium/chrome/browser/glic/ui/GlicBottomSheetComponentProvider.java
++++ b/chrome/browser/glic/android/java/src/org/chromium/chrome/browser/glic/ui/GlicBottomSheetComponentProvider.java
+@@ -40,7 +40,7 @@ import org.chromium.chrome.browser.tab_bottom_sheet.TabBottomSheetContent;
+ import org.chromium.chrome.browser.tab_bottom_sheet.TabBottomSheetManager;
+ import org.chromium.chrome.browser.tab_bottom_sheet.TabBottomSheetSkeletonCoordinator;
+ import org.chromium.chrome.browser.tab_bottom_sheet.TabBottomSheetUtils;
+-import org.chromium.components.browser_ui.util.CustomTabLauncher;
++import org.chromium.components.browser_ui.settings.SettingsCustomTabLauncher;
+ import org.chromium.components.browser_ui.widget.text.TextViewWithCompoundDrawables;
+ 
+ /**
+@@ -165,7 +165,7 @@ public class GlicBottomSheetComponentProvider implements CoBrowseComponentProvid
+ 
+     private void mountNativeFreOnActiveContent() {
+         if (mActiveContent == null) return;
+-        CustomTabLauncher customTabLauncher = GlicNavigationUtils.getCustomTabLauncher();
++        SettingsCustomTabLauncher customTabLauncher = GlicNavigationUtils.getCustomTabLauncher();
+         assert customTabLauncher != null;
+         if (customTabLauncher == null) return;
+         mActiveContent.mountNativeFre(customTabLauncher, this::notifyNativeFreAccepted);
+diff --git a/chrome/browser/glic/android/java/src/org/chromium/chrome/browser/glic/ui/GlicBottomSheetComponentProviderUnitTest.java b/chrome/browser/glic/android/java/src/org/chromium/chrome/browser/glic/ui/GlicBottomSheetComponentProviderUnitTest.java
+index e2d65f6b987e8..d08fbaa2cf608 100644
+--- a/chrome/browser/glic/android/java/src/org/chromium/chrome/browser/glic/ui/GlicBottomSheetComponentProviderUnitTest.java
++++ b/chrome/browser/glic/android/java/src/org/chromium/chrome/browser/glic/ui/GlicBottomSheetComponentProviderUnitTest.java
+@@ -41,7 +41,7 @@ import org.chromium.chrome.browser.glic.R;
+ import org.chromium.chrome.browser.glic.settings.GlicNavigationUtils;
+ import org.chromium.chrome.browser.profiles.Profile;
+ import org.chromium.chrome.browser.tab_bottom_sheet.TabBottomSheetContent;
+-import org.chromium.components.browser_ui.util.CustomTabLauncher;
++import org.chromium.components.browser_ui.settings.SettingsCustomTabLauncher;
+ 
+ import java.util.concurrent.TimeUnit;
+ 
+@@ -56,7 +56,7 @@ public class GlicBottomSheetComponentProviderUnitTest {
+     @Mock private Profile mProfile;
+     @Mock private GlicBottomSheetComponentProvider.Natives mNativesMock;
+     @Mock private GlicEnabling.Natives mGlicEnablingJniMock;
+-    @Mock private CustomTabLauncher mCustomTabLauncher;
++    @Mock private SettingsCustomTabLauncher mCustomTabLauncher;
+ 
+     private JniRawPtr<GlicBottomSheetComponentProvider.NativeGlicCoBrowseViews>
+             mNativeCoBrowseViews;
+diff --git a/chrome/browser/glic/android/java/src/org/chromium/chrome/browser/glic/ui/GlicBottomSheetContent.java b/chrome/browser/glic/android/java/src/org/chromium/chrome/browser/glic/ui/GlicBottomSheetContent.java
+index c85a0e8cc7215..95e291d2181a0 100644
+--- a/chrome/browser/glic/android/java/src/org/chromium/chrome/browser/glic/ui/GlicBottomSheetContent.java
++++ b/chrome/browser/glic/android/java/src/org/chromium/chrome/browser/glic/ui/GlicBottomSheetContent.java
+@@ -25,7 +25,7 @@ import org.chromium.chrome.browser.tab_bottom_sheet.TabBottomSheetContent;
+ import org.chromium.chrome.browser.tab_bottom_sheet.TabBottomSheetUtils;
+ import org.chromium.components.browser_ui.bottomsheet.BottomSheetContent;
+ import org.chromium.components.browser_ui.bottomsheet.BottomSheetContent.GlowSpec;
+-import org.chromium.components.browser_ui.util.CustomTabLauncher;
++import org.chromium.components.browser_ui.settings.SettingsCustomTabLauncher;
+ 
+ import java.util.List;
+ 
+@@ -79,7 +79,7 @@ public class GlicBottomSheetContent extends TabBottomSheetContent {
+         mDestroyCallback = destroyCallback;
+     }
+ 
+-    void mountNativeFre(CustomTabLauncher customTabLauncher, Runnable onNativeFreAccepted) {
++    void mountNativeFre(SettingsCustomTabLauncher customTabLauncher, Runnable onNativeFreAccepted) {
+         if (mFreCoordinator != null) return;
+ 
+         ViewGroup expanded = TabBottomSheetUtils.getExpandedContentGroup(getContentView());
+diff --git a/chrome/browser/glic/android/java/src/org/chromium/chrome/browser/glic/ui/GlicBottomSheetContentUnitTest.java b/chrome/browser/glic/android/java/src/org/chromium/chrome/browser/glic/ui/GlicBottomSheetContentUnitTest.java
+index 601173dc4dc06..8b1d2b1212fd6 100644
+--- a/chrome/browser/glic/android/java/src/org/chromium/chrome/browser/glic/ui/GlicBottomSheetContentUnitTest.java
++++ b/chrome/browser/glic/android/java/src/org/chromium/chrome/browser/glic/ui/GlicBottomSheetContentUnitTest.java
+@@ -62,7 +62,7 @@ import org.chromium.chrome.browser.tab_bottom_sheet.TabBottomSheetSkeletonCoordi
+ import org.chromium.chrome.browser.tab_bottom_sheet.TabBottomSheetUtils;
+ import org.chromium.components.browser_ui.bottomsheet.BottomSheetContent;
+ import org.chromium.components.browser_ui.bottomsheet.BottomSheetContent.GlowSpec;
+-import org.chromium.components.browser_ui.util.CustomTabLauncher;
++import org.chromium.components.browser_ui.settings.SettingsCustomTabLauncher;
+ import org.chromium.components.browser_ui.widget.text.TextViewWithCompoundDrawables;
+ 
+ import java.util.Arrays;
+@@ -83,7 +83,7 @@ public class GlicBottomSheetContentUnitTest {
+     @Mock private ActorKeyedServiceFactory.Natives mActorKeyedServiceFactoryJni;
+     @Mock private TabBottomSheetManager mTabBottomSheetManager;
+     @Mock private TabSelectionDelegate mTabSelectionDelegate;
+-    @Mock private CustomTabLauncher mCustomTabLauncher;
++    @Mock private SettingsCustomTabLauncher mCustomTabLauncher;
+     @Mock private GlicEnabling.Natives mGlicEnablingJniMock;
+ 
+     private Context mContext;
+diff --git a/chrome/browser/glic/android/java/src/org/chromium/chrome/browser/glic/ui/GlicBottomSheetFreCoordinator.java b/chrome/browser/glic/android/java/src/org/chromium/chrome/browser/glic/ui/GlicBottomSheetFreCoordinator.java
+index 23e67fb4fb870..5168d1bfc9c38 100644
+--- a/chrome/browser/glic/android/java/src/org/chromium/chrome/browser/glic/ui/GlicBottomSheetFreCoordinator.java
++++ b/chrome/browser/glic/android/java/src/org/chromium/chrome/browser/glic/ui/GlicBottomSheetFreCoordinator.java
+@@ -25,8 +25,8 @@ import org.chromium.build.annotations.NullMarked;
+ import org.chromium.build.annotations.Nullable;
+ import org.chromium.chrome.browser.flags.ChromeFeatureList;
+ import org.chromium.chrome.browser.glic.R;
++import org.chromium.components.browser_ui.settings.SettingsCustomTabLauncher;
+ import org.chromium.components.browser_ui.styles.SemanticColorUtils;
+-import org.chromium.components.browser_ui.util.CustomTabLauncher;
+ import org.chromium.ui.text.ChromeClickableSpan;
+ import org.chromium.ui.text.SpanApplier;
+ import org.chromium.ui.text.SpanApplier.SpanInfo;
+@@ -40,7 +40,7 @@ class GlicBottomSheetFreCoordinator {
+     private final Context mContext;
+     private final Runnable mOnAccept;
+     private final Runnable mOnDecline;
+-    private final CustomTabLauncher mCustomTabLauncher;
++    private final SettingsCustomTabLauncher mCustomTabLauncher;
+     private final View mRootView;
+     private final ViewGroup mContentContainer;
+     private final ViewGroup mSkeletonContainer;
+@@ -59,7 +59,7 @@ class GlicBottomSheetFreCoordinator {
+             ViewGroup parent,
+             boolean isEnterpriseAccount,
+             @ColorInt int backgroundColor,
+-            CustomTabLauncher customTabLauncher,
++            SettingsCustomTabLauncher customTabLauncher,
+             Runnable onAccept,
+             Runnable onDecline) {
+         mContext = context;
+diff --git a/chrome/browser/glic/android/java/src/org/chromium/chrome/browser/glic/ui/GlicBottomSheetFreCoordinatorUnitTest.java b/chrome/browser/glic/android/java/src/org/chromium/chrome/browser/glic/ui/GlicBottomSheetFreCoordinatorUnitTest.java
+index 35cc5cc57e278..b9db309b6c84f 100644
+--- a/chrome/browser/glic/android/java/src/org/chromium/chrome/browser/glic/ui/GlicBottomSheetFreCoordinatorUnitTest.java
++++ b/chrome/browser/glic/android/java/src/org/chromium/chrome/browser/glic/ui/GlicBottomSheetFreCoordinatorUnitTest.java
+@@ -49,7 +49,7 @@ import org.chromium.base.FeatureOverrides;
+ import org.chromium.base.test.BaseRobolectricTestRunner;
+ import org.chromium.chrome.browser.flags.ChromeFeatureList;
+ import org.chromium.chrome.browser.glic.R;
+-import org.chromium.components.browser_ui.util.CustomTabLauncher;
++import org.chromium.components.browser_ui.settings.SettingsCustomTabLauncher;
+ import org.chromium.ui.base.TestActivity;
+ import org.chromium.ui.text.ChromeClickableSpan;
+ import org.chromium.ui.widget.ButtonCompat;
+@@ -69,7 +69,7 @@ public class GlicBottomSheetFreCoordinatorUnitTest {
+ 
+     @Mock private Runnable mOnAccept;
+     @Mock private Runnable mOnDecline;
+-    @Mock private CustomTabLauncher mCustomTabLauncher;
++    @Mock private SettingsCustomTabLauncher mCustomTabLauncher;
+ 
+     private Activity mActivity;
+     private FrameLayout mParentContainer;
+diff --git a/chrome/browser/password_manager/android/BUILD.gn b/chrome/browser/password_manager/android/BUILD.gn
+index c85016b9ff53a..cecd76c612737 100644
+--- a/chrome/browser/password_manager/android/BUILD.gn
++++ b/chrome/browser/password_manager/android/BUILD.gn
+@@ -141,7 +141,6 @@ android_library("java") {
+     "//components/browser_ui/notifications/android:java",
+     "//components/browser_ui/settings/android:java",
+     "//components/browser_ui/settings/android:managed_prefs_java_resources",
+-    "//components/browser_ui/util/android:java",
+     "//components/browser_ui/widget/android:java",
+     "//components/browser_ui/widget/android:java_resources",
+     "//components/password_manager/core/browser:password_manager_java_enums",
+@@ -325,7 +324,6 @@ robolectric_binary("password_manager_junit_tests") {
+     "//components/browser_ui/bottomsheet/android:java",
+     "//components/browser_ui/settings/android:java",
+     "//components/browser_ui/test/android:test_support_java",
+-    "//components/browser_ui/util/android:java",
+     "//components/password_manager/core/browser:password_manager_java_enums",
+     "//components/prefs/android:java",
+     "//components/signin/public/android:java",
+diff --git a/chrome/browser/password_manager/android/java/src/org/chromium/chrome/browser/password_manager/PasswordManagerHelper.java b/chrome/browser/password_manager/android/java/src/org/chromium/chrome/browser/password_manager/PasswordManagerHelper.java
+index 79dc8a35dd97c..121b46b9afdb7 100644
+--- a/chrome/browser/password_manager/android/java/src/org/chromium/chrome/browser/password_manager/PasswordManagerHelper.java
++++ b/chrome/browser/password_manager/android/java/src/org/chromium/chrome/browser/password_manager/PasswordManagerHelper.java
+@@ -44,7 +44,7 @@ import org.chromium.chrome.browser.pwm_disabled.PasswordCsvDownloadFlowControlle
+ import org.chromium.chrome.browser.pwm_disabled.PasswordManagerUnavailableDialogCoordinator;
+ import org.chromium.chrome.browser.sync.SyncServiceFactory;
+ import org.chromium.chrome.browser.util.BrowserUiUtils;
+-import org.chromium.components.browser_ui.util.CustomTabLauncher;
++import org.chromium.components.browser_ui.settings.SettingsCustomTabLauncher;
+ import org.chromium.components.sync.SyncService;
+ import org.chromium.ui.modaldialog.ModalDialogManager;
+ 
+@@ -123,8 +123,8 @@ public class PasswordManagerHelper {
+      *     attempt to launch the credential manager even without syncing enabled.
+      * @param account the account for which to open the UI. An empty or null account signals that
+      *     the UI should be opened for the local storage.
+-     * @param customTabLauncher launcher that can be used to open a custom tab with a help center
+-     *     article.
++     * @param settingsCustomTabLauncher launcher that can be used to open a custom tab with a help
++     *     center article.
+      */
+     public void showPasswordSettings(
+             Context context,
+@@ -132,7 +132,7 @@ public class PasswordManagerHelper {
+             ModalDialogManager modalDialogManager,
+             boolean managePasskeys,
+             @Nullable String account,
+-            CustomTabLauncher customTabLauncher) {
++            SettingsCustomTabLauncher settingsCustomTabLauncher) {
+         RecordHistogram.recordEnumeratedHistogram(
+                 "PasswordManager.ManagePasswordsReferrer",
+                 referrer,
+@@ -140,7 +140,7 @@ public class PasswordManagerHelper {
+         SyncService syncService = SyncServiceFactory.getForProfile(mProfile);
+ 
+         if (!showPwmUnavailableOrDownloadCsvDialog(
+-                context, modalDialogManager, customTabLauncher)) {
++                context, modalDialogManager, settingsCustomTabLauncher)) {
+             LoadingModalDialogCoordinator loadingDialogCoordinator =
+                     LoadingModalDialogCoordinator.create(modalDialogManager, context);
+             launchTheCredentialManager(
+@@ -152,30 +152,31 @@ public class PasswordManagerHelper {
+      * Starts the flow allowing the user to download unmigrated password manager passwords as a CSV.
+      *
+      * @param context instance of a FragmentActivity which will host the entire UI flow
+-     * @param customTabLauncher used to open a help articcle in a CCT
++     * @param settingsCustomTabLauncher used to open a help articcle in a CCT
+      */
+     public void launchDownloadPasswordsCsvFlow(
+-            Context context, CustomTabLauncher customTabLauncher) {
++            Context context, SettingsCustomTabLauncher settingsCustomTabLauncher) {
+         FragmentActivity activity = (FragmentActivity) ContextUtils.activityFromContext(context);
+         assert activity != null : "Context is expected to be a fragment activity";
+-        assert customTabLauncher != null : "The CSV download dialog requires a CustomTabLauncher";
++        assert settingsCustomTabLauncher != null
++                : "The CSV download dialog requires a SettingsCustomTabLauncher";
+         PasswordCsvDownloadFlowControllerFactory.getOrCreateController()
+                 .showDialogAndStartFlow(
+                         activity,
+                         mProfile,
+                         PasswordManagerUtilBridge.isGooglePlayServicesUpdatable(),
+                         PasswordManagerUtilBridge.isPasswordManagerAvailable(),
+-                        customTabLauncher);
++                        settingsCustomTabLauncher);
+     }
+ 
+     private boolean showPwmUnavailableOrDownloadCsvDialog(
+             Context context,
+             ModalDialogManager modalDialogManager,
+-            CustomTabLauncher customTabLauncher) {
++            SettingsCustomTabLauncher settingsCustomTabLauncher) {
+         // Automotive doesn't support the export flow.
+         if (!DeviceInfo.isAutomotive()
+                 && LoginDbDeprecationUtilBridge.hasPasswordsInCsv(mProfile)) {
+-            showDownloadCsvDialog(context, customTabLauncher);
++            showDownloadCsvDialog(context, settingsCustomTabLauncher);
+             return true;
+         }
+ 
+@@ -192,9 +193,10 @@ public class PasswordManagerHelper {
+         return false;
+     }
+ 
+-    private void showDownloadCsvDialog(Context context, CustomTabLauncher customTabLauncher) {
++    private void showDownloadCsvDialog(
++            Context context, SettingsCustomTabLauncher settingsCustomTabLauncher) {
+         if (context instanceof FragmentActivity) {
+-            launchDownloadPasswordsCsvFlow(context, customTabLauncher);
++            launchDownloadPasswordsCsvFlow(context, settingsCustomTabLauncher);
+         } else {
+             PasswordExportLauncher.showMainSettingsAndStartExport(context);
+         }
+@@ -210,15 +212,15 @@ public class PasswordManagerHelper {
+      *     for local will show. The purpose of this is to enable showing the checkup for local
+      *     storage if the password checkup is launched from the leak detection dialog and the leaked
+      *     credential is only saved in the local password storage.
+-     * @param customTabLauncher launcher that can be used to open a custom tab with a help center
+-     *     article.
++     * @param settingsCustomTabLauncher launcher that can be used to open a custom tab with a help
++     *     center article.
+      */
+     public void showPasswordCheckup(
+             Context context,
+             @PasswordCheckReferrer int referrer,
+             Supplier<ModalDialogManager> modalDialogManagerSupplier,
+             @Nullable String accountEmail,
+-            @Nullable CustomTabLauncher customTabLauncher) {
++            @Nullable SettingsCustomTabLauncher settingsCustomTabLauncher) {
+         assert accountEmail == null || !accountEmail.isEmpty();
+         LoadingModalDialogCoordinator loadingDialogCoordinator =
+                 LoadingModalDialogCoordinator.create(modalDialogManagerSupplier.get(), context);
+@@ -229,7 +231,7 @@ public class PasswordManagerHelper {
+                 loadingDialogCoordinator,
+                 modalDialogManagerSupplier.get(),
+                 context,
+-                customTabLauncher);
++                settingsCustomTabLauncher);
+     }
+ 
+     /**
+@@ -448,13 +450,14 @@ public class PasswordManagerHelper {
+             LoadingModalDialogCoordinator loadingDialogCoordinator,
+             ModalDialogManager modalDialogManager,
+             Context context,
+-            @Nullable CustomTabLauncher customTabLauncher) {
++            @Nullable SettingsCustomTabLauncher settingsCustomTabLauncher) {
+         PasswordCheckupClientHelper checkupClient;
+         try {
+             checkupClient = getPasswordCheckupClientHelper();
+         } catch (PasswordManagerUnavailableException exception) {
+-            assert customTabLauncher != null;
+-            showPwmUnavailableOrDownloadCsvDialog(context, modalDialogManager, customTabLauncher);
++            assert settingsCustomTabLauncher != null;
++            showPwmUnavailableOrDownloadCsvDialog(
++                    context, modalDialogManager, settingsCustomTabLauncher);
+             return;
+         }
+ 
+diff --git a/chrome/browser/password_manager/android/junit/src/org/chromium/chrome/browser/password_manager/PasswordManagerCheckupHelperTest.java b/chrome/browser/password_manager/android/junit/src/org/chromium/chrome/browser/password_manager/PasswordManagerCheckupHelperTest.java
+index e3944cf1ac5a6..80245bbf1f540 100644
+--- a/chrome/browser/password_manager/android/junit/src/org/chromium/chrome/browser/password_manager/PasswordManagerCheckupHelperTest.java
++++ b/chrome/browser/password_manager/android/junit/src/org/chromium/chrome/browser/password_manager/PasswordManagerCheckupHelperTest.java
+@@ -67,8 +67,8 @@ import org.chromium.chrome.browser.pwm_disabled.PasswordCsvDownloadFlowControlle
+ import org.chromium.chrome.browser.pwm_disabled.PasswordCsvDownloadFlowControllerFactory;
+ import org.chromium.chrome.browser.sync.SyncServiceFactory;
+ import org.chromium.chrome.browser.util.BrowserUiUtils;
++import org.chromium.components.browser_ui.settings.SettingsCustomTabLauncher;
+ import org.chromium.components.browser_ui.test.BrowserUiTestFragmentActivity;
+-import org.chromium.components.browser_ui.util.CustomTabLauncher;
+ import org.chromium.components.signin.base.CoreAccountInfo;
+ import org.chromium.components.sync.SyncService;
+ import org.chromium.components.sync.UserSelectableType;
+@@ -104,7 +104,7 @@ public class PasswordManagerCheckupHelperTest {
+     // TODO(crbug.com/40854050): Use fake instead of mock
+     @Mock private PasswordManagerBackendSupportHelper mBackendSupportHelperMock;
+ 
+-    private CustomTabLauncher mCustomTabLauncher;
++    private SettingsCustomTabLauncher mSettingsCustomTabLauncher;
+ 
+     private ModalDialogManager mModalDialogManager;
+     private SettableNonNullObservableSupplier<ModalDialogManager> mModalDialogManagerSupplier;
+@@ -140,7 +140,7 @@ public class PasswordManagerCheckupHelperTest {
+                 .thenReturn(mPasswordCheckupClientHelperMock);
+         PasswordCheckupClientHelperFactory.setFactoryForTesting(
+                 mPasswordCheckupClientHelperFactoryMock);
+-        mCustomTabLauncher = (Context context, String url) -> {};
++        mSettingsCustomTabLauncher = (Context context, String url) -> {};
+     }
+ 
+     @Test
+@@ -172,7 +172,7 @@ public class PasswordManagerCheckupHelperTest {
+                 PasswordCheckReferrer.SAFETY_CHECK,
+                 mModalDialogManagerSupplier,
+                 TEST_EMAIL_ADDRESS,
+-                mCustomTabLauncher);
++                mSettingsCustomTabLauncher);
+ 
+         assertNull(mModalDialogManager.getCurrentDialogForTest());
+     }
+@@ -188,7 +188,7 @@ public class PasswordManagerCheckupHelperTest {
+                 PasswordCheckReferrer.SAFETY_CHECK,
+                 mModalDialogManagerSupplier,
+                 TEST_NO_EMAIL_ADDRESS,
+-                mCustomTabLauncher);
++                mSettingsCustomTabLauncher);
+ 
+         assertNull(mModalDialogManager.getCurrentDialogForTest());
+     }
+@@ -202,7 +202,7 @@ public class PasswordManagerCheckupHelperTest {
+                 PasswordCheckReferrer.SAFETY_CHECK,
+                 mModalDialogManagerSupplier,
+                 TEST_EMAIL_ADDRESS,
+-                mCustomTabLauncher);
++                mSettingsCustomTabLauncher);
+ 
+         verify(mPasswordCheckupClientHelperMock)
+                 .getPasswordCheckupIntent(
+@@ -219,7 +219,7 @@ public class PasswordManagerCheckupHelperTest {
+                 PasswordCheckReferrer.SAFETY_CHECK,
+                 mModalDialogManagerSupplier,
+                 TEST_NO_EMAIL_ADDRESS,
+-                mCustomTabLauncher);
++                mSettingsCustomTabLauncher);
+ 
+         verify(mPasswordCheckupClientHelperMock)
+                 .getPasswordCheckupIntent(
+@@ -238,7 +238,7 @@ public class PasswordManagerCheckupHelperTest {
+                 PasswordCheckReferrer.SAFETY_CHECK,
+                 mModalDialogManagerSupplier,
+                 TEST_EMAIL_ADDRESS,
+-                mCustomTabLauncher);
++                mSettingsCustomTabLauncher);
+         verify(mPendingIntentMock).send();
+     }
+ 
+@@ -250,7 +250,7 @@ public class PasswordManagerCheckupHelperTest {
+                 PasswordCheckReferrer.SAFETY_CHECK,
+                 mModalDialogManagerSupplier,
+                 TEST_NO_EMAIL_ADDRESS,
+-                mCustomTabLauncher);
++                mSettingsCustomTabLauncher);
+         verify(mPendingIntentMock).send();
+     }
+ 
+@@ -274,7 +274,7 @@ public class PasswordManagerCheckupHelperTest {
+                 PasswordCheckReferrer.SAFETY_CHECK,
+                 mModalDialogManagerSupplier,
+                 TEST_EMAIL_ADDRESS,
+-                mCustomTabLauncher);
++                mSettingsCustomTabLauncher);
+ 
+         histogram.assertExpected();
+     }
+@@ -297,7 +297,7 @@ public class PasswordManagerCheckupHelperTest {
+                 PasswordCheckReferrer.SAFETY_CHECK,
+                 mModalDialogManagerSupplier,
+                 TEST_NO_EMAIL_ADDRESS,
+-                mCustomTabLauncher);
++                mSettingsCustomTabLauncher);
+ 
+         histogram.assertExpected();
+     }
+@@ -324,7 +324,7 @@ public class PasswordManagerCheckupHelperTest {
+                 PasswordCheckReferrer.SAFETY_CHECK,
+                 mModalDialogManagerSupplier,
+                 TEST_EMAIL_ADDRESS,
+-                mCustomTabLauncher);
++                mSettingsCustomTabLauncher);
+ 
+         histogram.assertExpected();
+     }
+@@ -350,7 +350,7 @@ public class PasswordManagerCheckupHelperTest {
+                 PasswordCheckReferrer.SAFETY_CHECK,
+                 mModalDialogManagerSupplier,
+                 TEST_NO_EMAIL_ADDRESS,
+-                mCustomTabLauncher);
++                mSettingsCustomTabLauncher);
+ 
+         histogram.assertExpected();
+     }
+@@ -378,7 +378,7 @@ public class PasswordManagerCheckupHelperTest {
+                 PasswordCheckReferrer.SAFETY_CHECK,
+                 mModalDialogManagerSupplier,
+                 TEST_EMAIL_ADDRESS,
+-                mCustomTabLauncher);
++                mSettingsCustomTabLauncher);
+ 
+         histogram.assertExpected();
+     }
+@@ -404,7 +404,7 @@ public class PasswordManagerCheckupHelperTest {
+                 PasswordCheckReferrer.SAFETY_CHECK,
+                 mModalDialogManagerSupplier,
+                 TEST_NO_EMAIL_ADDRESS,
+-                mCustomTabLauncher);
++                mSettingsCustomTabLauncher);
+ 
+         histogram.assertExpected();
+     }
+@@ -670,7 +670,7 @@ public class PasswordManagerCheckupHelperTest {
+                 PasswordCheckReferrer.SAFETY_CHECK,
+                 mModalDialogManagerSupplier,
+                 TEST_EMAIL_ADDRESS,
+-                mCustomTabLauncher);
++                mSettingsCustomTabLauncher);
+ 
+         histogram.assertExpected();
+     }
+@@ -685,7 +685,7 @@ public class PasswordManagerCheckupHelperTest {
+                 mLoadingModalDialogCoordinator,
+                 mModalDialogManager,
+                 ContextUtils.getApplicationContext(),
+-                mCustomTabLauncher);
++                mSettingsCustomTabLauncher);
+ 
+         verify(mLoadingModalDialogCoordinator).show();
+     }
+@@ -701,7 +701,7 @@ public class PasswordManagerCheckupHelperTest {
+                 mLoadingModalDialogCoordinator,
+                 mModalDialogManager,
+                 ContextUtils.getApplicationContext(),
+-                mCustomTabLauncher);
++                mSettingsCustomTabLauncher);
+ 
+         verify(mLoadingModalDialogCoordinator).dismiss();
+     }
+@@ -719,7 +719,7 @@ public class PasswordManagerCheckupHelperTest {
+                 mLoadingModalDialogCoordinator,
+                 mModalDialogManager,
+                 ContextUtils.getApplicationContext(),
+-                mCustomTabLauncher);
++                mSettingsCustomTabLauncher);
+ 
+         verify(mLoadingModalDialogCoordinator).dismiss();
+     }
+@@ -737,7 +737,7 @@ public class PasswordManagerCheckupHelperTest {
+                 mLoadingModalDialogCoordinator,
+                 mModalDialogManager,
+                 ContextUtils.getApplicationContext(),
+-                mCustomTabLauncher);
++                mSettingsCustomTabLauncher);
+ 
+         verify(mLoadingModalDialogCoordinator).dismiss();
+     }
+@@ -756,7 +756,7 @@ public class PasswordManagerCheckupHelperTest {
+                 mLoadingModalDialogCoordinator,
+                 mModalDialogManager,
+                 ContextUtils.getApplicationContext(),
+-                mCustomTabLauncher);
++                mSettingsCustomTabLauncher);
+ 
+         verify(mPendingIntentMock, never()).send();
+     }
+@@ -775,7 +775,7 @@ public class PasswordManagerCheckupHelperTest {
+                 mLoadingModalDialogCoordinator,
+                 mModalDialogManager,
+                 ContextUtils.getApplicationContext(),
+-                mCustomTabLauncher);
++                mSettingsCustomTabLauncher);
+ 
+         verify(mPendingIntentMock, never()).send();
+     }
+@@ -793,7 +793,7 @@ public class PasswordManagerCheckupHelperTest {
+                 mLoadingModalDialogCoordinator,
+                 mModalDialogManager,
+                 ContextUtils.getApplicationContext(),
+-                mCustomTabLauncher);
++                mSettingsCustomTabLauncher);
+ 
+         verify(mPendingIntentMock, never()).send();
+ 
+@@ -814,7 +814,7 @@ public class PasswordManagerCheckupHelperTest {
+                 mLoadingModalDialogCoordinator,
+                 mModalDialogManager,
+                 ContextUtils.getApplicationContext(),
+-                mCustomTabLauncher);
++                mSettingsCustomTabLauncher);
+ 
+         verify(mLoadingModalDialogCoordinator).dismiss();
+     }
+@@ -833,7 +833,7 @@ public class PasswordManagerCheckupHelperTest {
+                 mLoadingModalDialogCoordinator,
+                 mModalDialogManager,
+                 ContextUtils.getApplicationContext(),
+-                mCustomTabLauncher);
++                mSettingsCustomTabLauncher);
+ 
+         RobolectricUtil.runAllBackgroundAndUiIncludingDelayed();
+         verify(mLoadingModalDialogCoordinator).dismiss();
+@@ -854,7 +854,7 @@ public class PasswordManagerCheckupHelperTest {
+                 mLoadingModalDialogCoordinator,
+                 mModalDialogManager,
+                 ContextUtils.getApplicationContext(),
+-                mCustomTabLauncher);
++                mSettingsCustomTabLauncher);
+ 
+         mLoadingDialogCoordinatorObserver.onDismissable();
+ 
+@@ -875,7 +875,7 @@ public class PasswordManagerCheckupHelperTest {
+                 mLoadingModalDialogCoordinator,
+                 mModalDialogManager,
+                 ContextUtils.getApplicationContext(),
+-                mCustomTabLauncher);
++                mSettingsCustomTabLauncher);
+     }
+ 
+     @Test
+@@ -892,7 +892,7 @@ public class PasswordManagerCheckupHelperTest {
+                 mLoadingModalDialogCoordinator,
+                 mModalDialogManager,
+                 ContextUtils.getApplicationContext(),
+-                mCustomTabLauncher);
++                mSettingsCustomTabLauncher);
+ 
+         when(mLoadingModalDialogCoordinator.getState())
+                 .thenReturn(LoadingModalDialogCoordinator.State.CANCELLED);
+@@ -913,7 +913,7 @@ public class PasswordManagerCheckupHelperTest {
+                 mLoadingModalDialogCoordinator,
+                 mModalDialogManager,
+                 ContextUtils.getApplicationContext(),
+-                mCustomTabLauncher);
++                mSettingsCustomTabLauncher);
+     }
+ 
+     @Test
+@@ -930,7 +930,7 @@ public class PasswordManagerCheckupHelperTest {
+                 mLoadingModalDialogCoordinator,
+                 mModalDialogManager,
+                 ContextUtils.getApplicationContext(),
+-                mCustomTabLauncher);
++                mSettingsCustomTabLauncher);
+ 
+         when(mLoadingModalDialogCoordinator.getState())
+                 .thenReturn(LoadingModalDialogCoordinator.State.TIMED_OUT);
+@@ -953,7 +953,7 @@ public class PasswordManagerCheckupHelperTest {
+                 mLoadingModalDialogCoordinator,
+                 mModalDialogManager,
+                 ContextUtils.getApplicationContext(),
+-                mCustomTabLauncher);
++                mSettingsCustomTabLauncher);
+ 
+         verify(mLoadingModalDialogCoordinator).dismiss();
+     }
+@@ -972,7 +972,7 @@ public class PasswordManagerCheckupHelperTest {
+                 mLoadingModalDialogCoordinator,
+                 mModalDialogManager,
+                 ContextUtils.getApplicationContext(),
+-                mCustomTabLauncher);
++                mSettingsCustomTabLauncher);
+ 
+         verify(mLoadingModalDialogCoordinator).dismiss();
+     }
+@@ -993,7 +993,7 @@ public class PasswordManagerCheckupHelperTest {
+                 mLoadingModalDialogCoordinator,
+                 mModalDialogManager,
+                 activity,
+-                mCustomTabLauncher);
++                mSettingsCustomTabLauncher);
+ 
+         ArgumentCaptor<Bundle> optionsCaptor = ArgumentCaptor.forClass(Bundle.class);
+         verify(mPendingIntentMock)
+@@ -1023,7 +1023,7 @@ public class PasswordManagerCheckupHelperTest {
+                 mLoadingModalDialogCoordinator,
+                 mModalDialogManager,
+                 activity,
+-                mCustomTabLauncher);
++                mSettingsCustomTabLauncher);
+ 
+         verify(mPendingIntentMock).send();
+         verify(mPendingIntentMock, never())
+@@ -1100,7 +1100,7 @@ public class PasswordManagerCheckupHelperTest {
+                 PasswordCheckReferrer.SAFETY_CHECK,
+                 mModalDialogManagerSupplier,
+                 TEST_NO_EMAIL_ADDRESS,
+-                mCustomTabLauncher);
++                mSettingsCustomTabLauncher);
+ 
+         verify(mockController)
+                 .showDialogAndStartFlow(
+@@ -1108,7 +1108,7 @@ public class PasswordManagerCheckupHelperTest {
+                         eq(mProfile),
+                         /* isGooglePlayServicesAvailable= */ eq(true),
+                         /* isPasswordManagerAvailable= */ eq(false),
+-                        eq(mCustomTabLauncher));
++                        eq(mSettingsCustomTabLauncher));
+     }
+ 
+     @Test
+@@ -1128,7 +1128,7 @@ public class PasswordManagerCheckupHelperTest {
+                 PasswordCheckReferrer.SAFETY_CHECK,
+                 mModalDialogManagerSupplier,
+                 TEST_NO_EMAIL_ADDRESS,
+-                mCustomTabLauncher);
++                mSettingsCustomTabLauncher);
+ 
+         verify(mockController)
+                 .showDialogAndStartFlow(
+@@ -1136,7 +1136,7 @@ public class PasswordManagerCheckupHelperTest {
+                         eq(mProfile),
+                         /* isGooglePlayServicesAvailable= */ eq(false),
+                         /* isPasswordManagerAvailable= */ eq(false),
+-                        eq(mCustomTabLauncher));
++                        eq(mSettingsCustomTabLauncher));
+     }
+ 
+     @Test
+@@ -1153,7 +1153,7 @@ public class PasswordManagerCheckupHelperTest {
+                 PasswordCheckReferrer.SAFETY_CHECK,
+                 mModalDialogManagerSupplier,
+                 TEST_NO_EMAIL_ADDRESS,
+-                mCustomTabLauncher);
++                mSettingsCustomTabLauncher);
+         PropertyModel dialogModel = mModalDialogManager.getCurrentDialogForTest();
+         assertNotNull(dialogModel);
+         assertEquals(
+@@ -1175,7 +1175,7 @@ public class PasswordManagerCheckupHelperTest {
+                 PasswordCheckReferrer.SAFETY_CHECK,
+                 mModalDialogManagerSupplier,
+                 TEST_NO_EMAIL_ADDRESS,
+-                mCustomTabLauncher);
++                mSettingsCustomTabLauncher);
+         PropertyModel dialogModel = mModalDialogManager.getCurrentDialogForTest();
+         assertNotNull(dialogModel);
+         assertEquals(
+diff --git a/chrome/browser/password_manager/android/junit/src/org/chromium/chrome/browser/password_manager/PasswordManagerHelperTest.java b/chrome/browser/password_manager/android/junit/src/org/chromium/chrome/browser/password_manager/PasswordManagerHelperTest.java
+index b7546cbb53720..1cf108f6466f6 100644
+--- a/chrome/browser/password_manager/android/junit/src/org/chromium/chrome/browser/password_manager/PasswordManagerHelperTest.java
++++ b/chrome/browser/password_manager/android/junit/src/org/chromium/chrome/browser/password_manager/PasswordManagerHelperTest.java
+@@ -65,9 +65,9 @@ import org.chromium.chrome.browser.pwm_disabled.PasswordCsvDownloadFlowControlle
+ import org.chromium.chrome.browser.settings.SettingsNavigationFactory;
+ import org.chromium.chrome.browser.sync.SyncServiceFactory;
+ import org.chromium.chrome.browser.util.BrowserUiUtils;
++import org.chromium.components.browser_ui.settings.SettingsCustomTabLauncher;
+ import org.chromium.components.browser_ui.settings.SettingsNavigation;
+ import org.chromium.components.browser_ui.test.BrowserUiTestFragmentActivity;
+-import org.chromium.components.browser_ui.util.CustomTabLauncher;
+ import org.chromium.components.signin.base.CoreAccountInfo;
+ import org.chromium.components.sync.SyncService;
+ import org.chromium.components.sync.UserSelectableType;
+@@ -118,7 +118,7 @@ public class PasswordManagerHelperTest {
+     @Mock private LoadingModalDialogCoordinator mLoadingModalDialogCoordinator;
+     private LoadingModalDialogCoordinator.Observer mLoadingDialogCoordinatorObserver;
+ 
+-    private CustomTabLauncher mCustomTabLauncher;
++    private SettingsCustomTabLauncher mSettingsCustomTabLauncher;
+ 
+     private PasswordManagerHelper mPasswordManagerHelper;
+ 
+@@ -155,7 +155,7 @@ public class PasswordManagerHelperTest {
+                 mCredentialManagerLauncherFactoryMock);
+ 
+         SettingsNavigationFactory.setInstanceForTesting(mSettingsNavigationMock);
+-        mCustomTabLauncher = (Context context, String url) -> {};
++        mSettingsCustomTabLauncher = (Context context, String url) -> {};
+     }
+ 
+     @Test
+@@ -169,7 +169,7 @@ public class PasswordManagerHelperTest {
+                 mModalDialogManager,
+                 /* managePasskeys= */ false,
+                 TEST_EMAIL_ADDRESS,
+-                mCustomTabLauncher);
++                mSettingsCustomTabLauncher);
+ 
+         verify(mCredentialManagerLauncherMock)
+                 .getAccountCredentialManagerIntent(
+@@ -203,7 +203,7 @@ public class PasswordManagerHelperTest {
+                 mModalDialogManager,
+                 /* managePasskeys= */ false,
+                 TEST_EMAIL_ADDRESS,
+-                mCustomTabLauncher);
++                mSettingsCustomTabLauncher);
+ 
+         histogram.assertExpected();
+     }
+@@ -232,7 +232,7 @@ public class PasswordManagerHelperTest {
+                 mModalDialogManager,
+                 /* managePasskeys= */ false,
+                 TEST_EMAIL_ADDRESS,
+-                mCustomTabLauncher);
++                mSettingsCustomTabLauncher);
+ 
+         histogram.assertExpected();
+     }
+@@ -262,7 +262,7 @@ public class PasswordManagerHelperTest {
+                 mModalDialogManager,
+                 /* managePasskeys= */ false,
+                 TEST_EMAIL_ADDRESS,
+-                mCustomTabLauncher);
++                mSettingsCustomTabLauncher);
+ 
+         histogram.assertExpected();
+     }
+@@ -706,7 +706,7 @@ public class PasswordManagerHelperTest {
+                 mModalDialogManager,
+                 /* managePasskeys= */ false,
+                 TEST_EMAIL_ADDRESS,
+-                mCustomTabLauncher);
++                mSettingsCustomTabLauncher);
+ 
+         histogram.assertExpected();
+     }
+@@ -736,7 +736,7 @@ public class PasswordManagerHelperTest {
+                 mModalDialogManager,
+                 /* managePasskeys= */ false,
+                 TEST_EMAIL_ADDRESS,
+-                mCustomTabLauncher);
++                mSettingsCustomTabLauncher);
+ 
+         histogram.assertExpected();
+     }
+@@ -766,7 +766,7 @@ public class PasswordManagerHelperTest {
+                 mModalDialogManager,
+                 /* managePasskeys= */ false,
+                 TEST_NO_EMAIL_ADDRESS,
+-                mCustomTabLauncher);
++                mSettingsCustomTabLauncher);
+ 
+         histogram.assertExpected();
+     }
+@@ -790,7 +790,7 @@ public class PasswordManagerHelperTest {
+                 mModalDialogManager,
+                 /* managePasskeys= */ false,
+                 TEST_NO_EMAIL_ADDRESS,
+-                mCustomTabLauncher);
++                mSettingsCustomTabLauncher);
+ 
+         verify(mockController)
+                 .showDialogAndStartFlow(
+@@ -798,7 +798,7 @@ public class PasswordManagerHelperTest {
+                         eq(mProfile),
+                         /* isGooglePlayServicesAvailable= */ eq(true),
+                         /* isPasswordManagerAvailable= */ eq(false),
+-                        eq(mCustomTabLauncher));
++                        eq(mSettingsCustomTabLauncher));
+     }
+ 
+     @Test
+@@ -820,7 +820,7 @@ public class PasswordManagerHelperTest {
+                 mModalDialogManager,
+                 /* managePasskeys= */ false,
+                 TEST_NO_EMAIL_ADDRESS,
+-                mCustomTabLauncher);
++                mSettingsCustomTabLauncher);
+ 
+         verify(mockController)
+                 .showDialogAndStartFlow(
+@@ -828,7 +828,7 @@ public class PasswordManagerHelperTest {
+                         eq(mProfile),
+                         /* isGooglePlayServicesAvailable= */ eq(true),
+                         /* isPasswordManagerAvailable= */ eq(true),
+-                        eq(mCustomTabLauncher));
++                        eq(mSettingsCustomTabLauncher));
+     }
+ 
+     @Test
+@@ -849,7 +849,7 @@ public class PasswordManagerHelperTest {
+                 mModalDialogManager,
+                 /* managePasskeys= */ false,
+                 TEST_NO_EMAIL_ADDRESS,
+-                mCustomTabLauncher);
++                mSettingsCustomTabLauncher);
+ 
+         verify(mockController)
+                 .showDialogAndStartFlow(
+@@ -857,7 +857,7 @@ public class PasswordManagerHelperTest {
+                         eq(mProfile),
+                         /* isGooglePlayServicesAvailable= */ eq(false),
+                         /* isPasswordManagerAvailable= */ eq(false),
+-                        eq(mCustomTabLauncher));
++                        eq(mSettingsCustomTabLauncher));
+     }
+ 
+     @Test
+@@ -875,7 +875,7 @@ public class PasswordManagerHelperTest {
+                 mModalDialogManager,
+                 /* managePasskeys= */ false,
+                 TEST_NO_EMAIL_ADDRESS,
+-                mCustomTabLauncher);
++                mSettingsCustomTabLauncher);
+         PropertyModel dialogModel = mModalDialogManager.getCurrentDialogForTest();
+         assertNotNull(dialogModel);
+         assertEquals(
+@@ -898,7 +898,7 @@ public class PasswordManagerHelperTest {
+                 mModalDialogManager,
+                 /* managePasskeys= */ false,
+                 TEST_NO_EMAIL_ADDRESS,
+-                mCustomTabLauncher);
++                mSettingsCustomTabLauncher);
+         PropertyModel dialogModel = mModalDialogManager.getCurrentDialogForTest();
+         assertNotNull(dialogModel);
+         assertEquals(
+diff --git a/chrome/browser/password_manager/android/pwm_disabled/BUILD.gn b/chrome/browser/password_manager/android/pwm_disabled/BUILD.gn
+index 68706e65d6b4a..38f7406cad906 100644
+--- a/chrome/browser/password_manager/android/pwm_disabled/BUILD.gn
++++ b/chrome/browser/password_manager/android/pwm_disabled/BUILD.gn
+@@ -35,8 +35,8 @@ android_library("java") {
+     "//chrome/browser/preferences:java",
+     "//chrome/browser/profiles/android:java",
+     "//chrome/browser/ui/android/strings:ui_strings_grd",
++    "//components/browser_ui/settings/android:java",
+     "//components/browser_ui/theme/android:java_resources",
+-    "//components/browser_ui/util/android:java",
+     "//components/browser_ui/widget/android:java",
+     "//components/device_reauth:device_reauth_java_enums",
+     "//components/prefs/android:java",
+@@ -81,8 +81,8 @@ robolectric_library("junit") {
+     "//chrome/browser/password_manager/android:utils_java",
+     "//chrome/browser/profiles/android:java",
+     "//chrome/browser/ui/android/strings:ui_strings_grd",
++    "//components/browser_ui/settings/android:java",
+     "//components/browser_ui/test/android:test_support_java",
+-    "//components/browser_ui/util/android:java",
+     "//components/device_reauth:device_reauth_java_enums",
+     "//third_party/androidx:androidx_annotation_annotation_java",
+     "//third_party/androidx:androidx_appcompat_appcompat_java",
+diff --git a/chrome/browser/password_manager/android/pwm_disabled/java/src/org/chromium/chrome/browser/pwm_disabled/PasswordCsvDownloadDialogController.java b/chrome/browser/password_manager/android/pwm_disabled/java/src/org/chromium/chrome/browser/pwm_disabled/PasswordCsvDownloadDialogController.java
+index 68626d4b52efc..7d821f435ea2a 100644
+--- a/chrome/browser/password_manager/android/pwm_disabled/java/src/org/chromium/chrome/browser/pwm_disabled/PasswordCsvDownloadDialogController.java
++++ b/chrome/browser/password_manager/android/pwm_disabled/java/src/org/chromium/chrome/browser/pwm_disabled/PasswordCsvDownloadDialogController.java
+@@ -19,7 +19,7 @@ import androidx.fragment.app.FragmentActivity;
+ 
+ import org.chromium.base.Callback;
+ import org.chromium.build.annotations.NullMarked;
+-import org.chromium.components.browser_ui.util.CustomTabLauncher;
++import org.chromium.components.browser_ui.settings.SettingsCustomTabLauncher;
+ import org.chromium.ui.modelutil.PropertyModel;
+ import org.chromium.ui.modelutil.PropertyModelChangeProcessor;
+ import org.chromium.ui.text.ChromeClickableSpan;
+@@ -34,7 +34,7 @@ class PasswordCsvDownloadDialogController {
+     private final View mDialogView;
+     private final boolean mIsGooglePlayServicesAvailable;
+ 
+-    private final CustomTabLauncher mCustomTabLauncher;
++    private final SettingsCustomTabLauncher mSettingsCustomTabLauncher;
+     private final Callback<Uri> mOnDestinationDocumentCreated;
+ 
+     private PasswordCsvDownloadDialogFragment mFragment;
+@@ -44,11 +44,11 @@ class PasswordCsvDownloadDialogController {
+             boolean isGooglePlayServicesAvailable,
+             Runnable onExportClicked,
+             Runnable onCancel,
+-            CustomTabLauncher customTabLauncher,
++            SettingsCustomTabLauncher settingsCustomTabLauncher,
+             Callback<Uri> onDestinationDocumentCreated) {
+         mActivity = activity;
+         mIsGooglePlayServicesAvailable = isGooglePlayServicesAvailable;
+-        mCustomTabLauncher = customTabLauncher;
++        mSettingsCustomTabLauncher = settingsCustomTabLauncher;
+         mOnDestinationDocumentCreated = onDestinationDocumentCreated;
+         mDialogView =
+                 LayoutInflater.from(mActivity)
+@@ -129,6 +129,6 @@ class PasswordCsvDownloadDialogController {
+     }
+ 
+     private void helpLinkClicked(View unusedView) {
+-        mCustomTabLauncher.openUrlInCct(mActivity, HELP_ARTICLE_LINK);
++        mSettingsCustomTabLauncher.openUrlInCct(mActivity, HELP_ARTICLE_LINK);
+     }
+ }
+diff --git a/chrome/browser/password_manager/android/pwm_disabled/java/src/org/chromium/chrome/browser/pwm_disabled/PasswordCsvDownloadDialogTest.java b/chrome/browser/password_manager/android/pwm_disabled/java/src/org/chromium/chrome/browser/pwm_disabled/PasswordCsvDownloadDialogTest.java
+index e7f860a908fd9..2cba0abc87387 100644
+--- a/chrome/browser/password_manager/android/pwm_disabled/java/src/org/chromium/chrome/browser/pwm_disabled/PasswordCsvDownloadDialogTest.java
++++ b/chrome/browser/password_manager/android/pwm_disabled/java/src/org/chromium/chrome/browser/pwm_disabled/PasswordCsvDownloadDialogTest.java
+@@ -35,8 +35,8 @@ import org.robolectric.shadows.ShadowActivity;
+ import org.robolectric.shadows.ShadowDialog;
+ 
+ import org.chromium.base.test.BaseRobolectricTestRunner;
++import org.chromium.components.browser_ui.settings.SettingsCustomTabLauncher;
+ import org.chromium.components.browser_ui.test.BrowserUiTestFragmentActivity;
+-import org.chromium.components.browser_ui.util.CustomTabLauncher;
+ import org.chromium.ui.text.ChromeClickableSpan;
+ import org.chromium.ui.text.SpanApplier;
+ import org.chromium.ui.widget.TextViewWithClickableSpans;
+@@ -54,7 +54,7 @@ public class PasswordCsvDownloadDialogTest {
+ 
+     private FragmentActivity mActivity;
+ 
+-    @Mock private CustomTabLauncher mCustomTabLauncher;
++    @Mock private SettingsCustomTabLauncher mSettingsCustomTabLauncher;
+ 
+     @Before
+     public void setUp() {
+@@ -72,7 +72,12 @@ public class PasswordCsvDownloadDialogTest {
+     public void testDialogContentsWithGms() {
+         mController =
+                 new PasswordCsvDownloadDialogController(
+-                        mActivity, true, () -> {}, () -> {}, mCustomTabLauncher, (Uri uri) -> {});
++                        mActivity,
++                        true,
++                        () -> {},
++                        () -> {},
++                        mSettingsCustomTabLauncher,
++                        (Uri uri) -> {});
+         mController.showDialog();
+         mActivity.getSupportFragmentManager().executePendingTransactions();
+ 
+@@ -108,7 +113,12 @@ public class PasswordCsvDownloadDialogTest {
+     public void testDialogContentsNoGms() {
+         mController =
+                 new PasswordCsvDownloadDialogController(
+-                        mActivity, false, () -> {}, () -> {}, mCustomTabLauncher, (Uri uri) -> {});
++                        mActivity,
++                        false,
++                        () -> {},
++                        () -> {},
++                        mSettingsCustomTabLauncher,
++                        (Uri uri) -> {});
+         mController.showDialog();
+         mActivity.getSupportFragmentManager().executePendingTransactions();
+ 
+@@ -141,7 +151,7 @@ public class PasswordCsvDownloadDialogTest {
+                         false,
+                         positiveButtonCalback,
+                         () -> {},
+-                        mCustomTabLauncher,
++                        mSettingsCustomTabLauncher,
+                         (Uri uri) -> {});
+         mController.showDialog();
+         mActivity.getSupportFragmentManager().executePendingTransactions();
+@@ -160,7 +170,7 @@ public class PasswordCsvDownloadDialogTest {
+                         false,
+                         () -> {},
+                         negativeButtonCalback,
+-                        mCustomTabLauncher,
++                        mSettingsCustomTabLauncher,
+                         (Uri uri) -> {});
+         mController.showDialog();
+         mActivity.getSupportFragmentManager().executePendingTransactions();
+@@ -174,7 +184,12 @@ public class PasswordCsvDownloadDialogTest {
+     public void testHelpLinkClick() {
+         mController =
+                 new PasswordCsvDownloadDialogController(
+-                        mActivity, true, () -> {}, () -> {}, mCustomTabLauncher, (Uri uri) -> {});
++                        mActivity,
++                        true,
++                        () -> {},
++                        () -> {},
++                        mSettingsCustomTabLauncher,
++                        (Uri uri) -> {});
+         mController.showDialog();
+         mActivity.getSupportFragmentManager().executePendingTransactions();
+ 
+@@ -183,7 +198,7 @@ public class PasswordCsvDownloadDialogTest {
+         ClickableSpan[] clickableSpans = textView.getClickableSpans();
+         assertEquals(1, clickableSpans.length);
+         clickableSpans[0].onClick(textView);
+-        verify(mCustomTabLauncher).openUrlInCct(any(), any());
++        verify(mSettingsCustomTabLauncher).openUrlInCct(any(), any());
+     }
+ 
+     @Test
+@@ -195,7 +210,7 @@ public class PasswordCsvDownloadDialogTest {
+                         false,
+                         () -> {},
+                         () -> {},
+-                        mCustomTabLauncher,
++                        mSettingsCustomTabLauncher,
+                         (destinationUri) -> {
+                             uri.set(destinationUri);
+                         });
+diff --git a/chrome/browser/password_manager/android/pwm_disabled/java/src/org/chromium/chrome/browser/pwm_disabled/PasswordCsvDownloadFlowController.java b/chrome/browser/password_manager/android/pwm_disabled/java/src/org/chromium/chrome/browser/pwm_disabled/PasswordCsvDownloadFlowController.java
+index 1488accc736d9..946c8cc51de73 100644
+--- a/chrome/browser/password_manager/android/pwm_disabled/java/src/org/chromium/chrome/browser/pwm_disabled/PasswordCsvDownloadFlowController.java
++++ b/chrome/browser/password_manager/android/pwm_disabled/java/src/org/chromium/chrome/browser/pwm_disabled/PasswordCsvDownloadFlowController.java
+@@ -26,7 +26,7 @@ import org.chromium.chrome.browser.password_manager.LoginDbDeprecationUtilBridge
+ import org.chromium.chrome.browser.profiles.Profile;
+ import org.chromium.chrome.browser.pwm_disabled.PwmDeprecationDialogsMetricsRecorder.DownloadCsvDialogType;
+ import org.chromium.chrome.browser.pwm_disabled.PwmDeprecationDialogsMetricsRecorder.DownloadCsvFlowStep;
+-import org.chromium.components.browser_ui.util.CustomTabLauncher;
++import org.chromium.components.browser_ui.settings.SettingsCustomTabLauncher;
+ import org.chromium.ui.widget.Toast;
+ 
+ import java.io.File;
+@@ -59,7 +59,7 @@ public class PasswordCsvDownloadFlowController {
+             Profile profile,
+             boolean isGooglePlayServicesAvailable,
+             boolean isPasswordManagerAvailable,
+-            CustomTabLauncher customTabLauncher) {
++            SettingsCustomTabLauncher settingsCustomTabLauncher) {
+         mProfile = profile;
+         mFragmentActivity = activity;
+         mCsvDownloadDialogController =
+@@ -71,7 +71,7 @@ public class PasswordCsvDownloadFlowController {
+                             dismissDownloadDialog();
+                             endFlow();
+                         },
+-                        customTabLauncher,
++                        settingsCustomTabLauncher,
+                         this::onDownloadLocationSet);
+         mCsvDownloadDialogController.showDialog();
+         mLastFlowStep = DownloadCsvFlowStep.DISMISSED_DIALOG;
+diff --git a/chrome/browser/password_manager/android/pwm_disabled/java/src/org/chromium/chrome/browser/pwm_disabled/PasswordCsvDownloadFlowControllerTest.java b/chrome/browser/password_manager/android/pwm_disabled/java/src/org/chromium/chrome/browser/pwm_disabled/PasswordCsvDownloadFlowControllerTest.java
+index 88168e5f1ab41..7387217562959 100644
+--- a/chrome/browser/password_manager/android/pwm_disabled/java/src/org/chromium/chrome/browser/pwm_disabled/PasswordCsvDownloadFlowControllerTest.java
++++ b/chrome/browser/password_manager/android/pwm_disabled/java/src/org/chromium/chrome/browser/pwm_disabled/PasswordCsvDownloadFlowControllerTest.java
+@@ -61,8 +61,8 @@ import org.chromium.chrome.browser.password_manager.LoginDbDeprecationUtilBridge
+ import org.chromium.chrome.browser.password_manager.LoginDbDeprecationUtilBridgeJni;
+ import org.chromium.chrome.browser.profiles.Profile;
+ import org.chromium.chrome.browser.pwm_disabled.PwmDeprecationDialogsMetricsRecorder.DownloadCsvFlowStep;
++import org.chromium.components.browser_ui.settings.SettingsCustomTabLauncher;
+ import org.chromium.components.browser_ui.test.BrowserUiTestFragmentActivity;
+-import org.chromium.components.browser_ui.util.CustomTabLauncher;
+ import org.chromium.ui.test.util.MockitoHelper;
+ import org.chromium.ui.widget.ToastManager;
+ 
+@@ -99,7 +99,7 @@ public class PasswordCsvDownloadFlowControllerTest {
+     @Mock Profile mProfile;
+     @Mock ReauthenticatorBridge mReauthenticatorBridge;
+     @Mock LoginDbDeprecationUtilBridge.Natives mLoginDbDeprecationUtilBridge;
+-    @Mock CustomTabLauncher mCustomTabLauncher;
++    @Mock SettingsCustomTabLauncher mSettingsCustomTabLauncher;
+ 
+     @Before
+     public void setUp() {
+@@ -131,7 +131,8 @@ public class PasswordCsvDownloadFlowControllerTest {
+                         FULL_SUPPORT_GMS_DOWNLOAD_FLOW_LAST_STEP_HISTOGRAM,
+                         DownloadCsvFlowStep.NO_SCREEN_LOCK);
+         mController = new PasswordCsvDownloadFlowController(mEndOfFlowCallback);
+-        mController.showDialogAndStartFlow(mActivity, mProfile, true, true, mCustomTabLauncher);
++        mController.showDialogAndStartFlow(
++                mActivity, mProfile, true, true, mSettingsCustomTabLauncher);
+         mActivity.getSupportFragmentManager().executePendingTransactions();
+ 
+         ReauthenticatorBridge.setInstanceForTesting(mReauthenticatorBridge);
+@@ -164,7 +165,8 @@ public class PasswordCsvDownloadFlowControllerTest {
+                         FULL_SUPPORT_GMS_DOWNLOAD_FLOW_LAST_STEP_HISTOGRAM,
+                         DownloadCsvFlowStep.REAUTH_FAILED);
+         mController = new PasswordCsvDownloadFlowController(mEndOfFlowCallback);
+-        mController.showDialogAndStartFlow(mActivity, mProfile, true, true, mCustomTabLauncher);
++        mController.showDialogAndStartFlow(
++                mActivity, mProfile, true, true, mSettingsCustomTabLauncher);
+         mActivity.getSupportFragmentManager().executePendingTransactions();
+ 
+         ReauthenticatorBridge.setInstanceForTesting(mReauthenticatorBridge);
+@@ -193,7 +195,8 @@ public class PasswordCsvDownloadFlowControllerTest {
+         File sourceFile = setUpTempAutoExportedCsv(TEST_FILE_DATA);
+ 
+         mController = new PasswordCsvDownloadFlowController(mEndOfFlowCallback);
+-        mController.showDialogAndStartFlow(mActivity, mProfile, true, true, mCustomTabLauncher);
++        mController.showDialogAndStartFlow(
++                mActivity, mProfile, true, true, mSettingsCustomTabLauncher);
+         mActivity.getSupportFragmentManager().executePendingTransactions();
+ 
+         ReauthenticatorBridge.setInstanceForTesting(mReauthenticatorBridge);
+@@ -236,7 +239,8 @@ public class PasswordCsvDownloadFlowControllerTest {
+         File sourceFile = setUpTempAutoExportedCsv(TEST_FILE_DATA);
+ 
+         mController = new PasswordCsvDownloadFlowController(mEndOfFlowCallback);
+-        mController.showDialogAndStartFlow(mActivity, mProfile, true, true, mCustomTabLauncher);
++        mController.showDialogAndStartFlow(
++                mActivity, mProfile, true, true, mSettingsCustomTabLauncher);
+         mActivity.getSupportFragmentManager().executePendingTransactions();
+ 
+         ReauthenticatorBridge.setInstanceForTesting(mReauthenticatorBridge);
+@@ -306,7 +310,8 @@ public class PasswordCsvDownloadFlowControllerTest {
+         File sourceFile = setUpTempAutoExportedCsv(TEST_FILE_DATA);
+ 
+         mController = new PasswordCsvDownloadFlowController(mEndOfFlowCallback);
+-        mController.showDialogAndStartFlow(mActivity, mProfile, true, true, mCustomTabLauncher);
++        mController.showDialogAndStartFlow(
++                mActivity, mProfile, true, true, mSettingsCustomTabLauncher);
+         mActivity.getSupportFragmentManager().executePendingTransactions();
+ 
+         ReauthenticatorBridge.setInstanceForTesting(mReauthenticatorBridge);
+@@ -350,7 +355,8 @@ public class PasswordCsvDownloadFlowControllerTest {
+     public void testDownloadFlowForRecreatedActivity() throws IOException {
+         mController = new PasswordCsvDownloadFlowController(mEndOfFlowCallback);
+         PasswordCsvDownloadFlowControllerFactory.setControllerForTesting(mController);
+-        mController.showDialogAndStartFlow(mActivity, mProfile, true, true, mCustomTabLauncher);
++        mController.showDialogAndStartFlow(
++                mActivity, mProfile, true, true, mSettingsCustomTabLauncher);
+         mActivity.getSupportFragmentManager().executePendingTransactions();
+ 
+         ReauthenticatorBridge.setInstanceForTesting(mReauthenticatorBridge);
+@@ -385,7 +391,8 @@ public class PasswordCsvDownloadFlowControllerTest {
+                         DownloadCsvFlowStep.DISMISSED_DIALOG);
+ 
+         mController = new PasswordCsvDownloadFlowController(mEndOfFlowCallback);
+-        mController.showDialogAndStartFlow(mActivity, mProfile, true, false, mCustomTabLauncher);
++        mController.showDialogAndStartFlow(
++                mActivity, mProfile, true, false, mSettingsCustomTabLauncher);
+         mActivity.getSupportFragmentManager().executePendingTransactions();
+ 
+         Dialog dialog = ShadowDialog.getLatestDialog();
+@@ -402,7 +409,8 @@ public class PasswordCsvDownloadFlowControllerTest {
+                         DownloadCsvFlowStep.DISMISSED_DIALOG);
+ 
+         mController = new PasswordCsvDownloadFlowController(mEndOfFlowCallback);
+-        mController.showDialogAndStartFlow(mActivity, mProfile, false, false, mCustomTabLauncher);
++        mController.showDialogAndStartFlow(
++                mActivity, mProfile, false, false, mSettingsCustomTabLauncher);
+         mActivity.getSupportFragmentManager().executePendingTransactions();
+ 
+         Dialog dialog = ShadowDialog.getLatestDialog();
+@@ -445,7 +453,8 @@ public class PasswordCsvDownloadFlowControllerTest {
+                         FULL_SUPPORT_GMS_DOWNLOAD_FLOW_LAST_STEP_HISTOGRAM,
+                         DownloadCsvFlowStep.NO_SCREEN_LOCK);
+         mController = new PasswordCsvDownloadFlowController(mEndOfFlowCallback);
+-        mController.showDialogAndStartFlow(mActivity, mProfile, true, true, mCustomTabLauncher);
++        mController.showDialogAndStartFlow(
++                mActivity, mProfile, true, true, mSettingsCustomTabLauncher);
+         mActivity.getSupportFragmentManager().executePendingTransactions();
+ 
+         DeviceAuthAvailabilityCheckerBridge.setBiometricAvailabilityStatusForTesting(
+@@ -479,7 +488,8 @@ public class PasswordCsvDownloadFlowControllerTest {
+                         FULL_SUPPORT_GMS_DOWNLOAD_FLOW_LAST_STEP_HISTOGRAM,
+                         DownloadCsvFlowStep.REAUTH_FAILED);
+         mController = new PasswordCsvDownloadFlowController(mEndOfFlowCallback);
+-        mController.showDialogAndStartFlow(mActivity, mProfile, true, true, mCustomTabLauncher);
++        mController.showDialogAndStartFlow(
++                mActivity, mProfile, true, true, mSettingsCustomTabLauncher);
+         mActivity.getSupportFragmentManager().executePendingTransactions();
+ 
+         ReauthenticatorBridge.setInstanceForTesting(mReauthenticatorBridge);
+diff --git a/chrome/browser/privacy_guide/android/BUILD.gn b/chrome/browser/privacy_guide/android/BUILD.gn
+index 8774e3a0ce062..45136797995d8 100644
+--- a/chrome/browser/privacy_guide/android/BUILD.gn
++++ b/chrome/browser/privacy_guide/android/BUILD.gn
+@@ -41,7 +41,6 @@ android_library("java") {
+     "//components/browser_ui/bottomsheet/android:java",
+     "//components/browser_ui/settings/android:java",
+     "//components/browser_ui/site_settings/android:java",
+-    "//components/browser_ui/util/android:java",
+     "//components/browser_ui/widget/android:java",
+     "//components/content_settings/android:content_settings_enums_java",
+     "//components/embedder_support/android:util_java",
+diff --git a/chrome/browser/privacy_guide/android/java/src/org/chromium/chrome/browser/privacy_guide/PrivacyGuideBasePage.java b/chrome/browser/privacy_guide/android/java/src/org/chromium/chrome/browser/privacy_guide/PrivacyGuideBasePage.java
+index acdc99850ad15..b1d5ba38e19c6 100644
+--- a/chrome/browser/privacy_guide/android/java/src/org/chromium/chrome/browser/privacy_guide/PrivacyGuideBasePage.java
++++ b/chrome/browser/privacy_guide/android/java/src/org/chromium/chrome/browser/privacy_guide/PrivacyGuideBasePage.java
+@@ -10,14 +10,15 @@ import org.chromium.build.annotations.Initializer;
+ import org.chromium.build.annotations.NullMarked;
+ import org.chromium.chrome.browser.profiles.Profile;
+ import org.chromium.chrome.browser.settings.ProfileDependentSetting;
+-import org.chromium.components.browser_ui.util.CustomTabLauncher;
++import org.chromium.components.browser_ui.settings.SettingsCustomTabLauncher;
+ 
+ /** Handles common dependencies for pages of the Privacy Guide. */
+ @NullMarked
+ public abstract class PrivacyGuideBasePage extends Fragment
+-        implements ProfileDependentSetting, CustomTabLauncher.CustomTabLauncherClient {
++        implements ProfileDependentSetting,
++                SettingsCustomTabLauncher.SettingsCustomTabLauncherClient {
+     private Profile mProfile;
+-    private CustomTabLauncher mCustomTabLauncher;
++    private SettingsCustomTabLauncher mCustomTabLauncher;
+ 
+     /** Return the profile associated with this page. */
+     public Profile getProfile() {
+@@ -26,7 +27,7 @@ public abstract class PrivacyGuideBasePage extends Fragment
+ 
+     @Initializer
+     @Override
+-    public void setCustomTabLauncher(CustomTabLauncher customTabLauncher) {
++    public void setCustomTabLauncher(SettingsCustomTabLauncher customTabLauncher) {
+         mCustomTabLauncher = customTabLauncher;
+     }
+ 
+@@ -39,7 +40,7 @@ public abstract class PrivacyGuideBasePage extends Fragment
+     /**
+      * @return The launcher for CCT.
+      */
+-    public CustomTabLauncher getCustomTabLauncher() {
++    public SettingsCustomTabLauncher getCustomTabLauncher() {
+         return mCustomTabLauncher;
+     }
+ }
+diff --git a/chrome/browser/safety_check/android/BUILD.gn b/chrome/browser/safety_check/android/BUILD.gn
+index 5ed0db0d9a737..3f04ed7b6d457 100644
+--- a/chrome/browser/safety_check/android/BUILD.gn
++++ b/chrome/browser/safety_check/android/BUILD.gn
+@@ -54,7 +54,6 @@ android_library("java") {
+     "//chrome/browser/sync/android:java",
+     "//chrome/browser/ui/android/signin:java",
+     "//components/browser_ui/settings/android:java",
+-    "//components/browser_ui/util/android:java",
+     "//components/password_manager/core/browser:password_manager_java_enums",
+     "//components/prefs/android:java",
+     "//components/signin/public/android:java",
+@@ -142,7 +141,6 @@ robolectric_library("junit") {
+     "//chrome/browser/ui/android/signin:java",
+     "//chrome/test/android:chrome_java_unit_test_support",
+     "//components/browser_ui/settings/android:java",
+-    "//components/browser_ui/util/android:java",
+     "//components/commerce/core:proto_java",
+     "//components/password_manager/core/browser:password_manager_java_enums",
+     "//components/prefs/android:java",
+diff --git a/chrome/browser/safety_check/android/java/src/org/chromium/chrome/browser/safety_check/SafetyCheckCoordinator.java b/chrome/browser/safety_check/android/java/src/org/chromium/chrome/browser/safety_check/SafetyCheckCoordinator.java
+index caec6ce68c157..6c0916c9cdef5 100644
+--- a/chrome/browser/safety_check/android/java/src/org/chromium/chrome/browser/safety_check/SafetyCheckCoordinator.java
++++ b/chrome/browser/safety_check/android/java/src/org/chromium/chrome/browser/safety_check/SafetyCheckCoordinator.java
+@@ -21,7 +21,7 @@ import org.chromium.build.annotations.Nullable;
+ import org.chromium.chrome.browser.password_manager.PasswordManagerHelper;
+ import org.chromium.chrome.browser.password_manager.PasswordStoreBridge;
+ import org.chromium.chrome.browser.pwd_check_wrapper.PasswordCheckControllerFactory;
+-import org.chromium.components.browser_ui.util.CustomTabLauncher;
++import org.chromium.components.browser_ui.settings.SettingsCustomTabLauncher;
+ import org.chromium.components.signin.base.CoreAccountInfo;
+ import org.chromium.components.sync.SyncService;
+ import org.chromium.ui.modaldialog.ModalDialogManager;
+@@ -52,8 +52,8 @@ public class SafetyCheckCoordinator implements DefaultLifecycleObserver, SafetyC
+      * @param passwordStoreBridge Provides access to stored passwords.
+      * @param passwordManagerHelper An instance of {@link PasswordManagerHelper} that provides
+      *     access to password management capabilities.
+-     * @param customTabLauncher Used by password manager to open a help center article in a custom
+-     *     tab.
++     * @param settingsCustomTabLauncher Used by password manager to open a help center article in a
++     *     custom tab.
+      */
+     public static void create(
+             SafetyCheckSettingsFragment settingsFragment,
+@@ -63,7 +63,7 @@ public class SafetyCheckCoordinator implements DefaultLifecycleObserver, SafetyC
+             @Nullable SyncService syncService,
+             PasswordStoreBridge passwordStoreBridge,
+             PasswordManagerHelper passwordManagerHelper,
+-            CustomTabLauncher customTabLauncher) {
++            SettingsCustomTabLauncher settingsCustomTabLauncher) {
+         new SafetyCheckCoordinator(
+                 settingsFragment,
+                 updatesClient,
+@@ -72,7 +72,7 @@ public class SafetyCheckCoordinator implements DefaultLifecycleObserver, SafetyC
+                 syncService,
+                 passwordStoreBridge,
+                 passwordManagerHelper,
+-                customTabLauncher);
++                settingsCustomTabLauncher);
+     }
+ 
+     private SafetyCheckCoordinator(
+@@ -83,7 +83,7 @@ public class SafetyCheckCoordinator implements DefaultLifecycleObserver, SafetyC
+             @Nullable SyncService syncService,
+             PasswordStoreBridge passwordStoreBridge,
+             PasswordManagerHelper passwordManagerHelper,
+-            CustomTabLauncher customTabLauncher) {
++            SettingsCustomTabLauncher settingsCustomTabLauncher) {
+         mSettingsFragment = settingsFragment;
+         mUpdatesClient = updatesClient;
+         mSyncService = syncService;
+@@ -129,7 +129,7 @@ public class SafetyCheckCoordinator implements DefaultLifecycleObserver, SafetyC
+                                                     new PasswordCheckControllerFactory(),
+                                                     passwordManagerHelper,
+                                                     modalDialogManagerSupplier,
+-                                                    customTabLauncher);
++                                                    settingsCustomTabLauncher);
+                                 }
+                             }
+                         });
+diff --git a/chrome/browser/safety_check/android/java/src/org/chromium/chrome/browser/safety_check/SafetyCheckMediator.java b/chrome/browser/safety_check/android/java/src/org/chromium/chrome/browser/safety_check/SafetyCheckMediator.java
+index 2fae1cc2fea32..8951384d5ea8f 100644
+--- a/chrome/browser/safety_check/android/java/src/org/chromium/chrome/browser/safety_check/SafetyCheckMediator.java
++++ b/chrome/browser/safety_check/android/java/src/org/chromium/chrome/browser/safety_check/SafetyCheckMediator.java
+@@ -43,7 +43,7 @@ import org.chromium.chrome.browser.safety_check.PasswordsCheckPreferenceProperti
+ import org.chromium.chrome.browser.safety_check.SafetyCheckProperties.SafeBrowsingState;
+ import org.chromium.chrome.browser.safety_check.SafetyCheckProperties.UpdatesState;
+ import org.chromium.chrome.browser.settings.SettingsNavigationFactory;
+-import org.chromium.components.browser_ui.util.CustomTabLauncher;
++import org.chromium.components.browser_ui.settings.SettingsCustomTabLauncher;
+ import org.chromium.components.sync.SyncService;
+ import org.chromium.content_public.common.ContentUrlConstants;
+ import org.chromium.ui.modaldialog.ModalDialogManager;
+@@ -101,7 +101,7 @@ class SafetyCheckMediator {
+      * Used to open a p-link help center article in a custom tab. Needed by the password manager
+      * settings.
+      */
+-    private final CustomTabLauncher mCustomTabLauncher;
++    private final SettingsCustomTabLauncher mSettingsCustomTabLauncher;
+ 
+     private final MonotonicObservableSupplier<ModalDialogManager> mModalDialogManagerSupplier;
+ 
+@@ -194,7 +194,7 @@ class SafetyCheckMediator {
+             PasswordCheckControllerFactory passwordCheckControllerFactory,
+             PasswordManagerHelper passwordManagerHelper,
+             MonotonicObservableSupplier<ModalDialogManager> modalDialogManagerSupplier,
+-            CustomTabLauncher customTabLauncher) {
++            SettingsCustomTabLauncher settingsCustomTabLauncher) {
+         mSafetyCheckModel = safetyCheckModel;
+         mPasswordsCheckAccountStorageModel = passwordsCheckAccountModel;
+         mPasswordsCheckLocalStorageModel = passwordsCheckLocalModel;
+@@ -208,7 +208,7 @@ class SafetyCheckMediator {
+                         syncService, passwordStoreBridge, passwordManagerHelper);
+         mPasswordManagerHelper = passwordManagerHelper;
+         mModalDialogManagerSupplier = modalDialogManagerSupplier;
+-        mCustomTabLauncher = customTabLauncher;
++        mSettingsCustomTabLauncher = settingsCustomTabLauncher;
+         // Set the listener for clicking the updates element.
+         mSafetyCheckModel.set(
+                 SafetyCheckProperties.UPDATES_CLICK_LISTENER,
+@@ -479,7 +479,7 @@ class SafetyCheckMediator {
+                                 mModalDialogManagerSupplier.asNonNull().get(),
+                                 /* managePasskeys= */ false,
+                                 account,
+-                                mCustomTabLauncher);
++                                mSettingsCustomTabLauncher);
+                         return true;
+                     };
+         } else if (state == PasswordsState.COMPROMISED_EXIST || state == PasswordsState.SAFE) {
+@@ -505,7 +505,7 @@ class SafetyCheckMediator {
+                                 PasswordCheckReferrer.SAFETY_CHECK,
+                                 mModalDialogManagerSupplier.asNonNull(),
+                                 account,
+-                                mCustomTabLauncher);
++                                mSettingsCustomTabLauncher);
+                         return true;
+                     };
+         }
+diff --git a/chrome/browser/safety_check/android/javatests/src/org/chromium/chrome/browser/safety_check/SafetyCheckMediatorTest.java b/chrome/browser/safety_check/android/javatests/src/org/chromium/chrome/browser/safety_check/SafetyCheckMediatorTest.java
+index 631a749828322..9413da9b24fa5 100644
+--- a/chrome/browser/safety_check/android/javatests/src/org/chromium/chrome/browser/safety_check/SafetyCheckMediatorTest.java
++++ b/chrome/browser/safety_check/android/javatests/src/org/chromium/chrome/browser/safety_check/SafetyCheckMediatorTest.java
+@@ -70,8 +70,8 @@ import org.chromium.chrome.browser.safety_check.SafetyCheckProperties.SafeBrowsi
+ import org.chromium.chrome.browser.safety_check.SafetyCheckProperties.UpdatesState;
+ import org.chromium.chrome.browser.settings.SettingsNavigationFactory;
+ import org.chromium.chrome.browser.sync.SyncServiceFactory;
++import org.chromium.components.browser_ui.settings.SettingsCustomTabLauncher;
+ import org.chromium.components.browser_ui.settings.SettingsNavigation;
+-import org.chromium.components.browser_ui.util.CustomTabLauncher;
+ import org.chromium.components.signin.base.CoreAccountInfo;
+ import org.chromium.components.sync.SyncService;
+ import org.chromium.components.sync.UserSelectableType;
+@@ -125,7 +125,7 @@ public class SafetyCheckMediatorTest {
+     @Mock private PasswordManagerHelper.Natives mPasswordManagerHelperNativeMock;
+     @Mock LoadingModalDialogCoordinator mLoadingModalDialogCoordinator;
+     private FakePasswordCheckControllerFactory mPasswordCheckControllerFactory;
+-    @Mock private CustomTabLauncher mCustomTabLauncher;
++    @Mock private SettingsCustomTabLauncher mSettingsCustomTabLauncher;
+ 
+     private SafetyCheckMediator mMediator;
+ 
+@@ -204,7 +204,7 @@ public class SafetyCheckMediatorTest {
+                 mPasswordCheckControllerFactory,
+                 PasswordManagerHelper.getForProfile(mProfile),
+                 mModalDialogManagerSupplier,
+-                mCustomTabLauncher);
++                mSettingsCustomTabLauncher);
+     }
+ 
+     private Preference.OnPreferenceClickListener getPasswordsClickListener(
+diff --git a/chrome/browser/safety_hub/android/BUILD.gn b/chrome/browser/safety_hub/android/BUILD.gn
+index 980b954353cb5..3a806e3733f48 100644
+--- a/chrome/browser/safety_hub/android/BUILD.gn
++++ b/chrome/browser/safety_hub/android/BUILD.gn
+@@ -189,7 +189,6 @@ robolectric_library("junit") {
+     "//components/browser_ui/notifications/android:test_support_java",
+     "//components/browser_ui/notifications/android:utils_java",
+     "//components/browser_ui/settings/android:java",
+-    "//components/browser_ui/util/android:java",
+     "//components/content_settings/core/common:content_settings_types_java",
+     "//components/prefs/android:java",
+     "//components/signin/public/android:signin_java_test_support",
+diff --git a/chrome/browser/safety_hub/android/java/src/org/chromium/chrome/browser/safety_hub/SafetyHubMagicStackMediator.java b/chrome/browser/safety_hub/android/java/src/org/chromium/chrome/browser/safety_hub/SafetyHubMagicStackMediator.java
+index 6cea69db8c459..14662d9767ce2 100644
+--- a/chrome/browser/safety_hub/android/java/src/org/chromium/chrome/browser/safety_hub/SafetyHubMagicStackMediator.java
++++ b/chrome/browser/safety_hub/android/java/src/org/chromium/chrome/browser/safety_hub/SafetyHubMagicStackMediator.java
+@@ -234,7 +234,7 @@ class SafetyHubMagicStackMediator implements TabModelSelectorObserver, MagicStac
+         mModel.set(
+                 SafetyHubMagicStackViewProperties.BUTTON_ON_CLICK_LISTENER,
+                 (view) -> {
+-                    // The customTabLauncher is only needed by dialogs shown when
++                    // The settingsCustomTabLauncher is only needed by dialogs shown when
+                     // password manager is not available. Since the SafetyHub magic stack
+                     // card is only shown if the password manager is accessible, it's fine
+                     // to pass null instead.
+@@ -242,7 +242,7 @@ class SafetyHubMagicStackMediator implements TabModelSelectorObserver, MagicStac
+                             mContext,
+                             mProfile,
+                             mModalDialogManagerSupplier,
+-                            /* customTabLauncher= */ null);
++                            /* settingsCustomTabLauncher= */ null);
+                     recordExternalInteractions(ExternalInteractions.OPEN_GPM_FROM_MAGIC_STACK);
+                     mMagicStackBridge.dismissCompromisedPasswordsModule();
+                     dismissModule();
+diff --git a/chrome/browser/safety_hub/android/java/src/org/chromium/chrome/browser/safety_hub/SafetyHubModuleDelegateImpl.java b/chrome/browser/safety_hub/android/java/src/org/chromium/chrome/browser/safety_hub/SafetyHubModuleDelegateImpl.java
+index 7e065120b2d6c..60b701eae8e9c 100644
+--- a/chrome/browser/safety_hub/android/java/src/org/chromium/chrome/browser/safety_hub/SafetyHubModuleDelegateImpl.java
++++ b/chrome/browser/safety_hub/android/java/src/org/chromium/chrome/browser/safety_hub/SafetyHubModuleDelegateImpl.java
+@@ -32,7 +32,7 @@ import org.chromium.chrome.browser.ui.signin.account_picker.AccountPickerBottomS
+ import org.chromium.chrome.browser.ui.signin.history_sync.HistorySyncConfig;
+ import org.chromium.components.browser_ui.bottomsheet.BottomSheetController;
+ import org.chromium.components.browser_ui.device_lock.DeviceLockActivityLauncher;
+-import org.chromium.components.browser_ui.util.CustomTabLauncher;
++import org.chromium.components.browser_ui.settings.SettingsCustomTabLauncher;
+ import org.chromium.components.signin.SigninFeatureMap;
+ import org.chromium.components.signin.metrics.SigninAccessPoint;
+ import org.chromium.components.sync.SyncService;
+@@ -51,7 +51,7 @@ public class SafetyHubModuleDelegateImpl
+     private final Profile mProfile;
+     private final Supplier<@Nullable ModalDialogManager> mModalDialogManagerSupplier;
+     private final SigninAndHistorySyncActivityLauncher mSigninLauncher;
+-    private final CustomTabLauncher mCustomTabLauncher;
++    private final SettingsCustomTabLauncher mSettingsCustomTabLauncher;
+     private @Nullable BottomSheetSigninAndHistorySyncCoordinator mSigninCoordinator;
+ 
+     /**
+@@ -68,8 +68,8 @@ public class SafetyHubModuleDelegateImpl
+      * @param modalDialogManagerSupplier A supplier for {@link ModalDialogManager} that will be used
+      *     to launch the password check UI.
+      * @param signinLauncher Launcher for the sign-in flow.
+-     * @param customTabLauncher Used by the password manager dialogs to open a help center article
+-     *     in a CCT.
++     * @param settingsCustomTabLauncher Used by the password manager dialogs to open a help center
++     *     article in a CCT.
+      */
+     public SafetyHubModuleDelegateImpl(
+             Supplier<@Nullable WindowAndroid> windowAndroidSupplier,
+@@ -81,11 +81,11 @@ public class SafetyHubModuleDelegateImpl
+             Supplier<@Nullable BottomSheetController> bottomSheetControllerSupplier,
+             Supplier<@Nullable ModalDialogManager> modalDialogManagerSupplier,
+             SigninAndHistorySyncActivityLauncher signinLauncher,
+-            CustomTabLauncher customTabLauncher) {
++            SettingsCustomTabLauncher settingsCustomTabLauncher) {
+         mProfile = profile;
+         mModalDialogManagerSupplier = modalDialogManagerSupplier;
+         mSigninLauncher = signinLauncher;
+-        mCustomTabLauncher = customTabLauncher;
++        mSettingsCustomTabLauncher = settingsCustomTabLauncher;
+ 
+         if (SigninFeatureMap.getInstance().isActivitylessSigninAllEntryPointEnabled()) {
+             SupplierUtils.waitForAll(
+@@ -119,7 +119,7 @@ public class SafetyHubModuleDelegateImpl
+                 context,
+                 mProfile,
+                 SupplierUtils.asNonNull(mModalDialogManagerSupplier),
+-                mCustomTabLauncher);
++                mSettingsCustomTabLauncher);
+     }
+ 
+     @Override
+@@ -128,7 +128,7 @@ public class SafetyHubModuleDelegateImpl
+                 context,
+                 mProfile,
+                 SupplierUtils.asNonNull(mModalDialogManagerSupplier),
+-                mCustomTabLauncher);
++                mSettingsCustomTabLauncher);
+     }
+ 
+     @Override
+diff --git a/chrome/browser/safety_hub/android/java/src/org/chromium/chrome/browser/safety_hub/SafetyHubUtils.java b/chrome/browser/safety_hub/android/java/src/org/chromium/chrome/browser/safety_hub/SafetyHubUtils.java
+index ca53b25bb6efd..a5023f581a50c 100644
+--- a/chrome/browser/safety_hub/android/java/src/org/chromium/chrome/browser/safety_hub/SafetyHubUtils.java
++++ b/chrome/browser/safety_hub/android/java/src/org/chromium/chrome/browser/safety_hub/SafetyHubUtils.java
+@@ -17,8 +17,8 @@ import org.chromium.chrome.browser.safe_browsing.SafeBrowsingBridge;
+ import org.chromium.chrome.browser.safe_browsing.SafeBrowsingState;
+ import org.chromium.chrome.browser.safety_hub.SafetyHubModuleMediator.ModuleState;
+ import org.chromium.chrome.browser.signin.services.IdentityServicesProvider;
++import org.chromium.components.browser_ui.settings.SettingsCustomTabLauncher;
+ import org.chromium.components.browser_ui.settings.SettingsUtils;
+-import org.chromium.components.browser_ui.util.CustomTabLauncher;
+ import org.chromium.components.signin.base.AccountInfo;
+ import org.chromium.components.signin.identitymanager.IdentityManager;
+ import org.chromium.ui.modaldialog.ModalDialogManager;
+@@ -39,7 +39,7 @@ class SafetyHubUtils {
+             Context context,
+             Profile profile,
+             Supplier<ModalDialogManager> modalDialogManagerSupplier,
+-            @Nullable CustomTabLauncher customTabLauncher) {
++            @Nullable SettingsCustomTabLauncher settingsCustomTabLauncher) {
+         PasswordManagerHelper passwordManagerHelper = PasswordManagerHelper.getForProfile(profile);
+         String account = getAccountEmail(profile);
+         assert account != null
+@@ -49,7 +49,7 @@ class SafetyHubUtils {
+                 PasswordCheckReferrer.SAFETY_CHECK,
+                 modalDialogManagerSupplier,
+                 account,
+-                customTabLauncher);
++                settingsCustomTabLauncher);
+     }
+ 
+     /**
+@@ -61,14 +61,14 @@ class SafetyHubUtils {
+             Context context,
+             Profile profile,
+             Supplier<ModalDialogManager> modalDialogManagerSupplier,
+-            CustomTabLauncher customTabLauncher) {
++            SettingsCustomTabLauncher settingsCustomTabLauncher) {
+         PasswordManagerHelper passwordManagerHelper = PasswordManagerHelper.getForProfile(profile);
+         passwordManagerHelper.showPasswordCheckup(
+                 context,
+                 PasswordCheckReferrer.SAFETY_CHECK,
+                 modalDialogManagerSupplier,
+                 /* accountEmail= */ null,
+-                customTabLauncher);
++                settingsCustomTabLauncher);
+     }
+ 
+     /**
+diff --git a/chrome/browser/safety_hub/android/junit/src/org/chromium/chrome/browser/safety_hub/SafetyHubModuleDelegateTest.java b/chrome/browser/safety_hub/android/junit/src/org/chromium/chrome/browser/safety_hub/SafetyHubModuleDelegateTest.java
+index b521e3a9bb123..04b688eed2b3c 100644
+--- a/chrome/browser/safety_hub/android/junit/src/org/chromium/chrome/browser/safety_hub/SafetyHubModuleDelegateTest.java
++++ b/chrome/browser/safety_hub/android/junit/src/org/chromium/chrome/browser/safety_hub/SafetyHubModuleDelegateTest.java
+@@ -49,7 +49,7 @@ import org.chromium.chrome.browser.ui.signin.SigninAndHistorySyncActivityLaunche
+ import org.chromium.chrome.browser.ui.signin.history_sync.HistorySyncConfig;
+ import org.chromium.components.browser_ui.bottomsheet.BottomSheetController;
+ import org.chromium.components.browser_ui.device_lock.DeviceLockActivityLauncher;
+-import org.chromium.components.browser_ui.util.CustomTabLauncher;
++import org.chromium.components.browser_ui.settings.SettingsCustomTabLauncher;
+ import org.chromium.components.signin.SigninFeatures;
+ import org.chromium.components.signin.metrics.SigninAccessPoint;
+ import org.chromium.ui.base.ActivityResultTracker;
+@@ -72,7 +72,7 @@ public class SafetyHubModuleDelegateTest {
+     @Mock private BottomSheetSigninAndHistorySyncCoordinator mSigninCoordinator;
+     @Mock private Intent mSigninIntent;
+     @Mock private Context mContext;
+-    @Mock private CustomTabLauncher mCustomTabLauncher;
++    @Mock private SettingsCustomTabLauncher mSettingsCustomTabLauncher;
+ 
+     private Activity mActivity;
+     private SafetyHubModuleDelegate mSafetyHubModuleDelegate;
+@@ -126,7 +126,7 @@ public class SafetyHubModuleDelegateTest {
+                         bottomSheetControllerSupplier,
+                         () -> mModalDialogManager,
+                         mSigninLauncher,
+-                        mCustomTabLauncher);
++                        mSettingsCustomTabLauncher);
+ 
+         ShadowLooper.idleMainLooper();
+     }
+diff --git a/chrome/browser/search_engines/android/BUILD.gn b/chrome/browser/search_engines/android/BUILD.gn
+index 16a440db683fb..13777269426cd 100644
+--- a/chrome/browser/search_engines/android/BUILD.gn
++++ b/chrome/browser/search_engines/android/BUILD.gn
+@@ -201,7 +201,6 @@ robolectric_library("junit") {
+     "//chrome/test/android:chrome_java_unit_test_support",
+     "//components/browser_ui/settings/android:java",
+     "//components/browser_ui/theme/android:java_resources",
+-    "//components/browser_ui/util/android:java",
+     "//components/browser_ui/widget/android:java",
+     "//components/favicon/android:java",
+     "//components/feature_engagement/public:public_java",
+diff --git a/chrome/browser/search_engines/android/java/src/org/chromium/chrome/browser/search_engines/settings/extensions/ExtensionSearchEngineCoordinator.java b/chrome/browser/search_engines/android/java/src/org/chromium/chrome/browser/search_engines/settings/extensions/ExtensionSearchEngineCoordinator.java
+index 3b9fe485f93c7..9367832370596 100644
+--- a/chrome/browser/search_engines/android/java/src/org/chromium/chrome/browser/search_engines/settings/extensions/ExtensionSearchEngineCoordinator.java
++++ b/chrome/browser/search_engines/android/java/src/org/chromium/chrome/browser/search_engines/settings/extensions/ExtensionSearchEngineCoordinator.java
+@@ -11,7 +11,7 @@ import org.chromium.build.annotations.Initializer;
+ import org.chromium.build.annotations.NullMarked;
+ import org.chromium.chrome.browser.profiles.Profile;
+ import org.chromium.chrome.browser.search_engines.settings.common.SearchEngineListPreference;
+-import org.chromium.components.browser_ui.util.CustomTabLauncher;
++import org.chromium.components.browser_ui.settings.SettingsCustomTabLauncher;
+ import org.chromium.components.search_engines.SearchEngineSettingsDataProvider;
+ 
+ /** Interface for the extension search engine coordinator. */
+@@ -22,6 +22,6 @@ public interface ExtensionSearchEngineCoordinator extends Destroyable {
+             Context context,
+             Profile profile,
+             SearchEngineListPreference pref,
+-            CustomTabLauncher customTabLauncher,
++            SettingsCustomTabLauncher settingsCustomTabLauncher,
+             SearchEngineSettingsDataProvider settingsDataProvider);
+ }
+diff --git a/chrome/browser/search_engines/android/java/src/org/chromium/chrome/browser/search_engines/settings/extensions/ExtensionSearchEngineCoordinatorImpl.java b/chrome/browser/search_engines/android/java/src/org/chromium/chrome/browser/search_engines/settings/extensions/ExtensionSearchEngineCoordinatorImpl.java
+index 783c171ff6c48..dad1514ed37a3 100644
+--- a/chrome/browser/search_engines/android/java/src/org/chromium/chrome/browser/search_engines/settings/extensions/ExtensionSearchEngineCoordinatorImpl.java
++++ b/chrome/browser/search_engines/android/java/src/org/chromium/chrome/browser/search_engines/settings/extensions/ExtensionSearchEngineCoordinatorImpl.java
+@@ -12,7 +12,7 @@ import org.chromium.chrome.browser.profiles.Profile;
+ import org.chromium.chrome.browser.search_engines.settings.common.SearchEngineListPreference;
+ import org.chromium.chrome.browser.search_engines.settings.common.SiteSearchProperties;
+ import org.chromium.chrome.browser.search_engines.settings.common.SiteSearchViewBinder;
+-import org.chromium.components.browser_ui.util.CustomTabLauncher;
++import org.chromium.components.browser_ui.settings.SettingsCustomTabLauncher;
+ import org.chromium.components.search_engines.SearchEngineSettingsDataProvider;
+ import org.chromium.ui.modelutil.MVCListAdapter.ModelList;
+ import org.chromium.ui.modelutil.PropertyModel;
+@@ -36,13 +36,17 @@ public class ExtensionSearchEngineCoordinatorImpl implements ExtensionSearchEngi
+             Context context,
+             Profile profile,
+             SearchEngineListPreference pref,
+-            CustomTabLauncher customTabLauncher,
++            SettingsCustomTabLauncher settingsCustomTabLauncher,
+             SearchEngineSettingsDataProvider settingsDataProvider) {
+         mModelList = new ModelList();
+         mAdapter = new ExtensionSearchEngineAdapter(context, mModelList);
+         mMediator =
+                 new ExtensionSearchEngineMediator(
+-                        context, mModelList, profile, settingsDataProvider, customTabLauncher);
++                        context,
++                        mModelList,
++                        profile,
++                        settingsDataProvider,
++                        settingsCustomTabLauncher);
+ 
+         mPropertyModel =
+                 new PropertyModel.Builder(SiteSearchProperties.ALL_KEYS)
+diff --git a/chrome/browser/search_engines/android/java/src/org/chromium/chrome/browser/search_engines/settings/extensions/ExtensionSearchEngineMediator.java b/chrome/browser/search_engines/android/java/src/org/chromium/chrome/browser/search_engines/settings/extensions/ExtensionSearchEngineMediator.java
+index 23d5be4ce9645..49778453f25ab 100644
+--- a/chrome/browser/search_engines/android/java/src/org/chromium/chrome/browser/search_engines/settings/extensions/ExtensionSearchEngineMediator.java
++++ b/chrome/browser/search_engines/android/java/src/org/chromium/chrome/browser/search_engines/settings/extensions/ExtensionSearchEngineMediator.java
+@@ -14,7 +14,7 @@ import org.chromium.chrome.browser.profiles.Profile;
+ import org.chromium.chrome.browser.search_engines.ExtensionControlHandler;
+ import org.chromium.chrome.browser.search_engines.R;
+ import org.chromium.chrome.browser.search_engines.settings.common.BaseSiteSearchMediator;
+-import org.chromium.components.browser_ui.util.CustomTabLauncher;
++import org.chromium.components.browser_ui.settings.SettingsCustomTabLauncher;
+ import org.chromium.components.browser_ui.widget.BrowserUiListMenuUtils;
+ import org.chromium.components.browser_ui.widget.ListItemBuilder;
+ import org.chromium.components.search_engines.SearchEngineSettingsDataProvider;
+@@ -30,7 +30,7 @@ import java.util.List;
+ @NullMarked
+ public class ExtensionSearchEngineMediator extends BaseSiteSearchMediator {
+     private static final String EXTENSION_MANAGE_URL_PREFIX = "chrome://extensions/?id=";
+-    private final CustomTabLauncher mCustomTabLauncher;
++    private final SettingsCustomTabLauncher mSettingsCustomTabLauncher;
+     private final ExtensionControlHandler mExtensionControlHandler;
+ 
+     public ExtensionSearchEngineMediator(
+@@ -38,9 +38,9 @@ public class ExtensionSearchEngineMediator extends BaseSiteSearchMediator {
+             ModelList modelList,
+             Profile profile,
+             SearchEngineSettingsDataProvider settingsDataProvider,
+-            CustomTabLauncher customTabLauncher) {
++            SettingsCustomTabLauncher settingsCustomTabLauncher) {
+         super(context, modelList, profile, settingsDataProvider);
+-        mCustomTabLauncher = customTabLauncher;
++        mSettingsCustomTabLauncher = settingsCustomTabLauncher;
+         mExtensionControlHandler = ExtensionControlHandler.createForProfile(profile);
+ 
+         initializeTemplateUrlService();
+@@ -87,7 +87,8 @@ public class ExtensionSearchEngineMediator extends BaseSiteSearchMediator {
+         if (extensionId == null) return;
+ 
+         if (R.string.site_search_extensions_menu_manage == textId) {
+-            mCustomTabLauncher.openUrlInCct(mContext, EXTENSION_MANAGE_URL_PREFIX + extensionId);
++            mSettingsCustomTabLauncher.openUrlInCct(
++                    mContext, EXTENSION_MANAGE_URL_PREFIX + extensionId);
+         } else if (R.string.site_search_extensions_menu_disable == textId) {
+             mExtensionControlHandler.disableExtension(extensionId);
+         }
+diff --git a/chrome/browser/search_engines/android/junit/src/org/chromium/chrome/browser/search_engines/settings/extensions/ExtensionSearchEngineCoordinatorUnitTest.java b/chrome/browser/search_engines/android/junit/src/org/chromium/chrome/browser/search_engines/settings/extensions/ExtensionSearchEngineCoordinatorUnitTest.java
+index 9cbe495a6d547..a2ea497bd6f40 100644
+--- a/chrome/browser/search_engines/android/junit/src/org/chromium/chrome/browser/search_engines/settings/extensions/ExtensionSearchEngineCoordinatorUnitTest.java
++++ b/chrome/browser/search_engines/android/junit/src/org/chromium/chrome/browser/search_engines/settings/extensions/ExtensionSearchEngineCoordinatorUnitTest.java
+@@ -26,7 +26,7 @@ import org.chromium.chrome.browser.profiles.Profile;
+ import org.chromium.chrome.browser.search_engines.ExtensionControlHandler;
+ import org.chromium.chrome.browser.search_engines.TemplateUrlServiceFactory;
+ import org.chromium.chrome.browser.search_engines.settings.common.SearchEngineListPreference;
+-import org.chromium.components.browser_ui.util.CustomTabLauncher;
++import org.chromium.components.browser_ui.settings.SettingsCustomTabLauncher;
+ import org.chromium.components.favicon.LargeIconBridgeJni;
+ import org.chromium.components.search_engines.SearchEngineSettingsDataProvider;
+ import org.chromium.components.search_engines.TemplateUrlService;
+@@ -39,7 +39,7 @@ public class ExtensionSearchEngineCoordinatorUnitTest {
+     private Context mContext;
+     @Mock private Profile mProfile;
+     @Mock private SearchEngineListPreference mPreference;
+-    @Mock private CustomTabLauncher mCustomTabLauncher;
++    @Mock private SettingsCustomTabLauncher mSettingsCustomTabLauncher;
+     @Mock private TemplateUrlService mTemplateUrlService;
+     @Mock private LargeIconBridgeJni mLargeIconBridgeJni;
+     @Mock private ExtensionControlHandler mMockExtensionControlHandler;
+@@ -69,14 +69,14 @@ public class ExtensionSearchEngineCoordinatorUnitTest {
+     @Test
+     public void testInitialization() {
+         mCoordinator.initialize(
+-                mContext, mProfile, mPreference, mCustomTabLauncher, mSettingsDataProvider);
++                mContext, mProfile, mPreference, mSettingsCustomTabLauncher, mSettingsDataProvider);
+         verify(mPreference).setAdapter(any(ExtensionSearchEngineAdapter.class));
+     }
+ 
+     @Test
+     public void testDestroy() {
+         mCoordinator.initialize(
+-                mContext, mProfile, mPreference, mCustomTabLauncher, mSettingsDataProvider);
++                mContext, mProfile, mPreference, mSettingsCustomTabLauncher, mSettingsDataProvider);
+         mCoordinator.destroy();
+ 
+         verify(mPreference).setAdapter(eq(null));
+diff --git a/chrome/browser/search_engines/android/junit/src/org/chromium/chrome/browser/search_engines/settings/extensions/ExtensionSearchEngineMediatorUnitTest.java b/chrome/browser/search_engines/android/junit/src/org/chromium/chrome/browser/search_engines/settings/extensions/ExtensionSearchEngineMediatorUnitTest.java
+index f2a5f0cd98fba..bfc05c4f92e8a 100644
+--- a/chrome/browser/search_engines/android/junit/src/org/chromium/chrome/browser/search_engines/settings/extensions/ExtensionSearchEngineMediatorUnitTest.java
++++ b/chrome/browser/search_engines/android/junit/src/org/chromium/chrome/browser/search_engines/settings/extensions/ExtensionSearchEngineMediatorUnitTest.java
+@@ -30,7 +30,7 @@ import org.chromium.chrome.browser.search_engines.ExtensionControlHandler;
+ import org.chromium.chrome.browser.search_engines.R;
+ import org.chromium.chrome.browser.search_engines.TemplateUrlServiceFactory;
+ import org.chromium.chrome.browser.search_engines.settings.common.SiteSearchProperties;
+-import org.chromium.components.browser_ui.util.CustomTabLauncher;
++import org.chromium.components.browser_ui.settings.SettingsCustomTabLauncher;
+ import org.chromium.components.favicon.LargeIconBridgeJni;
+ import org.chromium.components.search_engines.SearchEngineSettingsDataProvider;
+ import org.chromium.components.search_engines.TemplateUrl;
+@@ -59,7 +59,7 @@ public class ExtensionSearchEngineMediatorUnitTest {
+     @Mock private LargeIconBridgeJni mLargeIconBridgeJni;
+     @Mock private TemplateUrl mTemplateUrl;
+     @Mock private ModelList mModelList;
+-    @Mock private CustomTabLauncher mCustomTabLauncher;
++    @Mock private SettingsCustomTabLauncher mSettingsCustomTabLauncher;
+     @Mock private ExtensionControlHandler mMockExtensionControlHandler;
+ 
+     private Context mContext;
+@@ -89,7 +89,11 @@ public class ExtensionSearchEngineMediatorUnitTest {
+ 
+         mMediator =
+                 new ExtensionSearchEngineMediator(
+-                        mContext, mModelList, mProfile, mSettingsDataProvider, mCustomTabLauncher);
++                        mContext,
++                        mModelList,
++                        mProfile,
++                        mSettingsDataProvider,
++                        mSettingsCustomTabLauncher);
+ 
+         Mockito.clearInvocations(mModelList, mTemplateUrlService, mSettingsDataProvider);
+     }
+@@ -171,7 +175,8 @@ public class ExtensionSearchEngineMediatorUnitTest {
+     @Test
+     public void testOnMenuItemClicked_Manage() {
+         mMediator.onMenuItemClicked(R.string.site_search_extensions_menu_manage, "extension_id");
+-        verify(mCustomTabLauncher).openUrlInCct(mContext, "chrome://extensions/?id=extension_id");
++        verify(mSettingsCustomTabLauncher)
++                .openUrlInCct(mContext, "chrome://extensions/?id=extension_id");
+     }
+ 
+     @Test
+diff --git a/chrome/browser/settings/BUILD.gn b/chrome/browser/settings/BUILD.gn
+index 524b20ae1dfed..65b396c1d4752 100644
+--- a/chrome/browser/settings/BUILD.gn
++++ b/chrome/browser/settings/BUILD.gn
+@@ -106,7 +106,6 @@ android_library("java") {
+     "//components/browser_ui/settings/android:java",
+     "//components/browser_ui/settings/android:managed_prefs_java_resources",
+     "//components/browser_ui/styles/android:java",
+-    "//components/browser_ui/util/android:java",
+     "//components/browser_ui/widget/android:java",
+     "//components/embedder_support/android:util_java",
+     "//components/favicon/android:java",
+diff --git a/chrome/browser/settings/android/java/src/org/chromium/chrome/browser/settings/ChromeBaseSettingsFragment.java b/chrome/browser/settings/android/java/src/org/chromium/chrome/browser/settings/ChromeBaseSettingsFragment.java
+index d42e1f0eccd9e..89936c1b1ed6c 100644
+--- a/chrome/browser/settings/android/java/src/org/chromium/chrome/browser/settings/ChromeBaseSettingsFragment.java
++++ b/chrome/browser/settings/android/java/src/org/chromium/chrome/browser/settings/ChromeBaseSettingsFragment.java
+@@ -23,7 +23,7 @@ import org.chromium.chrome.browser.profiles.Profile;
+ import org.chromium.components.browser_ui.settings.CustomDividerFragment;
+ import org.chromium.components.browser_ui.settings.EmbeddableSettingsPage;
+ import org.chromium.components.browser_ui.settings.PreferenceUpdateObserver;
+-import org.chromium.components.browser_ui.util.CustomTabLauncher;
++import org.chromium.components.browser_ui.settings.SettingsCustomTabLauncher;
+ 
+ /**
+  * Base class for settings in Chrome.
+@@ -35,11 +35,11 @@ import org.chromium.components.browser_ui.util.CustomTabLauncher;
+ public abstract class ChromeBaseSettingsFragment extends PreferenceFragmentCompat
+         implements EmbeddableSettingsPage,
+                 ProfileDependentSetting,
+-                CustomTabLauncher.CustomTabLauncherClient,
++                SettingsCustomTabLauncher.SettingsCustomTabLauncherClient,
+                 CustomDividerFragment,
+                 PreferenceUpdateObserver.Provider {
+     private Profile mProfile;
+-    private CustomTabLauncher mCustomTabLauncher;
++    private SettingsCustomTabLauncher mCustomTabLauncher;
+     private @Nullable PreferenceUpdateObserver mPreferenceUpdateObserver;
+     private @Nullable Context mThemedContext;
+ 
+@@ -84,7 +84,7 @@ public abstract class ChromeBaseSettingsFragment extends PreferenceFragmentCompa
+ 
+     @Initializer
+     @Override
+-    public void setCustomTabLauncher(CustomTabLauncher customTabLauncher) {
++    public void setCustomTabLauncher(SettingsCustomTabLauncher customTabLauncher) {
+         mCustomTabLauncher = customTabLauncher;
+     }
+ 
+@@ -116,7 +116,7 @@ public abstract class ChromeBaseSettingsFragment extends PreferenceFragmentCompa
+     }
+ 
+     /** Returns the launcher for CCT. */
+-    public CustomTabLauncher getCustomTabLauncher() {
++    public SettingsCustomTabLauncher getCustomTabLauncher() {
+         return mCustomTabLauncher;
+     }
+ 
+diff --git a/chrome/browser/sync/android/BUILD.gn b/chrome/browser/sync/android/BUILD.gn
+index 45adb9c452a5a..f6e07e81494f3 100644
+--- a/chrome/browser/sync/android/BUILD.gn
++++ b/chrome/browser/sync/android/BUILD.gn
+@@ -48,7 +48,7 @@ android_library("ui_java") {
+     "//chrome/browser/ui/android/signin:java_resources",
+     "//chrome/browser/ui/android/strings:ui_strings_grd",
+     "//chrome/browser/ui/messages/android:java",
+-    "//components/browser_ui/util/android:java",
++    "//components/browser_ui/settings/android:java",
+     "//components/browser_ui/widget/android:java",
+     "//components/device_reauth:device_reauth_java_enums",
+     "//components/signin/public/android:java",
+diff --git a/chrome/browser/sync/android/java/src/org/chromium/chrome/browser/sync/SyncSettingsUtils.java b/chrome/browser/sync/android/java/src/org/chromium/chrome/browser/sync/SyncSettingsUtils.java
+index 816ad1e81c3a7..57f37e32e7316 100644
+--- a/chrome/browser/sync/android/java/src/org/chromium/chrome/browser/sync/SyncSettingsUtils.java
++++ b/chrome/browser/sync/android/java/src/org/chromium/chrome/browser/sync/SyncSettingsUtils.java
+@@ -26,7 +26,7 @@ import org.chromium.build.annotations.NullMarked;
+ import org.chromium.build.annotations.Nullable;
+ import org.chromium.chrome.browser.profiles.Profile;
+ import org.chromium.chrome.browser.signin.services.DisplayableProfileData;
+-import org.chromium.components.browser_ui.util.CustomTabLauncher;
++import org.chromium.components.browser_ui.settings.SettingsCustomTabLauncher;
+ import org.chromium.components.signin.base.CoreAccountInfo;
+ import org.chromium.components.sync.BookmarksLimitExceededHelpClickedSource;
+ import org.chromium.components.sync.SyncService;
+@@ -114,7 +114,7 @@ public class SyncSettingsUtils {
+      * @param url The url link to open in the custom tab.
+      */
+     private static void openCustomTabWithURL(
+-            Context context, CustomTabLauncher customTabLauncher, String url) {
++            Context context, SettingsCustomTabLauncher customTabLauncher, String url) {
+         customTabLauncher.openUrlInCct(context, url);
+     }
+ 
+@@ -124,7 +124,8 @@ public class SyncSettingsUtils {
+      * @param context The context to use for starting the intent.
+      * @param customTabLauncher The launcher to use for opening the custom tab.
+      */
+-    public static void openSyncDashboard(Context context, CustomTabLauncher customTabLauncher) {
++    public static void openSyncDashboard(
++            Context context, SettingsCustomTabLauncher customTabLauncher) {
+         openCustomTabWithURL(context, customTabLauncher, SYNC_DASHBOARD_URL);
+     }
+ 
+@@ -136,7 +137,8 @@ public class SyncSettingsUtils {
+      * @param context The context to use for starting the intent.
+      * @param customTabLauncher The launcher to use for opening the custom tab.
+      */
+-    public static void openGoogleMyAccount(Context context, CustomTabLauncher customTabLauncher) {
++    public static void openGoogleMyAccount(
++            Context context, SettingsCustomTabLauncher customTabLauncher) {
+         RecordUserAction.record("SyncPreferences_ManageGoogleAccountClicked");
+         openCustomTabWithURL(context, customTabLauncher, MY_ACCOUNT_URL);
+     }
+@@ -157,7 +159,7 @@ public class SyncSettingsUtils {
+             Context context,
+             SyncService syncService,
+             @BookmarksLimitExceededHelpClickedSource int source,
+-            CustomTabLauncher customTabLauncher) {
++            SettingsCustomTabLauncher customTabLauncher) {
+         assert syncService != null;
+         syncService.acknowledgeBookmarksLimitExceededError(source);
+         openCustomTabWithURL(context, customTabLauncher, BOOKMARKS_LIMIT_EXCEEDED_HELP_CENTER_URL);
+diff --git a/components/browser_ui/settings/android/BUILD.gn b/components/browser_ui/settings/android/BUILD.gn
+index 22f89fc5070ba..ae9a08b1bdbd4 100644
+--- a/components/browser_ui/settings/android/BUILD.gn
++++ b/components/browser_ui/settings/android/BUILD.gn
+@@ -14,6 +14,7 @@ android_library("java") {
+     "java/src/org/chromium/components/browser_ui/settings/PreferenceUpdateObserver.java",
+     "java/src/org/chromium/components/browser_ui/settings/SearchUtils.java",
+     "java/src/org/chromium/components/browser_ui/settings/SearchViewProvider.java",
++    "java/src/org/chromium/components/browser_ui/settings/SettingsCustomTabLauncher.java",
+     "java/src/org/chromium/components/browser_ui/settings/SettingsFragment.java",
+     "java/src/org/chromium/components/browser_ui/settings/SettingsNavigation.java",
+     "java/src/org/chromium/components/browser_ui/settings/SettingsUtils.java",
+diff --git a/components/browser_ui/util/android/java/src/org/chromium/components/browser_ui/util/CustomTabLauncher.java b/components/browser_ui/settings/android/java/src/org/chromium/components/browser_ui/settings/SettingsCustomTabLauncher.java
+similarity index 52%
+rename from components/browser_ui/util/android/java/src/org/chromium/components/browser_ui/util/CustomTabLauncher.java
+rename to components/browser_ui/settings/android/java/src/org/chromium/components/browser_ui/settings/SettingsCustomTabLauncher.java
+index 50595046b32e9..f664cc7d5ff5d 100644
+--- a/components/browser_ui/util/android/java/src/org/chromium/components/browser_ui/util/CustomTabLauncher.java
++++ b/components/browser_ui/settings/android/java/src/org/chromium/components/browser_ui/settings/SettingsCustomTabLauncher.java
+@@ -2,7 +2,7 @@
+ // Use of this source code is governed by a BSD-style license that can be
+ // found in the LICENSE file.
+ 
+-package org.chromium.components.browser_ui.util;
++package org.chromium.components.browser_ui.settings;
+ 
+ import android.content.Context;
+ 
+@@ -10,14 +10,14 @@ import org.chromium.build.annotations.NullMarked;
+ 
+ /** CCT-related helpers and interfaces. */
+ @NullMarked
+-public interface CustomTabLauncher {
++public interface SettingsCustomTabLauncher {
+     /**
+-     * Interface for injecting a {@link CustomTabLauncher} to a fragment. This is useful for
+-     * fragments that need to launch a Custom tab.
++     * Interface for injecting a SettingsCustomTabHelper to a fragment. This is useful for fragments
++     * that need to launch a Custom tab.
+      */
+-    interface CustomTabLauncherClient {
+-        /** Sets an instance of {@link CustomTabLauncher} in a fragment. */
+-        void setCustomTabLauncher(CustomTabLauncher customTabLauncher);
++    interface SettingsCustomTabLauncherClient {
++        /** Sets an instance of {@link SettingsCustomTabLauncher} in a fragment. */
++        void setCustomTabLauncher(SettingsCustomTabLauncher customTabLauncher);
+     }
+ 
+     /**
+diff --git a/components/browser_ui/util/android/BUILD.gn b/components/browser_ui/util/android/BUILD.gn
+index 6d5fb4ce07aa5..36abe3a814d21 100644
+--- a/components/browser_ui/util/android/BUILD.gn
++++ b/components/browser_ui/util/android/BUILD.gn
+@@ -15,7 +15,6 @@ android_library("java") {
+     "java/src/org/chromium/components/browser_ui/util/ChromeItemPickerUtils.java",
+     "java/src/org/chromium/components/browser_ui/util/ComposedBrowserControlsVisibilityDelegate.java",
+     "java/src/org/chromium/components/browser_ui/util/ConversionUtils.java",
+-    "java/src/org/chromium/components/browser_ui/util/CustomTabLauncher.java",
+     "java/src/org/chromium/components/browser_ui/util/DimensionCompat.java",
+     "java/src/org/chromium/components/browser_ui/util/DownloadUtils.java",
+     "java/src/org/chromium/components/browser_ui/util/DrawableUtils.java",

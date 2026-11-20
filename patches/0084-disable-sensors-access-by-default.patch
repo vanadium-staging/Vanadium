@@ -1,0 +1,34 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Daniel Micay <danielmicay@gmail.com>
+Date: Sun, 16 Jun 2019 15:57:29 -0400
+Subject: [PATCH] disable sensors access by default
+
+---
+ .../core/browser/content_settings_registry.cc      | 14 +-------------
+ 1 file changed, 1 insertion(+), 13 deletions(-)
+
+diff --git a/components/content_settings/core/browser/content_settings_registry.cc b/components/content_settings/core/browser/content_settings_registry.cc
+index ffee4d99108a4..e28efaf5d0357 100644
+--- a/components/content_settings/core/browser/content_settings_registry.cc
++++ b/components/content_settings/core/browser/content_settings_registry.cc
+@@ -339,19 +339,7 @@ void ContentSettingsRegistry::Init() {
+            ContentSettingsInfo::INHERIT_IF_LESS_PERMISSIVE,
+            PermissionSettingsInfo::EXCEPTIONS_ON_SECURE_ORIGINS_ONLY);
+ 
+-  // TODO(crbug.com/40602007): Update this to "SECURE_ONLY" once
+-  // DeviceOrientationEvents and DeviceMotionEvents are only fired in secure
+-  // contexts.
+-  ContentSetting sensors_initial_default = CONTENT_SETTING_ALLOW;
+-#if BUILDFLAG(USE_BLINK)
+-  // "Ask" is only a valid sensors setting under the Allow/Ask/Block model.
+-  if (base::FeatureList::IsEnabled(
+-          ::features::kSensorsAllowAskBlockPermissionModel) &&
+-      base::FeatureList::IsEnabled(::features::kSensorsAskByDefault)) {
+-    sensors_initial_default = CONTENT_SETTING_ASK;
+-  }
+-#endif  // BUILDFLAG(USE_BLINK)
+-  Register(ContentSettingsType::SENSORS, "sensors", sensors_initial_default,
++  Register(ContentSettingsType::SENSORS, "sensors", CONTENT_SETTING_BLOCK,
+            WebsiteSettingsInfo::UNSYNCABLE, /*allowlisted_primary_schemes=*/{},
+            /*valid_settings=*/
+            {CONTENT_SETTING_ALLOW, CONTENT_SETTING_BLOCK, CONTENT_SETTING_ASK},

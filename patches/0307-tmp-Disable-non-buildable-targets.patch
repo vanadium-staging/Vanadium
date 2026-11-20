@@ -1,0 +1,22 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: quh4gko8 <88831734+quh4gko8@users.noreply.github.com>
+Date: Thu, 19 Nov 2026 05:08:54 +0000
+Subject: [PATCH] [tmp] Disable non-buildable targets
+
+---
+ chrome/browser/importer/BUILD.gn | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/chrome/browser/importer/BUILD.gn b/chrome/browser/importer/BUILD.gn
+index a06aff0f86c79..f605c9402da4c 100644
+--- a/chrome/browser/importer/BUILD.gn
++++ b/chrome/browser/importer/BUILD.gn
+@@ -122,7 +122,7 @@ source_set("browser_tests") {
+       "//chrome/browser/ui/browser_window",
+       "//chrome/common:constants",
+       "//chrome/test:test_support",
+-      "//chrome/test/base:in_process_browser_test",
++      # "//chrome/test/base:in_process_browser_test",
+       "//components/favicon_base",
+       "//content/test:test_support",
+       "//skia",
