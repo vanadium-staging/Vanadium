@@ -12,7 +12,7 @@ Subject: [PATCH] config: Explicitly declare queries to config package for
  4 files changed, 16 insertions(+)
 
 diff --git a/android_webview/nonembedded/java/AndroidManifest.xml b/android_webview/nonembedded/java/AndroidManifest.xml
-index 6d6614ab89827..bcdc1685b50f9 100644
+index 8ef90a915a56c..376284c742546 100644
 --- a/android_webview/nonembedded/java/AndroidManifest.xml
 +++ b/android_webview/nonembedded/java/AndroidManifest.xml
 @@ -38,6 +38,12 @@ by a child template that "extends" this file.
@@ -29,10 +29,10 @@ index 6d6614ab89827..bcdc1685b50f9 100644
                   android:icon="@{{manifest_package|default('com.android.webview')}}:drawable/icon_webview"
                   android:name="{{ application_name|default('org.chromium.android_webview.nonembedded.WebViewApkApplication') }}"
 diff --git a/android_webview/system_webview_apk_tmpl.gni b/android_webview/system_webview_apk_tmpl.gni
-index f40264c620594..81bd36450321e 100644
+index ca8f91a4cc2bf..7f8b395962372 100644
 --- a/android_webview/system_webview_apk_tmpl.gni
 +++ b/android_webview/system_webview_apk_tmpl.gni
-@@ -81,6 +81,8 @@ template("system_webview_apk_or_module_tmpl") {
+@@ -76,6 +76,8 @@ template("system_webview_apk_or_module_tmpl") {
        includes += [ input ]
        input = invoker.jinja_input
      }
@@ -42,10 +42,10 @@ index f40264c620594..81bd36450321e 100644
        variables += invoker.jinja_extra_variables
      }
 diff --git a/chrome/android/chrome_public_apk_tmpl.gni b/chrome/android/chrome_public_apk_tmpl.gni
-index 7817cd680fe2c..c523d9957e763 100644
+index 1f3bd38b356c7..428e81b6765fc 100644
 --- a/chrome/android/chrome_public_apk_tmpl.gni
 +++ b/chrome/android/chrome_public_apk_tmpl.gni
-@@ -237,6 +237,8 @@ template("chrome_common_apk_or_module_tmpl") {
+@@ -216,6 +216,8 @@ template("chrome_common_apk_or_module_tmpl") {
        includes += [ input ]
        input = invoker.jinja_input
      }
@@ -55,7 +55,7 @@ index 7817cd680fe2c..c523d9957e763 100644
        variables += invoker.jinja_extra_variables
      }
 diff --git a/chrome/android/java/AndroidManifest.xml b/chrome/android/java/AndroidManifest.xml
-index 935b5216893f3..66880ff99913d 100644
+index 826254cd6aafc..dee0daa33bf51 100644
 --- a/chrome/android/java/AndroidManifest.xml
 +++ b/chrome/android/java/AndroidManifest.xml
 @@ -218,6 +218,12 @@ by a child template that "extends" this file.

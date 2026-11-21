@@ -79,7 +79,7 @@ index 047156538b2bb..51f0edefe7b58 100644
      starter.set_policy(
          std::make_unique<sandbox::BaselinePolicyAndroid>(options));
 diff --git a/sandbox/linux/seccomp-bpf-helpers/baseline_policy.cc b/sandbox/linux/seccomp-bpf-helpers/baseline_policy.cc
-index 85f14c9023df8..eccfc6cb0da2d 100644
+index bc54371699156..d7f2bc56be4fd 100644
 --- a/sandbox/linux/seccomp-bpf-helpers/baseline_policy.cc
 +++ b/sandbox/linux/seccomp-bpf-helpers/baseline_policy.cc
 @@ -259,13 +259,13 @@ ResultExpr EvaluateSyscallImpl(int fs_denied_errno,
