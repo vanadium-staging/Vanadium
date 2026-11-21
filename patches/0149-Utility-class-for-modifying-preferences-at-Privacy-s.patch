@@ -4,21 +4,21 @@ Date: Tue, 11 Apr 2023 07:55:52 +0000
 Subject: [PATCH] Utility class for modifying preferences at Privacy section
 
 ---
- .../privacy/settings/PrivacySettings.java     |  6 ++
+ .../privacy/settings/PrivacySettings.java     |  7 +++
  .../chrome_app_java_resources_ext_sources.gni |  1 +
  .../chrome/android/chrome_java_ext_deps.gni   |  1 +
  .../android/chrome_java_ext_sources.gni       |  1 +
  .../java/res/xml/privacy_preferences_ext.xml  |  8 +++
  .../privacy/settings/PrivacySettingsExt.java  | 62 +++++++++++++++++++
- 6 files changed, 79 insertions(+)
+ 6 files changed, 80 insertions(+)
  create mode 100644 vanadium/chromium_src/chrome/android/java/res/xml/privacy_preferences_ext.xml
  create mode 100644 vanadium/chromium_src/chrome/android/java/src/org/chromium/chrome/browser/privacy/settings/PrivacySettingsExt.java
 
 diff --git a/chrome/android/java/src/org/chromium/chrome/browser/privacy/settings/PrivacySettings.java b/chrome/android/java/src/org/chromium/chrome/browser/privacy/settings/PrivacySettings.java
-index d054316ed7d79..4b90d606823ef 100644
+index 7a5548a11bbd8..e216681fa6e7d 100644
 --- a/chrome/android/java/src/org/chromium/chrome/browser/privacy/settings/PrivacySettings.java
 +++ b/chrome/android/java/src/org/chromium/chrome/browser/privacy/settings/PrivacySettings.java
-@@ -143,6 +143,8 @@ public class PrivacySettings extends ChromeBaseSettingsFragment
+@@ -146,6 +146,8 @@ public class PrivacySettings extends ChromeBaseSettingsFragment
  
          SettingsUtils.addPreferencesFromResource(this, R.xml.privacy_preferences);
  
@@ -27,16 +27,17 @@ index d054316ed7d79..4b90d606823ef 100644
          Preference privacyGuidePreference = findPreference(PREF_PRIVACY_GUIDE);
          // Record the launch of PG from the S&P link-row entry point
          privacyGuidePreference.setOnPreferenceClickListener(
-@@ -286,6 +288,8 @@ public class PrivacySettings extends ChromeBaseSettingsFragment
-         }
+@@ -290,6 +292,9 @@ public class PrivacySettings extends ChromeBaseSettingsFragment
          recordUniversalOptOutSettingsVisibility(universalOptOutSettingsVisible);
  
+         setUpNestedRows();
++
 +        PrivacySettingsExt.removePreferences(this);
 +
          updatePreferences();
      }
  
-@@ -475,6 +479,8 @@ public class PrivacySettings extends ChromeBaseSettingsFragment
+@@ -509,6 +514,8 @@ public class PrivacySettings extends ChromeBaseSettingsFragment
                              ? R.string.website_settings_category_javascript_optimizer_allowed_list
                              : R.string.website_settings_category_javascript_optimizer_blocked_list);
          }

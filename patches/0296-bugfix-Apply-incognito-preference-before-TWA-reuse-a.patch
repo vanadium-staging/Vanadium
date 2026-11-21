@@ -12,10 +12,10 @@ so the link opens in an incognito Custom Tab.
  1 file changed, 6 insertions(+), 3 deletions(-)
 
 diff --git a/chrome/android/java/src/org/chromium/chrome/browser/LaunchIntentDispatcher.java b/chrome/android/java/src/org/chromium/chrome/browser/LaunchIntentDispatcher.java
-index 9d235ab4e2725..3c386492401ee 100644
+index a435ec93ef505..06408e6f1860d 100644
 --- a/chrome/android/java/src/org/chromium/chrome/browser/LaunchIntentDispatcher.java
 +++ b/chrome/android/java/src/org/chromium/chrome/browser/LaunchIntentDispatcher.java
-@@ -461,15 +461,18 @@ public class LaunchIntentDispatcher {
+@@ -464,15 +464,18 @@ public class LaunchIntentDispatcher {
                  ApiCompatibilityUtils.moveTaskToFront(mActivity, handler.getTaskId(), 0);
                  return true;
              }

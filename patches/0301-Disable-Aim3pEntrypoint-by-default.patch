@@ -9,10 +9,10 @@ Subject: [PATCH] Disable Aim3pEntrypoint by default
  2 files changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/components/omnibox/common/android/java/src/org/chromium/components/omnibox/OmniboxFeatures.java b/components/omnibox/common/android/java/src/org/chromium/components/omnibox/OmniboxFeatures.java
-index 66170b04dc477..89161bf6e9fce 100644
+index 1dda37a6052c6..25d69a9ee5a98 100644
 --- a/components/omnibox/common/android/java/src/org/chromium/components/omnibox/OmniboxFeatures.java
 +++ b/components/omnibox/common/android/java/src/org/chromium/components/omnibox/OmniboxFeatures.java
-@@ -254,7 +254,7 @@ public class OmniboxFeatures {
+@@ -276,7 +276,7 @@ public class OmniboxFeatures {
       * AiModeButtonUiConfig}.
       */
      public static final CachedFlag sAim3pEntrypoint =
@@ -22,11 +22,11 @@ index 66170b04dc477..89161bf6e9fce 100644
      // Shows the preview match's favicon in the status view. Originally and incorrectly called exact
      // match. The feature string remains exact, but java code should be updated to the right name.
 diff --git a/components/omnibox/common/omnibox_features.cc b/components/omnibox/common/omnibox_features.cc
-index 21f0f8a973385..57a9838d0a2a8 100644
+index 5942c4aa81b03..7162928006819 100644
 --- a/components/omnibox/common/omnibox_features.cc
 +++ b/components/omnibox/common/omnibox_features.cc
-@@ -215,7 +215,7 @@ BASE_FEATURE(kOmniboxFuseboxUserEdGuidedTour, DISABLED);
- BASE_FEATURE(kOmniboxDisableTabsForCanvas, ENABLED);
+@@ -220,7 +220,7 @@ BASE_FEATURE(kOmniboxDisableTabsForCanvas, ENABLED);
+ BASE_FEATURE(kOmniboxAimOpenInNewTab, DISABLED);
  
  // Enables the AIM entrypoint for third party search engines.
 -BASE_FEATURE(kAim3pEntrypoint, ENABLED);
