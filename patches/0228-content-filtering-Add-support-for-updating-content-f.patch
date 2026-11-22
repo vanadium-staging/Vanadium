@@ -12,10 +12,10 @@ Subject: [PATCH] content-filtering: Add support for updating content filtering
  4 files changed, 9 insertions(+)
 
 diff --git a/chrome/android/java/src/org/chromium/chrome/browser/ChromeActivitySessionTracker.java b/chrome/android/java/src/org/chromium/chrome/browser/ChromeActivitySessionTracker.java
-index 60a092f7fc140..698ed0f1271c0 100644
+index ae305dddda0ae..7ddfc873e0467 100644
 --- a/chrome/android/java/src/org/chromium/chrome/browser/ChromeActivitySessionTracker.java
 +++ b/chrome/android/java/src/org/chromium/chrome/browser/ChromeActivitySessionTracker.java
-@@ -251,6 +251,8 @@ public class ChromeActivitySessionTracker {
+@@ -250,6 +250,8 @@ public class ChromeActivitySessionTracker {
                      .writeString(ChromePreferenceKeys.APP_LOCALE, currentLocale);
              TranslateBridge.resetAcceptLanguages(profile, currentLocale);
              if (previousLocale != null) {

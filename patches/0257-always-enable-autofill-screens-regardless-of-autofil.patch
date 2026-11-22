@@ -6,31 +6,21 @@ Subject: [PATCH] always enable autofill screens regardless of autofill
 
 ---
  .../autofill/settings/AutofillAiDelegate.java | 10 +++---
- .../AutofillPaymentMethodsFragment.java       | 26 +++++++-------
+ .../AutofillPaymentMethodsFragment.java       | 24 ++++++-------
  .../settings/AutofillProfilesFragment.java    | 10 +++---
  .../autofill/AutofillClientProviderUtils.java |  9 +++++
  .../options/AutofillOptionsCoordinator.java   | 36 ++++++++++++-------
  .../RadioButtonGroupThirdPartyPreference.java | 13 +++++++
  .../strings/android_chrome_strings.grd        |  6 ++++
- ...OFILL_OPTIONS_RESTART_PROMPT_TEXT.png.sha1 |  1 +
- ...FILL_OPTIONS_RESTART_PROMPT_TITLE.png.sha1 |  1 +
  components/autofill_strings.grdp              |  8 ++++-
- ...PARTY_FILLING_DEFAULT_DESCRIPTION.png.sha1 |  2 +-
- ...Y_FILLING_DEFAULT_DESCRIPTION_NEW.png.sha1 |  1 +
- ..._PARTY_FILLING_OPT_IN_DESCRIPTION.png.sha1 |  2 +-
- ...TY_FILLING_OPT_IN_DESCRIPTION_NEW.png.sha1 |  1 +
  .../autofill/android/java_ext_deps.gni        |  1 +
  .../browser/flags/ext/android/features.cc     |  8 +++++
  .../browser/flags/ext/android/features.h      |  2 ++
  .../browser/flags/ChromeExtFeatureList.java   |  7 ++++
- 18 files changed, 105 insertions(+), 39 deletions(-)
- create mode 100644 chrome/browser/ui/android/strings/android_chrome_strings_grd/IDS_AUTOFILL_OPTIONS_RESTART_PROMPT_TEXT.png.sha1
- create mode 100644 chrome/browser/ui/android/strings/android_chrome_strings_grd/IDS_AUTOFILL_OPTIONS_RESTART_PROMPT_TITLE.png.sha1
- create mode 100644 components/autofill_strings_grdp/IDS_AUTOFILL_THIRD_PARTY_FILLING_DEFAULT_DESCRIPTION_NEW.png.sha1
- create mode 100644 components/autofill_strings_grdp/IDS_AUTOFILL_THIRD_PARTY_FILLING_OPT_IN_DESCRIPTION_NEW.png.sha1
+ 12 files changed, 98 insertions(+), 36 deletions(-)
 
 diff --git a/chrome/android/java/src/org/chromium/chrome/browser/autofill/settings/AutofillAiDelegate.java b/chrome/android/java/src/org/chromium/chrome/browser/autofill/settings/AutofillAiDelegate.java
-index de856cf83fb29..445c30d377fe5 100644
+index a1aa2497c22e1..873a2bbfb5f4e 100644
 --- a/chrome/android/java/src/org/chromium/chrome/browser/autofill/settings/AutofillAiDelegate.java
 +++ b/chrome/android/java/src/org/chromium/chrome/browser/autofill/settings/AutofillAiDelegate.java
 @@ -5,7 +5,7 @@
@@ -42,7 +32,7 @@ index de856cf83fb29..445c30d377fe5 100644
  
  import android.app.Activity;
  import android.content.Context;
-@@ -359,7 +359,7 @@ public class AutofillAiDelegate {
+@@ -361,7 +361,7 @@ public class AutofillAiDelegate {
  
      private static boolean shouldShowWalletDataSharingDataCard(Profile profile) {
          EntityDataManager entityDataManager = EntityDataManagerFactory.getForProfile(profile);
@@ -51,7 +41,7 @@ index de856cf83fb29..445c30d377fe5 100644
                  && entityDataManager != null
                  && !entityDataManager.isWalletPublicPassStorageEnabled()
                  && ChromeFeatureList.isEnabled(
-@@ -414,7 +414,7 @@ public class AutofillAiDelegate {
+@@ -416,7 +416,7 @@ public class AutofillAiDelegate {
              ChromeBaseSettingsFragment fragment,
              PreferenceScreen screen,
              @AutofillOptionsReferrer int referrer) {
@@ -60,7 +50,7 @@ index de856cf83fb29..445c30d377fe5 100644
              addDisabledSettingsInfoCard(fragment, screen, referrer);
          }
      }
-@@ -457,7 +457,7 @@ public class AutofillAiDelegate {
+@@ -459,7 +459,7 @@ public class AutofillAiDelegate {
      /** Adds an information card to the search index if Chrome settings are disabled. */
      static void maybeAddDisabledSettingsInfoCard(
              SettingsIndexData indexData, Profile profile, String prefFragmentName) {
@@ -69,7 +59,7 @@ index de856cf83fb29..445c30d377fe5 100644
              if (indexData.getEntryForKey(prefFragmentName, DISABLED_SETTINGS_INFO) == null) {
                  addDisabledSettingsInfoCard(indexData, prefFragmentName);
              }
-@@ -634,7 +634,7 @@ public class AutofillAiDelegate {
+@@ -645,7 +645,7 @@ public class AutofillAiDelegate {
          EntityDataManager entityDataManager =
                  EntityDataManagerFactory.getForProfile(mFragment.getProfile());
          if (entityDataManager == null
@@ -79,7 +69,7 @@ index de856cf83fb29..445c30d377fe5 100644
          }
  
 diff --git a/chrome/android/java/src/org/chromium/chrome/browser/autofill/settings/AutofillPaymentMethodsFragment.java b/chrome/android/java/src/org/chromium/chrome/browser/autofill/settings/AutofillPaymentMethodsFragment.java
-index 3079b8eb13ee6..488a5bdfc14ed 100644
+index b7ec73cad493c..808dad789d6e0 100644
 --- a/chrome/android/java/src/org/chromium/chrome/browser/autofill/settings/AutofillPaymentMethodsFragment.java
 +++ b/chrome/android/java/src/org/chromium/chrome/browser/autofill/settings/AutofillPaymentMethodsFragment.java
 @@ -6,7 +6,7 @@ package org.chromium.chrome.browser.autofill.settings;
@@ -100,7 +90,7 @@ index 3079b8eb13ee6..488a5bdfc14ed 100644
  
          if (disabledSettings) {
              // Add the information string at the top.
-@@ -498,7 +498,7 @@ public class AutofillPaymentMethodsFragment extends ChromeBaseSettingsFragment
+@@ -487,7 +487,7 @@ public class AutofillPaymentMethodsFragment extends ChromeBaseSettingsFragment
          boolean enableReauthSwitch =
                  personalDataManager.isAutofillPaymentMethodsEnabled()
                          && isDeviceLockSetUp
@@ -109,7 +99,7 @@ index 3079b8eb13ee6..488a5bdfc14ed 100644
          mandatoryReauthSwitch.setEnabled(enableReauthSwitch);
          mandatoryReauthSwitch.setOnPreferenceChangeListener(this::onMandatoryReauthSwitchToggled);
          getPreferenceScreen().addPreference(mandatoryReauthSwitch);
-@@ -514,7 +514,7 @@ public class AutofillPaymentMethodsFragment extends ChromeBaseSettingsFragment
+@@ -503,7 +503,7 @@ public class AutofillPaymentMethodsFragment extends ChromeBaseSettingsFragment
          // updated and is in sync with the mandatory reauth user pref.
          mandatoryReauthSwitch.setChecked(
                  personalDataManager.isPaymentMethodsMandatoryReauthEnabled()
@@ -118,34 +108,23 @@ index 3079b8eb13ee6..488a5bdfc14ed 100644
      }
  
      private void createWalletReminderNoticePreference() {
-@@ -804,7 +804,7 @@ public class AutofillPaymentMethodsFragment extends ChromeBaseSettingsFragment
-         return ChromeFeatureList.isEnabled(
-                         ChromeFeatureList.AUTOFILL_ENABLE_SEPARATE_PIX_PREFERENCE_ITEM)
-                 && manager.getMaskedBankAccounts().length != 0
+@@ -773,13 +773,13 @@ public class AutofillPaymentMethodsFragment extends ChromeBaseSettingsFragment
+     static boolean shouldShowManagePix(PersonalDataManager manager, Profile profile) {
+         // hasPixAccounts + !disabledSettings
+         return manager.getMaskedBankAccounts().length != 0
 -                && !isPlatformAutofillEnabledForProfile(profile);
 +                && !isSettingsScreenDisabled(profile);
      }
  
      private static boolean shouldShowManageNonCardPayment(
-@@ -813,7 +813,7 @@ public class AutofillPaymentMethodsFragment extends ChromeBaseSettingsFragment
-         return ChromeFeatureList.isEnabled(
-                         ChromeFeatureList.AUTOFILL_ENABLE_SEPARATE_PIX_PREFERENCE_ITEM)
-                 && (hasEwallets || showA2aToggle)
--                && !isPlatformAutofillEnabledForProfile(profile);
-+                && !isSettingsScreenDisabled(profile);
-     }
- 
-     static boolean shouldShowOtherFinanceAccounts(
-@@ -822,7 +822,7 @@ public class AutofillPaymentMethodsFragment extends ChromeBaseSettingsFragment
-         return !ChromeFeatureList.isEnabled(
-                         ChromeFeatureList.AUTOFILL_ENABLE_SEPARATE_PIX_PREFERENCE_ITEM)
-                 && (hasEwallets || hasPixAccounts)
--                && !isPlatformAutofillEnabledForProfile(profile);
-+                && !isSettingsScreenDisabled(profile);
+             Profile profile, boolean hasEwallets, boolean showA2aToggle) {
+         // (hasEwallets | a2aToggle) + !disabledSettings
+-        return (hasEwallets || showA2aToggle) && !isPlatformAutofillEnabledForProfile(profile);
++        return (hasEwallets || showA2aToggle) && !isSettingsScreenDisabled(profile);
      }
  
      private static boolean shouldShowMandatoryReauthSwitch() {
-@@ -833,31 +833,31 @@ public class AutofillPaymentMethodsFragment extends ChromeBaseSettingsFragment
+@@ -790,31 +790,31 @@ public class AutofillPaymentMethodsFragment extends ChromeBaseSettingsFragment
  
      private static boolean shouldShowCardBenefitsPref(
              PersonalDataManager manager, Profile profile) {
@@ -182,10 +161,10 @@ index 3079b8eb13ee6..488a5bdfc14ed 100644
                  && manager.isAutofillPaymentMethodsEnabled()
                  && manager.shouldShowAddIbanButtonOnSettingsPage();
      }
-@@ -891,7 +891,7 @@ public class AutofillPaymentMethodsFragment extends ChromeBaseSettingsFragment
-                                     && ChromeFeatureList.isEnabled(
-                                             ChromeFeatureList
-                                                     .FACILITATED_PAYMENTS_ENABLE_A2A_PAYMENT);
+@@ -844,7 +844,7 @@ public class AutofillPaymentMethodsFragment extends ChromeBaseSettingsFragment
+                     boolean hasEwallets = hasEwallets(personalDataManager);
+                     boolean showA2aToggle =
+                             personalDataManager.getFacilitatedPaymentsA2ATriggeredOncePref();
 -                    if (isPlatformAutofillEnabledForProfile(profile)) {
 +                    if (isSettingsScreenDisabled(profile)) {
                          indexData.addEntryForKey(
@@ -308,10 +287,10 @@ index 051381e3b2d70..5d5ce898bb876 100644
      }
  
 diff --git a/chrome/browser/autofill/android/java/src/org/chromium/chrome/browser/autofill/settings/options/RadioButtonGroupThirdPartyPreference.java b/chrome/browser/autofill/android/java/src/org/chromium/chrome/browser/autofill/settings/options/RadioButtonGroupThirdPartyPreference.java
-index feeb355a88b76..14af219f12aca 100644
+index 5e66d798121d0..6822b7252e3fc 100644
 --- a/chrome/browser/autofill/android/java/src/org/chromium/chrome/browser/autofill/settings/options/RadioButtonGroupThirdPartyPreference.java
 +++ b/chrome/browser/autofill/android/java/src/org/chromium/chrome/browser/autofill/settings/options/RadioButtonGroupThirdPartyPreference.java
-@@ -99,6 +99,19 @@ public final class RadioButtonGroupThirdPartyPreference
+@@ -98,6 +98,19 @@ public final class RadioButtonGroupThirdPartyPreference
  
          group.setOnCheckedChangeListener(this::onCheckedChanged);
          setSelectedOption(mSelectedOption); // Update UI according to internal state.
@@ -332,10 +311,10 @@ index feeb355a88b76..14af219f12aca 100644
  
      /**
 diff --git a/chrome/browser/ui/android/strings/android_chrome_strings.grd b/chrome/browser/ui/android/strings/android_chrome_strings.grd
-index 74b52f4536cae..ae5ef36202d47 100644
+index 04949a6225709..2cac2529f23eb 100644
 --- a/chrome/browser/ui/android/strings/android_chrome_strings.grd
 +++ b/chrome/browser/ui/android/strings/android_chrome_strings.grd
-@@ -765,9 +765,15 @@ For more settings that use data to improve your Vanadium experience, go to <ph n
+@@ -789,9 +789,15 @@ For more settings that use data to improve your Vanadium experience, go to <ph n
        <message name="IDS_AUTOFILL_OPTIONS_CONFIRM_RESTART" desc="Description below switch toggling the use of third-party autofill in Vanadium." formatter_data="android_java">
          Restart Vanadium
        </message>
@@ -351,27 +330,11 @@ index 74b52f4536cae..ae5ef36202d47 100644
        <message name="IDS_AUTOFILL_OPTIONS_RESTART_PROMPT_PARAGRAPH_1_TEXT" desc="Title of the dialog prompting the user to restart to apply the new Autofill settings." formatter_data="android_java">
          After Vanadium restarts, your info saved from your new provider will be used to autofill passwords, passkeys, addresses, payment methods, and other info.
        </message>
-diff --git a/chrome/browser/ui/android/strings/android_chrome_strings_grd/IDS_AUTOFILL_OPTIONS_RESTART_PROMPT_TEXT.png.sha1 b/chrome/browser/ui/android/strings/android_chrome_strings_grd/IDS_AUTOFILL_OPTIONS_RESTART_PROMPT_TEXT.png.sha1
-new file mode 100644
-index 0000000000000..7ad19dc30474d
---- /dev/null
-+++ b/chrome/browser/ui/android/strings/android_chrome_strings_grd/IDS_AUTOFILL_OPTIONS_RESTART_PROMPT_TEXT.png.sha1
-@@ -0,0 +1 @@
-+0397c7f77964cacbe565a8765976018a14a2e62a
-\ No newline at end of file
-diff --git a/chrome/browser/ui/android/strings/android_chrome_strings_grd/IDS_AUTOFILL_OPTIONS_RESTART_PROMPT_TITLE.png.sha1 b/chrome/browser/ui/android/strings/android_chrome_strings_grd/IDS_AUTOFILL_OPTIONS_RESTART_PROMPT_TITLE.png.sha1
-new file mode 100644
-index 0000000000000..7ad19dc30474d
---- /dev/null
-+++ b/chrome/browser/ui/android/strings/android_chrome_strings_grd/IDS_AUTOFILL_OPTIONS_RESTART_PROMPT_TITLE.png.sha1
-@@ -0,0 +1 @@
-+0397c7f77964cacbe565a8765976018a14a2e62a
-\ No newline at end of file
 diff --git a/components/autofill_strings.grdp b/components/autofill_strings.grdp
-index fc1b07c8ab3aa..dd70baec6e73e 100644
+index 221d17a0fd340..e11863809f6e3 100644
 --- a/components/autofill_strings.grdp
 +++ b/components/autofill_strings.grdp
-@@ -533,9 +533,15 @@
+@@ -536,9 +536,15 @@
        Autofill using another service
      </message>
      <message name="IDS_AUTOFILL_THIRD_PARTY_FILLING_DEFAULT_DESCRIPTION" desc="Description shown on the option to use the default Vanadium autofill experience." formatter_data="android_java">
@@ -388,40 +351,6 @@ index fc1b07c8ab3aa..dd70baec6e73e 100644
        To use another autofill service in Vanadium, choose your autofill provider in Android settings
      </message>
      <message name="IDS_AUTOFILL_THIRD_PARTY_FILLING_OPT_IN_DESCRIPTION_V2" desc="The description text below the Autofill using another service radio button. It provides instructions on how to enable third-party services, noting the dependency on system-level Android settings." formatter_data="android_java">
-diff --git a/components/autofill_strings_grdp/IDS_AUTOFILL_THIRD_PARTY_FILLING_DEFAULT_DESCRIPTION.png.sha1 b/components/autofill_strings_grdp/IDS_AUTOFILL_THIRD_PARTY_FILLING_DEFAULT_DESCRIPTION.png.sha1
-index 1427cbeaebde5..f7681fd553273 100644
---- a/components/autofill_strings_grdp/IDS_AUTOFILL_THIRD_PARTY_FILLING_DEFAULT_DESCRIPTION.png.sha1
-+++ b/components/autofill_strings_grdp/IDS_AUTOFILL_THIRD_PARTY_FILLING_DEFAULT_DESCRIPTION.png.sha1
-@@ -1 +1 @@
--91d4baabaf13a5cf85e9008c74ce29d43a238531
-\ No newline at end of file
-+c02763e3bd6519924b42979a23bf8afa58cd60a1
-\ No newline at end of file
-diff --git a/components/autofill_strings_grdp/IDS_AUTOFILL_THIRD_PARTY_FILLING_DEFAULT_DESCRIPTION_NEW.png.sha1 b/components/autofill_strings_grdp/IDS_AUTOFILL_THIRD_PARTY_FILLING_DEFAULT_DESCRIPTION_NEW.png.sha1
-new file mode 100644
-index 0000000000000..1427cbeaebde5
---- /dev/null
-+++ b/components/autofill_strings_grdp/IDS_AUTOFILL_THIRD_PARTY_FILLING_DEFAULT_DESCRIPTION_NEW.png.sha1
-@@ -0,0 +1 @@
-+91d4baabaf13a5cf85e9008c74ce29d43a238531
-\ No newline at end of file
-diff --git a/components/autofill_strings_grdp/IDS_AUTOFILL_THIRD_PARTY_FILLING_OPT_IN_DESCRIPTION.png.sha1 b/components/autofill_strings_grdp/IDS_AUTOFILL_THIRD_PARTY_FILLING_OPT_IN_DESCRIPTION.png.sha1
-index 1427cbeaebde5..f7681fd553273 100644
---- a/components/autofill_strings_grdp/IDS_AUTOFILL_THIRD_PARTY_FILLING_OPT_IN_DESCRIPTION.png.sha1
-+++ b/components/autofill_strings_grdp/IDS_AUTOFILL_THIRD_PARTY_FILLING_OPT_IN_DESCRIPTION.png.sha1
-@@ -1 +1 @@
--91d4baabaf13a5cf85e9008c74ce29d43a238531
-\ No newline at end of file
-+c02763e3bd6519924b42979a23bf8afa58cd60a1
-\ No newline at end of file
-diff --git a/components/autofill_strings_grdp/IDS_AUTOFILL_THIRD_PARTY_FILLING_OPT_IN_DESCRIPTION_NEW.png.sha1 b/components/autofill_strings_grdp/IDS_AUTOFILL_THIRD_PARTY_FILLING_OPT_IN_DESCRIPTION_NEW.png.sha1
-new file mode 100644
-index 0000000000000..1427cbeaebde5
---- /dev/null
-+++ b/components/autofill_strings_grdp/IDS_AUTOFILL_THIRD_PARTY_FILLING_OPT_IN_DESCRIPTION_NEW.png.sha1
-@@ -0,0 +1 @@
-+91d4baabaf13a5cf85e9008c74ce29d43a238531
-\ No newline at end of file
 diff --git a/vanadium/chromium_src/chrome/browser/autofill/android/java_ext_deps.gni b/vanadium/chromium_src/chrome/browser/autofill/android/java_ext_deps.gni
 index 148fbd0f28d65..878a0dce4fdb4 100644
 --- a/vanadium/chromium_src/chrome/browser/autofill/android/java_ext_deps.gni

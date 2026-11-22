@@ -39,13 +39,13 @@ index 95c0d48942654..4e456d8053162 100644
  
  }  // namespace component_updater
 diff --git a/components/update_client/url_fetcher_downloader.cc b/components/update_client/url_fetcher_downloader.cc
-index e4a9dc6c94d8e..74aea46867da3 100644
+index 942c4d733253c..88be19c5a44e3 100644
 --- a/components/update_client/url_fetcher_downloader.cc
 +++ b/components/update_client/url_fetcher_downloader.cc
-@@ -39,11 +39,15 @@ UrlFetcherDownloader::UrlFetcherDownloader(
+@@ -40,11 +40,15 @@ UrlFetcherDownloader::UrlFetcherDownloader(
  UrlFetcherDownloader::~UrlFetcherDownloader() = default;
  
- base::OnceClosure UrlFetcherDownloader::DoStartDownload(const GURL& url) {
+ CancelCallback UrlFetcherDownloader::DoStartDownload(const GURL& url) {
 +  GURL::Replacements replace_host;
 +  replace_host.SetHostStr("dl.vanadium.app");
 +  GURL new_url = url.ReplaceComponents(replace_host);

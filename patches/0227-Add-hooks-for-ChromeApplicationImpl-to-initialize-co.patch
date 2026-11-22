@@ -12,10 +12,10 @@ Subject: [PATCH] Add hooks for ChromeApplicationImpl to initialize
  create mode 100644 vanadium/chromium_src/chrome/android/java/src/org/chromium/chrome/browser/ChromeApplicationImplHooks.java
 
 diff --git a/chrome/android/java/src/org/chromium/chrome/browser/ChromeApplicationImpl.java b/chrome/android/java/src/org/chromium/chrome/browser/ChromeApplicationImpl.java
-index 1ee4c2d5200c3..508897dc9d89a 100644
+index ad4928089bc3a..a6f87bed06935 100644
 --- a/chrome/android/java/src/org/chromium/chrome/browser/ChromeApplicationImpl.java
 +++ b/chrome/android/java/src/org/chromium/chrome/browser/ChromeApplicationImpl.java
-@@ -44,10 +44,17 @@ import org.chromium.url.GURL;
+@@ -42,10 +42,17 @@ import org.chromium.url.GURL;
  public class ChromeApplicationImpl extends SplitCompatApplication.Impl {
      public ChromeApplicationImpl() {}
  
@@ -33,7 +33,7 @@ index 1ee4c2d5200c3..508897dc9d89a 100644
          // This Impl is only instantiated in the browser process; SplitChromeApplication uses the
          // base Impl for all other processes so that the chrome split is never loaded there.
          assert SplitCompatApplication.isBrowserProcess();
-@@ -111,6 +118,8 @@ public class ChromeApplicationImpl extends SplitCompatApplication.Impl {
+@@ -108,6 +115,8 @@ public class ChromeApplicationImpl extends SplitCompatApplication.Impl {
      @Override
      public void onConfigurationChanged(Configuration newConfig) {
          super.onConfigurationChanged(newConfig);

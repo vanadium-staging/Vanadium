@@ -9,10 +9,10 @@ Subject: [PATCH] Add a method to hook at Application.attachBaseContext() call
  2 files changed, 8 insertions(+)
 
 diff --git a/chrome/android/java/src/org/chromium/chrome/browser/base/SplitChromeApplication.java b/chrome/android/java/src/org/chromium/chrome/browser/base/SplitChromeApplication.java
-index 938908a9694bf..396f19247e631 100644
+index 15990ba41ebd8..d3445f33a2edf 100644
 --- a/chrome/android/java/src/org/chromium/chrome/browser/base/SplitChromeApplication.java
 +++ b/chrome/android/java/src/org/chromium/chrome/browser/base/SplitChromeApplication.java
-@@ -127,6 +127,7 @@ public class SplitChromeApplication extends SplitCompatApplication {
+@@ -128,6 +128,7 @@ public class SplitChromeApplication extends SplitCompatApplication {
          // We need to call setImplSupplier before continuing attachBaseContext. See
          // crbug.com/395261363 for details.
          super.attachBaseContext(context);
@@ -21,10 +21,10 @@ index 938908a9694bf..396f19247e631 100644
  
      private static @Nullable String getPreloadClassName(String split) {
 diff --git a/chrome/android/java/src/org/chromium/chrome/browser/base/SplitCompatApplication.java b/chrome/android/java/src/org/chromium/chrome/browser/base/SplitCompatApplication.java
-index 2d930e6d306d0..aeec24ed10c42 100644
+index 5064c5597d97a..249283296a247 100644
 --- a/chrome/android/java/src/org/chromium/chrome/browser/base/SplitCompatApplication.java
 +++ b/chrome/android/java/src/org/chromium/chrome/browser/base/SplitCompatApplication.java
-@@ -99,6 +99,9 @@ public class SplitCompatApplication extends Application {
+@@ -102,6 +102,9 @@ public class SplitCompatApplication extends Application {
              mApplication.superStartActivity(intent, options);
          }
  
@@ -34,7 +34,7 @@ index 2d930e6d306d0..aeec24ed10c42 100644
          public void onCreate() {}
  
          public void onTrimMemory(int level) {}
-@@ -129,6 +132,10 @@ public class SplitCompatApplication extends Application {
+@@ -132,6 +135,10 @@ public class SplitCompatApplication extends Application {
          super.startActivity(intent, options);
      }
  
