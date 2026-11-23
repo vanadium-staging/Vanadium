@@ -15,10 +15,10 @@ Subject: [PATCH] Toggle for closing tabs on exit
  create mode 100644 vanadium/chromium_src/chrome/android/java/src/org/chromium/chrome/browser/TabPreferencesUtils.java
 
 diff --git a/chrome/android/java/src/org/chromium/chrome/browser/ChromeTabbedActivity.java b/chrome/android/java/src/org/chromium/chrome/browser/ChromeTabbedActivity.java
-index eb3e5785daad6..2eabf7a465fbb 100644
+index 49d2691055724..77f0b14e64166 100644
 --- a/chrome/android/java/src/org/chromium/chrome/browser/ChromeTabbedActivity.java
 +++ b/chrome/android/java/src/org/chromium/chrome/browser/ChromeTabbedActivity.java
-@@ -2599,6 +2599,7 @@ public class ChromeTabbedActivity extends ChromeActivity implements PreAttachInt
+@@ -2611,6 +2611,7 @@ public class ChromeTabbedActivity extends ChromeActivity implements PreAttachInt
  
              boolean noRestoreState =
                      CommandLine.getInstance().hasSwitch(ChromeSwitches.NO_RESTORE_STATE);

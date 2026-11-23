@@ -9,7 +9,7 @@ Subject: [PATCH] enable memory tagging in all processes
  2 files changed, 1 insertion(+), 13 deletions(-)
 
 diff --git a/android_webview/nonembedded/java/AndroidManifest.xml b/android_webview/nonembedded/java/AndroidManifest.xml
-index e200801b3c61c..6d6614ab89827 100644
+index 027680f0908a1..8ef90a915a56c 100644
 --- a/android_webview/nonembedded/java/AndroidManifest.xml
 +++ b/android_webview/nonembedded/java/AndroidManifest.xml
 @@ -42,6 +42,7 @@ by a child template that "extends" this file.
@@ -21,11 +21,11 @@ index e200801b3c61c..6d6614ab89827 100644
          <meta-data android:name="com.android.webview.WebViewLibrary"
                     android:value="libwebviewchromium.so" />
 diff --git a/base/allocator/partition_alloc_features.cc b/base/allocator/partition_alloc_features.cc
-index dd065a5535d70..bc6b19b1b20d5 100644
+index cee01f76bd794..6b78dd8e78ef4 100644
 --- a/base/allocator/partition_alloc_features.cc
 +++ b/base/allocator/partition_alloc_features.cc
-@@ -221,11 +221,7 @@ constinit const FeatureParam<bool> kBackupRefPtrSuppressCorruptionDetectedCrash{
- #endif
+@@ -217,11 +217,7 @@ constinit const FeatureParam<bool> kBackupRefPtrSuppressCorruptionDetectedCrash{
+     false};
  
  BASE_FEATURE(kPartitionAllocMemoryTagging,
 -#if PA_BUILDFLAG(USE_FULL_MTE) || BUILDFLAG(IS_ANDROID)
@@ -36,7 +36,7 @@ index dd065a5535d70..bc6b19b1b20d5 100644
  );
  
  constexpr FeatureParam<MemtagMode>::Option kMemtagModeOptions[] = {
-@@ -253,23 +249,14 @@ constexpr FeatureParam<MemoryTaggingEnabledProcesses>::Option
+@@ -249,23 +245,14 @@ constexpr FeatureParam<MemoryTaggingEnabledProcesses>::Option
  constinit const FeatureParam<MemoryTaggingEnabledProcesses>
      kMemoryTaggingEnabledProcessesParam{
          &kPartitionAllocMemoryTagging, kPAFeatureEnabledProcessesStr,

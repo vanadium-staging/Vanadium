@@ -31,10 +31,10 @@ index 56b1dcd70350e..1fa3a887eccb3 100644
       * @return Intent to query a list of installed home launchers.
       */
 diff --git a/chrome/android/java/AndroidManifest.xml b/chrome/android/java/AndroidManifest.xml
-index e229054853915..935b5216893f3 100644
+index bdd0184c17c23..826254cd6aafc 100644
 --- a/chrome/android/java/AndroidManifest.xml
 +++ b/chrome/android/java/AndroidManifest.xml
-@@ -1087,6 +1087,11 @@ by a child template that "extends" this file.
+@@ -1088,6 +1088,11 @@ by a child template that "extends" this file.
                  <!-- Permits Chrome to act as a default handler for WEB_SEARCH intents. -->
                  <category android:name="android.intent.category.DEFAULT" />
              </intent-filter>
@@ -47,7 +47,7 @@ index e229054853915..935b5216893f3 100644
  
          <!-- GcmListenerService for messages from GCM. -->
 diff --git a/chrome/android/java/src/org/chromium/chrome/browser/document/ChromeLauncherActivity.java b/chrome/android/java/src/org/chromium/chrome/browser/document/ChromeLauncherActivity.java
-index 0dbdb1698a2f4..f1dbd8c76bbdc 100644
+index 6311a3cfb5a72..52d3e2b802ba1 100644
 --- a/chrome/android/java/src/org/chromium/chrome/browser/document/ChromeLauncherActivity.java
 +++ b/chrome/android/java/src/org/chromium/chrome/browser/document/ChromeLauncherActivity.java
 @@ -230,7 +230,7 @@ public class ChromeLauncherActivity extends Activity {

@@ -8,10 +8,10 @@ Subject: [PATCH] use Google Chrome branding for client hints
  1 file changed, 1 insertion(+)
 
 diff --git a/components/embedder_support/user_agent_utils.cc b/components/embedder_support/user_agent_utils.cc
-index 833293873f5e8..73e134db9e58f 100644
+index afd1e4c4d2a88..9b819c45fbead 100644
 --- a/components/embedder_support/user_agent_utils.cc
 +++ b/components/embedder_support/user_agent_utils.cc
-@@ -159,6 +159,7 @@ const blink::UserAgentBrandList GetUserAgentBrandList(
+@@ -162,6 +162,7 @@ const blink::UserAgentBrandList GetUserAgentBrandList(
    bool parse_result = base::StringToInt(major_version, &major_version_number);
    DCHECK(parse_result);
    std::optional<std::string> brand;
