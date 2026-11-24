@@ -8,10 +8,10 @@ Subject: [PATCH] enable dubious Do Not Track feature by default
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/chrome/browser/ui/browser_ui_prefs.cc b/chrome/browser/ui/browser_ui_prefs.cc
-index d83fdc2bbf1ce..7c011fd5f933c 100644
+index 01b596ae234ec..0784dded2bbe9 100644
 --- a/chrome/browser/ui/browser_ui_prefs.cc
 +++ b/chrome/browser/ui/browser_ui_prefs.cc
-@@ -151,7 +151,7 @@ void RegisterBrowserUserPrefs(user_prefs::PrefRegistrySyncable* registry) {
+@@ -149,7 +149,7 @@ void RegisterBrowserUserPrefs(user_prefs::PrefRegistrySyncable* registry) {
    registry->RegisterDictionaryPref(prefs::kBrowserWindowPlacementPopup);
    registry->RegisterDictionaryPref(prefs::kAppWindowPlacement);
    registry->RegisterBooleanPref(

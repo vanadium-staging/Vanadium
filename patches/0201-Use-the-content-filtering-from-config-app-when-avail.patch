@@ -26,10 +26,10 @@ index ad19333ae54c8..45dbcce70aa79 100644
 +  ]
  }
 diff --git a/chrome/browser/component_updater/registration.cc b/chrome/browser/component_updater/registration.cc
-index 6a083ad696130..3dfa147bb21e0 100644
+index 2e1d3741b7f3e..ff95e032ff36d 100644
 --- a/chrome/browser/component_updater/registration.cc
 +++ b/chrome/browser/component_updater/registration.cc
-@@ -109,6 +109,9 @@
+@@ -106,6 +106,9 @@
  #if BUILDFLAG(SAFE_BROWSING_AVAILABLE)
  #include "chrome/browser/component_updater/file_type_policies_component_installer.h"
  #endif
@@ -39,7 +39,7 @@ index 6a083ad696130..3dfa147bb21e0 100644
  
  namespace component_updater {
  
-@@ -153,7 +156,11 @@ void RegisterComponentsForUpdate() {
+@@ -154,7 +157,11 @@ void RegisterComponentsForUpdate() {
    RegisterWidevineCdmComponent(cus);
  #endif  // BUILDFLAG(ENABLE_WIDEVINE_CDM_COMPONENT)
  
