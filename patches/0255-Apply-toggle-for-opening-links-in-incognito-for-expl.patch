@@ -14,10 +14,10 @@ Changes since:
  3 files changed, 29 insertions(+)
 
 diff --git a/chrome/android/java/src/org/chromium/chrome/browser/ChromeTabbedActivity.java b/chrome/android/java/src/org/chromium/chrome/browser/ChromeTabbedActivity.java
-index e42e2a1ff9171..ff94c5ff2dd9b 100644
+index 26d39a5618053..2a783a99b893f 100644
 --- a/chrome/android/java/src/org/chromium/chrome/browser/ChromeTabbedActivity.java
 +++ b/chrome/android/java/src/org/chromium/chrome/browser/ChromeTabbedActivity.java
-@@ -1969,6 +1969,8 @@ public class ChromeTabbedActivity extends ChromeActivity implements PreAttachInt
+@@ -1986,6 +1986,8 @@ public class ChromeTabbedActivity extends ChromeActivity implements PreAttachInt
                  return;
              }
  
@@ -26,7 +26,7 @@ index e42e2a1ff9171..ff94c5ff2dd9b 100644
              // The intent to use in maybeDispatchExplicitMainViewIntent(). We're explicitly
              // adding NEW_TASK flag to make sure backing from CCT brings up the caller activity,
              // and not Chrome
-@@ -2543,6 +2545,8 @@ public class ChromeTabbedActivity extends ChromeActivity implements PreAttachInt
+@@ -2587,6 +2589,8 @@ public class ChromeTabbedActivity extends ChromeActivity implements PreAttachInt
              Log.i(TAG, "#initializeState");
              Intent intent = getIntent();
  
@@ -36,10 +36,10 @@ index e42e2a1ff9171..ff94c5ff2dd9b 100644
              PersistableBundle persistentState = getPersistentInstanceState();
              if (shouldPersistAcrossReboots() && persistentState != null) {
 diff --git a/chrome/android/java/src/org/chromium/chrome/browser/LaunchIntentDispatcher.java b/chrome/android/java/src/org/chromium/chrome/browser/LaunchIntentDispatcher.java
-index 5eb76d27b9ca5..9d235ab4e2725 100644
+index 7875fdca5cd63..a435ec93ef505 100644
 --- a/chrome/android/java/src/org/chromium/chrome/browser/LaunchIntentDispatcher.java
 +++ b/chrome/android/java/src/org/chromium/chrome/browser/LaunchIntentDispatcher.java
-@@ -586,6 +586,8 @@ public class LaunchIntentDispatcher {
+@@ -607,6 +607,8 @@ public class LaunchIntentDispatcher {
                  newIntent.setFlags(newIntent.getFlags() & ~Intent.FLAG_ACTIVITY_LAUNCH_ADJACENT);
              }
              maybePutCallingAppPackage(newIntent);

@@ -10,10 +10,10 @@ Subject: [PATCH] Reduce user agent and client hints for webview
  3 files changed, 2 insertions(+), 9 deletions(-)
 
 diff --git a/android_webview/browser/aw_field_trials.cc b/android_webview/browser/aw_field_trials.cc
-index 94d8ca7216ade..25857af7bf41d 100644
+index 53b6b56f43cc0..a06f19717345e 100644
 --- a/android_webview/browser/aw_field_trials.cc
 +++ b/android_webview/browser/aw_field_trials.cc
-@@ -129,10 +129,6 @@ void AwFieldTrials::RegisterFeatureOverrides(base::FeatureList* feature_list) {
+@@ -136,10 +136,6 @@ void AwFieldTrials::RegisterFeatureOverrides(base::FeatureList* feature_list) {
    // Disable launch_handler on WebView.
    aw_feature_overrides.DisableFeature(blink::features::kWebAppLaunchQueue);
  
@@ -25,10 +25,10 @@ index 94d8ca7216ade..25857af7bf41d 100644
    aw_feature_overrides.DisableFeature(blink::features::kFencedFrames);
  
 diff --git a/android_webview/common/aw_features.cc b/android_webview/common/aw_features.cc
-index e70e9965925eb..85fae30c982f1 100644
+index 9b581712c40cc..00ad3a6dd9576 100644
 --- a/android_webview/common/aw_features.cc
 +++ b/android_webview/common/aw_features.cc
-@@ -394,7 +394,7 @@ BASE_FEATURE(kWebViewReducedSeedRequestPeriod,
+@@ -411,7 +411,7 @@ BASE_FEATURE(kWebViewReducedSeedRequestPeriod,
  
  // This enables reducing webview user-agent android version and device model.
  BASE_FEATURE(kWebViewReduceUAAndroidVersionDeviceModel,
@@ -38,7 +38,7 @@ index e70e9965925eb..85fae30c982f1 100644
  // Allow WebView initialization to continue in the case where an old instance of
  // the same app process is stuck holding the lock.
 diff --git a/android_webview/glue/java/src/com/android/webview/chromium/WebViewChromiumFactoryProvider.java b/android_webview/glue/java/src/com/android/webview/chromium/WebViewChromiumFactoryProvider.java
-index 70ffe5b04d59c..bd4d88b337c0f 100644
+index 75e5b5d787d34..560ea2967c21e 100644
 --- a/android_webview/glue/java/src/com/android/webview/chromium/WebViewChromiumFactoryProvider.java
 +++ b/android_webview/glue/java/src/com/android/webview/chromium/WebViewChromiumFactoryProvider.java
 @@ -1110,10 +1110,7 @@ public class WebViewChromiumFactoryProvider implements WebViewFactoryProvider {

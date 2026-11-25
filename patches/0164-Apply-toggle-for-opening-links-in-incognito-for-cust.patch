@@ -15,10 +15,10 @@ Changes since:
  3 files changed, 8 insertions(+)
 
 diff --git a/chrome/android/java/src/org/chromium/chrome/browser/LaunchIntentDispatcher.java b/chrome/android/java/src/org/chromium/chrome/browser/LaunchIntentDispatcher.java
-index 9c565e359643c..5eb76d27b9ca5 100644
+index 553e9b0822683..7875fdca5cd63 100644
 --- a/chrome/android/java/src/org/chromium/chrome/browser/LaunchIntentDispatcher.java
 +++ b/chrome/android/java/src/org/chromium/chrome/browser/LaunchIntentDispatcher.java
-@@ -357,6 +357,7 @@ public class LaunchIntentDispatcher {
+@@ -356,6 +356,7 @@ public class LaunchIntentDispatcher {
              newIntent.setData(uri);
          }
          newIntent.setClassName(context, CustomTabActivity.class.getName());
@@ -27,10 +27,10 @@ index 9c565e359643c..5eb76d27b9ca5 100644
          newIntent.addFlags(Intent.FLAG_ACTIVITY_FORWARD_RESULT);
  
 diff --git a/chrome/android/java/src/org/chromium/chrome/browser/customtabs/IncognitoCustomTabIntentDataProvider.java b/chrome/android/java/src/org/chromium/chrome/browser/customtabs/IncognitoCustomTabIntentDataProvider.java
-index e8d1b0054aa5f..81f9417a9101f 100644
+index e0fa203cbec27..1019e1b2d30d7 100644
 --- a/chrome/android/java/src/org/chromium/chrome/browser/customtabs/IncognitoCustomTabIntentDataProvider.java
 +++ b/chrome/android/java/src/org/chromium/chrome/browser/customtabs/IncognitoCustomTabIntentDataProvider.java
-@@ -215,6 +215,9 @@ public class IncognitoCustomTabIntentDataProvider extends BrowserServicesIntentD
+@@ -220,6 +220,9 @@ public class IncognitoCustomTabIntentDataProvider extends BrowserServicesIntentD
  
      public static boolean isValidIncognitoIntent(Intent intent, boolean recordMetrics) {
          if (!isIncognitoRequested(intent)) return false;

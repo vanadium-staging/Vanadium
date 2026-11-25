@@ -10,7 +10,7 @@ Subject: [PATCH] add support for appending build flags for Vanadium
  create mode 100644 vanadium/chromium_src/build/config/BUILD.gn
 
 diff --git a/build/config/compiler/BUILD.gn b/build/config/compiler/BUILD.gn
-index c267546ebd519..5844aec8f28df 100644
+index e520c91ce7731..3ccf2dd54d513 100644
 --- a/build/config/compiler/BUILD.gn
 +++ b/build/config/compiler/BUILD.gn
 @@ -475,6 +475,9 @@ config("compiler") {
