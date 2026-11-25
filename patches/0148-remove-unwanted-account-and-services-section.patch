@@ -8,10 +8,10 @@ Subject: [PATCH] remove unwanted account and services section
  1 file changed, 2 insertions(+)
 
 diff --git a/chrome/android/java/src/org/chromium/chrome/browser/settings/MainSettings.java b/chrome/android/java/src/org/chromium/chrome/browser/settings/MainSettings.java
-index 76744487aa566..ffb3ae0dfba7a 100644
+index 4e023eb14ec9a..eb692ebfa8595 100644
 --- a/chrome/android/java/src/org/chromium/chrome/browser/settings/MainSettings.java
 +++ b/chrome/android/java/src/org/chromium/chrome/browser/settings/MainSettings.java
-@@ -476,6 +476,8 @@ public class MainSettings extends ChromeBaseSettingsFragment
+@@ -537,6 +537,8 @@ public class MainSettings extends ChromeBaseSettingsFragment
  
          org.chromium.base.settings.SettingsExtUtils.safelyRemovePreference(this, "safety_check");
          org.chromium.base.settings.SettingsExtUtils.safelyRemovePreference(this, PREF_SAFETY_HUB);
@@ -19,4 +19,4 @@ index 76744487aa566..ffb3ae0dfba7a 100644
 +        org.chromium.base.settings.SettingsExtUtils.safelyRemovePreference(this, PREF_GOOGLE_SERVICES);
      }
  
-     private static boolean shouldShowSafetyHubPref() {
+     protected void maybeAddSearchHeaderPreference() {

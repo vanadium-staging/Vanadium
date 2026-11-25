@@ -4,19 +4,20 @@ Date: Sat, 17 Aug 2019 15:53:50 -0400
 Subject: [PATCH] set default search engine to DuckDuckGo
 
 ---
- components/search_engines/template_url_prepopulate_data.cc | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ components/search_engines/template_url_prepopulate_data.cc | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
 diff --git a/components/search_engines/template_url_prepopulate_data.cc b/components/search_engines/template_url_prepopulate_data.cc
-index a25ad76e9ceb3..6066f3d48e415 100644
+index 24e8f47c00242..1ba43a0ab7675 100644
 --- a/components/search_engines/template_url_prepopulate_data.cc
 +++ b/components/search_engines/template_url_prepopulate_data.cc
-@@ -359,7 +359,7 @@ std::unique_ptr<TemplateURLData> GetPrepopulatedFallbackSearch(
+@@ -295,7 +295,8 @@ std::unique_ptr<TemplateURLData> GetPrepopulatedFallbackSearch(
      const std::vector<raw_ptr<const PrepopulatedEngine>>&
          regional_prepopulated_engines) {
-   return FindPrepopulatedEngineInternal(prefs, regional_prepopulated_engines,
--                                        google.id,
-+                                        duckduckgo.id,
-                                         /*use_first_as_fallback=*/true);
+   return PrepopulatedEngineToTemplateURLData(
+-      FindPrepopulatedEngineInternal(regional_prepopulated_engines, google.id,
++      FindPrepopulatedEngineInternal(regional_prepopulated_engines,
++                                     duckduckgo.id,
+                                      /*use_first_as_fallback=*/true));
  }
  
