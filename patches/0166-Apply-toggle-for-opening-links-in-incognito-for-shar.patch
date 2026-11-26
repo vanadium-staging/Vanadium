@@ -12,7 +12,7 @@ Changes since:
  2 files changed, 12 insertions(+)
 
 diff --git a/chrome/android/java/src/org/chromium/chrome/browser/document/ChromeLauncherActivity.java b/chrome/android/java/src/org/chromium/chrome/browser/document/ChromeLauncherActivity.java
-index 546f6feac5d12..7a81356f9883c 100644
+index 3fcab6bb22c39..e4f910bd14d52 100644
 --- a/chrome/android/java/src/org/chromium/chrome/browser/document/ChromeLauncherActivity.java
 +++ b/chrome/android/java/src/org/chromium/chrome/browser/document/ChromeLauncherActivity.java
 @@ -118,6 +118,8 @@ public class ChromeLauncherActivity extends Activity {

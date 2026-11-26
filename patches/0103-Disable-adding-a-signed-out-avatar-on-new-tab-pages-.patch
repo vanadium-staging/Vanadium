@@ -1,0 +1,46 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: quh4gko8 <88831734+quh4gko8@users.noreply.github.com>
+Date: Tue, 8 Aug 2023 09:10:36 +0000
+Subject: [PATCH] Disable adding a signed out avatar on new tab pages by
+ default
+
+---
+ .../chromium/chrome/browser/ui/signin/SigninUtils.java    | 8 ++++++++
+ .../toolbar/signin_button/SigninButtonCoordinator.java    | 1 +
+ 2 files changed, 9 insertions(+)
+
+diff --git a/chrome/browser/ui/android/signin/java/src/org/chromium/chrome/browser/ui/signin/SigninUtils.java b/chrome/browser/ui/android/signin/java/src/org/chromium/chrome/browser/ui/signin/SigninUtils.java
+index 458e31e093be1..fe5badebd87e4 100644
+--- a/chrome/browser/ui/android/signin/java/src/org/chromium/chrome/browser/ui/signin/SigninUtils.java
++++ b/chrome/browser/ui/android/signin/java/src/org/chromium/chrome/browser/ui/signin/SigninUtils.java
+@@ -125,10 +125,18 @@ public final class SigninUtils {
+                 && !DialogWhenLargeContentLayout.shouldShowAsDialog(context);
+     }
+ 
++    public static boolean allowNtpAvatar() {
++        return false;
++    }
++
+     public static String getContentDescriptionForIdentityDisc(
+             Context context,
+             @Nullable DisplayableProfileData profileData,
+             @UserActionableError int identityError) {
++        if (!allowNtpAvatar()) {
++            return "";
++        }
++
+         if (profileData == null) {
+             return context.getString(R.string.accessibility_toolbar_btn_signed_out_identity_disc);
+         }
+diff --git a/chrome/browser/ui/android/toolbar/java/src/org/chromium/chrome/browser/toolbar/signin_button/SigninButtonCoordinator.java b/chrome/browser/ui/android/toolbar/java/src/org/chromium/chrome/browser/toolbar/signin_button/SigninButtonCoordinator.java
+index 7bda6a38716f7..58cb96b69952a 100644
+--- a/chrome/browser/ui/android/toolbar/java/src/org/chromium/chrome/browser/toolbar/signin_button/SigninButtonCoordinator.java
++++ b/chrome/browser/ui/android/toolbar/java/src/org/chromium/chrome/browser/toolbar/signin_button/SigninButtonCoordinator.java
+@@ -193,6 +193,7 @@ public class SigninButtonCoordinator extends ToolbarChildButton implements UrlFo
+                 tab != null
+                         && !tab.isOffTheRecord()
+                         && !shouldHideButtonForUrlFocus
++                        && org.chromium.chrome.browser.ui.signin.SigninUtils.allowNtpAvatar()
+                         && (mShowOnAllPages || mIsNtpSupplier.getAsBoolean());
+ 
+         // Only update signin button if it does not match the intended state.
