@@ -9,10 +9,10 @@ Subject: [PATCH] [tmp] Disable Safety Hub features by default
  2 files changed, 3 insertions(+), 3 deletions(-)
 
 diff --git a/chrome/common/chrome_features.cc b/chrome/common/chrome_features.cc
-index 60863b5128aad..a468d802f8580 100644
+index 2dc84fa2e9c1c..ee2ed2ffa4c41 100644
 --- a/chrome/common/chrome_features.cc
 +++ b/chrome/common/chrome_features.cc
-@@ -1570,7 +1570,7 @@ BASE_FEATURE(kRecordWebAppDebugInfo, base::FEATURE_DISABLED_BY_DEFAULT);
+@@ -1588,7 +1588,7 @@ BASE_FEATURE(kRecordWebAppDebugInfo, base::FEATURE_DISABLED_BY_DEFAULT);
  // Enables notification permission revocation for abusive origins.
  BASE_FEATURE(kAbusiveNotificationPermissionRevocation,
               "AbusiveOriginNotificationPermissionRevocation",
@@ -21,7 +21,7 @@ index 60863b5128aad..a468d802f8580 100644
  
  #if BUILDFLAG(ENABLE_EXTENSIONS_CORE)
  BASE_FEATURE(kSafetyHubExtensionsUwSTrigger, base::FEATURE_ENABLED_BY_DEFAULT);
-@@ -1584,7 +1584,7 @@ BASE_FEATURE(kSafetyHubExtensionsOffStoreTrigger,
+@@ -1602,7 +1602,7 @@ BASE_FEATURE(kSafetyHubExtensionsOffStoreTrigger,
               base::FEATURE_ENABLED_BY_DEFAULT);
  #endif
  
