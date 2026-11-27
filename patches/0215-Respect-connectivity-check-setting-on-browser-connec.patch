@@ -10,10 +10,10 @@ Subject: [PATCH] Respect connectivity check setting on browser connectivity
  2 files changed, 45 insertions(+)
 
 diff --git a/chrome/android/java/src/org/chromium/chrome/browser/feedback/ConnectivityChecker.java b/chrome/android/java/src/org/chromium/chrome/browser/feedback/ConnectivityChecker.java
-index 37a4a3aaee6f4..5dee0dd966b26 100644
+index d262214aed070..9eb75f1b1231a 100644
 --- a/chrome/android/java/src/org/chromium/chrome/browser/feedback/ConnectivityChecker.java
 +++ b/chrome/android/java/src/org/chromium/chrome/browser/feedback/ConnectivityChecker.java
-@@ -111,6 +111,27 @@ public final class ConnectivityChecker {
+@@ -112,6 +112,27 @@ public final class ConnectivityChecker {
       */
      public static void checkConnectivitySystemNetworkStack(
              boolean useHttps, int timeoutMs, ConnectivityCheckerCallback callback) {
@@ -41,7 +41,7 @@ index 37a4a3aaee6f4..5dee0dd966b26 100644
          String url = useHttps ? sHttpsNoContentUrl : sHttpNoContentUrl;
          checkConnectivitySystemNetworkStack(url, timeoutMs, callback);
      }
-@@ -188,6 +209,28 @@ public final class ConnectivityChecker {
+@@ -189,6 +210,28 @@ public final class ConnectivityChecker {
              boolean useHttps,
              int timeoutMs,
              ConnectivityCheckerCallback callback) {

@@ -10,7 +10,7 @@ Subject: [PATCH] Respect connectivity check setting on DNS-over-HTTPS
  3 files changed, 60 insertions(+), 1 deletion(-)
 
 diff --git a/net/DEPS b/net/DEPS
-index 76b30ad015f6a..c8b203d8fd630 100644
+index 6bf7ba430553e..cbc24fd38d2eb 100644
 --- a/net/DEPS
 +++ b/net/DEPS
 @@ -12,6 +12,9 @@ include_rules = [
@@ -24,7 +24,7 @@ index 76b30ad015f6a..c8b203d8fd630 100644
    # built as a library.
    "-base/i18n",
 diff --git a/net/dns/dns_transaction.cc b/net/dns/dns_transaction.cc
-index bddffacb803b6..db0fd05caeff0 100644
+index c2b398fdd6610..2730bb6651392 100644
 --- a/net/dns/dns_transaction.cc
 +++ b/net/dns/dns_transaction.cc
 @@ -95,6 +95,14 @@

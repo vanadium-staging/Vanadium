@@ -1,0 +1,249 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: quh4gko8 <88831734+quh4gko8@users.noreply.github.com>
+Date: Tue, 24 Nov 2026 03:02:19 +0000
+Subject: [PATCH] Hide Android NTP Theme collections in Appearance and history
+
+---
+ .../NtpCustomizationUtils.java                |  6 +++++
+ .../theme/NtpThemeBottomSheetView.java        |  5 +++-
+ .../theme/NtpThemeCoordinator.java            |  3 +++
+ .../theme/NtpThemeMediator.java               |  3 +++
+ .../NtpThemeSyncHistoryCoordinator.java       | 25 ++++++++++++-----
+ .../NtpThemeBottomSheetViewUnitTest.java      | 14 ++++++++++
+ ...tpThemeSyncHistoryCoordinatorUnitTest.java | 27 +++++++++++++++++++
+ 7 files changed, 75 insertions(+), 8 deletions(-)
+
+diff --git a/chrome/browser/ntp_customization/java/src/org/chromium/chrome/browser/ntp_customization/NtpCustomizationUtils.java b/chrome/browser/ntp_customization/java/src/org/chromium/chrome/browser/ntp_customization/NtpCustomizationUtils.java
+index 8e276ea586257..86be6984683e7 100644
+--- a/chrome/browser/ntp_customization/java/src/org/chromium/chrome/browser/ntp_customization/NtpCustomizationUtils.java
++++ b/chrome/browser/ntp_customization/java/src/org/chromium/chrome/browser/ntp_customization/NtpCustomizationUtils.java
+@@ -520,6 +520,12 @@ public class NtpCustomizationUtils {
+         return getNtpBackgroundTypeFromSharedPreference();
+     }
+ 
++    /** Returns whether the theme data represents a disabled collection wallpaper. */
++    public static boolean isThemeCollectionBlocked(@Nullable NtpBackgroundDataBase theme) {
++        return !NtpThemeCollectionsExt.isEnabled()
++                && theme instanceof NtpBackgroundDataThemeCollection;
++    }
++
+     /**
+      * Saves the background image.
+      *
+diff --git a/chrome/browser/ntp_customization/java/src/org/chromium/chrome/browser/ntp_customization/theme/NtpThemeBottomSheetView.java b/chrome/browser/ntp_customization/java/src/org/chromium/chrome/browser/ntp_customization/theme/NtpThemeBottomSheetView.java
+index 6003d44e9f015..94f69531a28eb 100644
+--- a/chrome/browser/ntp_customization/java/src/org/chromium/chrome/browser/ntp_customization/theme/NtpThemeBottomSheetView.java
++++ b/chrome/browser/ntp_customization/java/src/org/chromium/chrome/browser/ntp_customization/theme/NtpThemeBottomSheetView.java
+@@ -22,6 +22,7 @@ import android.widget.ScrollView;
+ import org.chromium.build.annotations.NullMarked;
+ import org.chromium.build.annotations.Nullable;
+ import org.chromium.chrome.browser.ntp_customization.NtpCustomizationUtils.NtpBackgroundType;
++import org.chromium.chrome.browser.ntp_customization.NtpThemeCollectionsExt;
+ import org.chromium.chrome.browser.ntp_customization.R;
+ 
+ /** The view of the "New tab page appearance" bottom sheet. */
+@@ -74,7 +75,9 @@ public class NtpThemeBottomSheetView extends ScrollView {
+                                 R.layout.ntp_customization_theme_list_theme_collections_item_layout,
+                                 container,
+                                 false);
+-        container.addView(mThemeCollectionsSection);
++        if (NtpThemeCollectionsExt.isEnabled()) {
++            container.addView(mThemeCollectionsSection);
++        }
+     }
+ 
+     void destroy() {
+diff --git a/chrome/browser/ntp_customization/java/src/org/chromium/chrome/browser/ntp_customization/theme/NtpThemeCoordinator.java b/chrome/browser/ntp_customization/java/src/org/chromium/chrome/browser/ntp_customization/theme/NtpThemeCoordinator.java
+index 781e158894983..260f95613e0d8 100644
+--- a/chrome/browser/ntp_customization/java/src/org/chromium/chrome/browser/ntp_customization/theme/NtpThemeCoordinator.java
++++ b/chrome/browser/ntp_customization/java/src/org/chromium/chrome/browser/ntp_customization/theme/NtpThemeCoordinator.java
+@@ -31,6 +31,7 @@ import org.chromium.chrome.browser.ntp_customization.NtpCustomizationConfigManag
+ import org.chromium.chrome.browser.ntp_customization.NtpCustomizationCoordinator.BottomSheetType;
+ import org.chromium.chrome.browser.ntp_customization.NtpCustomizationUtils;
+ import org.chromium.chrome.browser.ntp_customization.NtpCustomizationViewProperties;
++import org.chromium.chrome.browser.ntp_customization.NtpThemeCollectionsExt;
+ import org.chromium.chrome.browser.ntp_customization.R;
+ import org.chromium.chrome.browser.ntp_customization.theme.chrome_colors.NtpChromeColorsCoordinator;
+ import org.chromium.chrome.browser.ntp_customization.theme.theme_collections.BackgroundCollection;
+@@ -212,6 +213,8 @@ public class NtpThemeCoordinator {
+             public void onThemeCollectionsClicked(
+                     Runnable resetCustomizedThemeRunnable,
+                     List<BackgroundCollection> themeCollectionsList) {
++                if (!NtpThemeCollectionsExt.isEnabled()) return;
++
+                 if (mNtpThemeCollectionsCoordinator == null) {
+                     Runnable onDailyRefreshCancelledCallback =
+                             () -> {
+diff --git a/chrome/browser/ntp_customization/java/src/org/chromium/chrome/browser/ntp_customization/theme/NtpThemeMediator.java b/chrome/browser/ntp_customization/java/src/org/chromium/chrome/browser/ntp_customization/theme/NtpThemeMediator.java
+index bf9e9c2ae5e75..1c88ebb7d8eca 100644
+--- a/chrome/browser/ntp_customization/java/src/org/chromium/chrome/browser/ntp_customization/theme/NtpThemeMediator.java
++++ b/chrome/browser/ntp_customization/java/src/org/chromium/chrome/browser/ntp_customization/theme/NtpThemeMediator.java
+@@ -40,6 +40,7 @@ import org.chromium.chrome.browser.ntp_customization.NtpCustomizationMetricsUtil
+ import org.chromium.chrome.browser.ntp_customization.NtpCustomizationUtils;
+ import org.chromium.chrome.browser.ntp_customization.NtpCustomizationUtils.NtpBackgroundType;
+ import org.chromium.chrome.browser.ntp_customization.NtpCustomizationUtils.OnImageLoadedCallback;
++import org.chromium.chrome.browser.ntp_customization.NtpThemeCollectionsExt;
+ import org.chromium.chrome.browser.ntp_customization.theme.theme_collections.BackgroundCollection;
+ import org.chromium.chrome.browser.ntp_customization.theme.theme_collections.NtpThemeCollectionManager;
+ import org.chromium.chrome.browser.profiles.Profile;
+@@ -260,6 +261,8 @@ public class NtpThemeMediator {
+      */
+     @VisibleForTesting
+     void fetchAndSetThemeCollectionsLeadingIcon() {
++        if (!NtpThemeCollectionsExt.isEnabled()) return;
++
+         mNtpThemeCollectionManager.getBackgroundCollections(
+                 (collections) -> {
+                     mThemeCollectionsList.clear();
+diff --git a/chrome/browser/ntp_customization/java/src/org/chromium/chrome/browser/ntp_customization/theme_sync/NtpThemeSyncHistoryCoordinator.java b/chrome/browser/ntp_customization/java/src/org/chromium/chrome/browser/ntp_customization/theme_sync/NtpThemeSyncHistoryCoordinator.java
+index 79bd38d91272d..b5793a5e5e6ea 100644
+--- a/chrome/browser/ntp_customization/java/src/org/chromium/chrome/browser/ntp_customization/theme_sync/NtpThemeSyncHistoryCoordinator.java
++++ b/chrome/browser/ntp_customization/java/src/org/chromium/chrome/browser/ntp_customization/theme_sync/NtpThemeSyncHistoryCoordinator.java
+@@ -24,6 +24,7 @@ import org.chromium.chrome.browser.ntp_customization.NtpCustomizationConfigManag
+ import org.chromium.chrome.browser.ntp_customization.NtpCustomizationCoordinator.BottomSheetType;
+ import org.chromium.chrome.browser.ntp_customization.NtpCustomizationMetricsUtils;
+ import org.chromium.chrome.browser.ntp_customization.NtpCustomizationUtils;
++import org.chromium.chrome.browser.ntp_customization.NtpThemeCollectionsExt;
+ import org.chromium.chrome.browser.ntp_customization.R;
+ import org.chromium.chrome.browser.ntp_customization.theme.chrome_colors.NtpThemeColorInfo.NtpThemeColorId;
+ import org.chromium.chrome.browser.ntp_customization.theme.theme_collections.BackgroundCollection;
+@@ -156,7 +157,9 @@ public class NtpThemeSyncHistoryCoordinator {
+                 new NtpBackgroundDataColor(
+                         context, PlatformType.ANDROID, NtpThemeColorId.NTP_COLORS_VIOLET, false));
+ 
+-        mThemeCollectionManager.getBackgroundCollections(this::onTheCollectionIdAvailable);
++        if (NtpThemeCollectionsExt.isEnabled()) {
++            mThemeCollectionManager.getBackgroundCollections(this::onTheCollectionIdAvailable);
++        }
+     }
+ 
+     /**
+@@ -272,17 +275,22 @@ public class NtpThemeSyncHistoryCoordinator {
+         NtpBackgroundDataGroup localGroup = mNtpBackgroundDataGroups[PlatformType.ANDROID];
+         cacheThemeCollectionUrls(localGroup);
+ 
+-        // Adds all previously selected theming by the users.
++        // Keep legacy wallpaper history on disk for policy cleanup.
+         assumeNonNull(localGroup);
+-        if (!localGroup.isEmpty()) {
+-            mDataShowingList.addAll(localGroup.getList());
++        for (NtpBackgroundDataBase data : localGroup) {
++            if (!NtpCustomizationUtils.isThemeCollectionBlocked(data)) {
++                mDataShowingList.add(data);
++            }
+         }
+ 
+         if (currentNtpBackgroundData == null) {
+             // Sets the index to the default theme if there isn't any NTP theme set before.
+             lastSelectedIndex = 0;
+-        } else if (!localGroup.isEmpty()) {
+-            int index = localGroup.indexOf(currentNtpBackgroundData);
++        } else {
++            int index =
++                    mDataShowingList
++                            .subList(defaultOptionSize, mDataShowingList.size())
++                            .indexOf(currentNtpBackgroundData);
+             if (index != -1) {
+                 // The index is set to the item from local selected history which matches the
+                 // current theme.
+@@ -301,7 +309,8 @@ public class NtpThemeSyncHistoryCoordinator {
+                 // the previous platforms: the same theme can be the latest selection on several
+                 // platforms, and each platform has its own history list, so it would otherwise be
+                 // added once per platform.
+-                if (!mDataShowingList.contains(data)) {
++                if (!NtpCustomizationUtils.isThemeCollectionBlocked(data)
++                        && !mDataShowingList.contains(data)) {
+                     // Adds the data and stops here.
+                     addBackgroundDataFromOtherPlatforms(data);
+                     break;
+@@ -429,6 +438,8 @@ public class NtpThemeSyncHistoryCoordinator {
+      * @param backgroundData The {@link NtpBackgroundDataBase} of the clicked item.
+      */
+     private void onItemClicked(NtpBackgroundDataBase backgroundData, int position) {
++        if (NtpCustomizationUtils.isThemeCollectionBlocked(backgroundData)) return;
++
+         boolean shouldRecreate = shouldRecreateActivity(backgroundData);
+         mBottomSheetDelegate.onNewColorSelected(shouldRecreate);
+         recordItemClick(backgroundData, position);
+diff --git a/chrome/browser/ntp_customization/junit/src/org/chromium/chrome/browser/ntp_customization/theme/NtpThemeBottomSheetViewUnitTest.java b/chrome/browser/ntp_customization/junit/src/org/chromium/chrome/browser/ntp_customization/theme/NtpThemeBottomSheetViewUnitTest.java
+index b7d3e33f980f0..8c2e7561ab740 100644
+--- a/chrome/browser/ntp_customization/junit/src/org/chromium/chrome/browser/ntp_customization/theme/NtpThemeBottomSheetViewUnitTest.java
++++ b/chrome/browser/ntp_customization/junit/src/org/chromium/chrome/browser/ntp_customization/theme/NtpThemeBottomSheetViewUnitTest.java
+@@ -35,6 +35,7 @@ import org.mockito.junit.MockitoJUnit;
+ import org.mockito.junit.MockitoRule;
+ 
+ import org.chromium.base.test.BaseRobolectricTestRunner;
++import org.chromium.chrome.browser.ntp_customization.NtpThemeCollectionsExt;
+ import org.chromium.chrome.browser.ntp_customization.R;
+ 
+ /** Unit tests for {@link NtpThemeBottomSheetView}. */
+@@ -53,11 +54,15 @@ public class NtpThemeBottomSheetViewUnitTest {
+ 
+     @Before
+     public void setUp() {
++        NtpThemeCollectionsExt.setEnabledForTesting(true);
+         mContext =
+                 new ContextThemeWrapper(
+                         ApplicationProvider.getApplicationContext(),
+                         R.style.Theme_BrowserUI_DayNight);
++        inflateThemeBottomSheet();
++    }
+ 
++    private void inflateThemeBottomSheet() {
+         mNtpThemeBottomSheetView =
+                 (NtpThemeBottomSheetView)
+                         LayoutInflater.from(mContext)
+@@ -67,6 +72,15 @@ public class NtpThemeBottomSheetViewUnitTest {
+                                         false);
+     }
+ 
++    @Test
++    public void testDisabledCollectionsRowIsDetachedAndCanBeDestroyed() {
++        NtpThemeCollectionsExt.setEnabledForTesting(false);
++        inflateThemeBottomSheet();
++
++        assertNull(getSection(THEME_COLLECTION).getParent());
++        mNtpThemeBottomSheetView.destroy();
++    }
++
+     @Test
+     public void testDestroy() {
+         for (int sectionType : SECTION_TYPES) {
+diff --git a/chrome/browser/ntp_customization/junit/src/org/chromium/chrome/browser/ntp_customization/theme_sync/NtpThemeSyncHistoryCoordinatorUnitTest.java b/chrome/browser/ntp_customization/junit/src/org/chromium/chrome/browser/ntp_customization/theme_sync/NtpThemeSyncHistoryCoordinatorUnitTest.java
+index 149204e712506..73c684c73f87e 100644
+--- a/chrome/browser/ntp_customization/junit/src/org/chromium/chrome/browser/ntp_customization/theme_sync/NtpThemeSyncHistoryCoordinatorUnitTest.java
++++ b/chrome/browser/ntp_customization/junit/src/org/chromium/chrome/browser/ntp_customization/theme_sync/NtpThemeSyncHistoryCoordinatorUnitTest.java
+@@ -325,6 +325,33 @@ public class NtpThemeSyncHistoryCoordinatorUnitTest {
+                 (int) mPropertyModel.get(NtpThemeSyncHistoryProperties.HIGHLIGHTED_ITEM_INDEX));
+     }
+ 
++    @Test
++    public void testDisabledCollectionsAreHiddenBeforeHistorySelection() {
++        NtpThemeCollectionsExt.setEnabledForTesting(false);
++        NtpBackgroundDataCustomizedColor localColor =
++                createCustomizedColorImpl(PlatformType.ANDROID, Color.BLUE);
++        mNtpBackgroundDataManager.saveUserSelectedBackgroundTypeToSharedPreference(localColor);
++        mNtpBackgroundDataManager.saveUserSelectedBackgroundTypeToSharedPreference(
++                createDailyRefreshThemeCollection(TEST_IMAGE_URL_1, Color.RED));
++        saveRemoteCustomizedColorImpl(PlatformType.IOS, Color.CYAN);
++        mNtpBackgroundDataManager.saveRemoteSyncDataToSharedPreference(
++                createRemoteThemeCollectionImpl(/* isBitmapSaved= */ false));
++        RobolectricUtil.runAllBackgroundAndUi();
++        when(mNtpCustomizationConfigManager.getNtpBackgroundData()).thenReturn(localColor);
++
++        mCoordinator.prepareToShow();
++
++        assertShowingListWithCustomizedColorsImpl(Color.BLUE, Color.CYAN);
++        assertEquals(
++                1, (int) mPropertyModel.get(NtpThemeSyncHistoryProperties.HIGHLIGHTED_ITEM_INDEX));
++        assertEquals(
++                2,
++                mNtpBackgroundDataManager.getBackgroundDataGroupFromSharedPreference(
++                                PlatformType.ANDROID)
++                        .size());
++        verify(mMockImageFetcher, never()).fetchImage(any(), any());
++    }
++
+     @Test
+     public void testPrepareToShow_WithLocalAndRemoteHistory() {
+         // Save local history.

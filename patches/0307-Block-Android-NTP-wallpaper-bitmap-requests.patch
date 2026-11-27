@@ -1,0 +1,360 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: quh4gko8 <88831734+quh4gko8@users.noreply.github.com>
+Date: Mon, 23 Nov 2026 06:07:45 +0000
+Subject: [PATCH] Block Android NTP wallpaper bitmap requests
+
+---
+ .../CrossDeviceSettingImporterUnitTest.java   |  2 ++
+ .../chrome/browser/sync/synced_set_up/DEPS    |  5 ++++
+ chrome/browser/ntp_customization/DEPS         |  2 ++
+ .../NtpCustomizationUtils.java                |  7 +++++
+ .../NtpCustomizationUtilsUnitTest.java        | 22 +++++++++++++-
+ .../theme/NtpSyncedThemeManagerUnitTest.java  |  2 ++
+ .../theme/NtpThemeCoordinatorUnitTest.java    |  2 ++
+ .../theme/NtpThemeMediatorUnitTest.java       |  2 ++
+ .../NtpThemeCollectionManagerUnitTest.java    |  2 ++
+ .../NtpThemeCollectionsAdapterUnitTest.java   |  2 ++
+ ...tpThemeCollectionsCoordinatorUnitTest.java |  2 ++
+ ...tpThemeSyncHistoryCoordinatorUnitTest.java |  2 ++
+ .../chrome/browser/ntp_customization/DEPS     |  4 +++
+ .../NtpThemeCollectionsExt.java               | 30 +++++++++++++++++++
+ .../ntp_customization_java_ext_sources.gni    |  1 +
+ 15 files changed, 86 insertions(+), 1 deletion(-)
+ create mode 100644 chrome/android/junit/src/org/chromium/chrome/browser/sync/synced_set_up/DEPS
+ create mode 100644 vanadium/chromium_src/chrome/browser/ntp_customization/DEPS
+ create mode 100644 vanadium/chromium_src/chrome/browser/ntp_customization/ext/java/src/org/chromium/chrome/browser/ntp_customization/NtpThemeCollectionsExt.java
+
+diff --git a/chrome/android/junit/src/org/chromium/chrome/browser/sync/synced_set_up/CrossDeviceSettingImporterUnitTest.java b/chrome/android/junit/src/org/chromium/chrome/browser/sync/synced_set_up/CrossDeviceSettingImporterUnitTest.java
+index 0582e9d6532d8..2f39dab6822df 100644
+--- a/chrome/android/junit/src/org/chromium/chrome/browser/sync/synced_set_up/CrossDeviceSettingImporterUnitTest.java
++++ b/chrome/android/junit/src/org/chromium/chrome/browser/sync/synced_set_up/CrossDeviceSettingImporterUnitTest.java
+@@ -66,6 +66,7 @@ import org.chromium.chrome.browser.lifecycle.ActivityLifecycleDispatcher;
+ import org.chromium.chrome.browser.magic_stack.HomeModulesConfigManager;
+ import org.chromium.chrome.browser.ntp_customization.NtpCustomizationConfigManager;
+ import org.chromium.chrome.browser.ntp_customization.NtpCustomizationUtils;
++import org.chromium.chrome.browser.ntp_customization.NtpThemeCollectionsExt;
+ import org.chromium.chrome.browser.ntp_customization.policy.NtpCustomizationPolicyManager;
+ import org.chromium.chrome.browser.ntp_customization.theme.NtpSyncedThemeManager;
+ import org.chromium.chrome.browser.ntp_customization.theme.NtpThemeStateProvider;
+@@ -158,6 +159,7 @@ public class CrossDeviceSettingImporterUnitTest {
+ 
+     @Before
+     public void setUp() {
++        NtpThemeCollectionsExt.setEnabledForTesting(true);
+         mActivityTabSupplier.set(mTab);
+ 
+         mActivityScenarioRule.getScenario().onActivity(activity -> mActivity = activity);
+diff --git a/chrome/android/junit/src/org/chromium/chrome/browser/sync/synced_set_up/DEPS b/chrome/android/junit/src/org/chromium/chrome/browser/sync/synced_set_up/DEPS
+new file mode 100644
+index 0000000000000..8e19cb158b3e0
+--- /dev/null
++++ b/chrome/android/junit/src/org/chromium/chrome/browser/sync/synced_set_up/DEPS
+@@ -0,0 +1,5 @@
++specific_include_rules = {
++  "CrossDeviceSettingImporterUnitTest.java": [
++    "+vanadium/chromium_src/chrome/browser/ntp_customization",
++  ],
++}
+diff --git a/chrome/browser/ntp_customization/DEPS b/chrome/browser/ntp_customization/DEPS
+index 9c88615ec7c6b..6debef109a27a 100644
+--- a/chrome/browser/ntp_customization/DEPS
++++ b/chrome/browser/ntp_customization/DEPS
+@@ -6,4 +6,6 @@ include_rules = [
+   "+components/image_fetcher/android/java/src/org/chromium/components/image_fetcher/ImageFetcher.java",
+   "+components/image_fetcher/android/java/src/org/chromium/components/image_fetcher/ImageFetcherFactory.java",
+   "+chrome/android/java/src/org/chromium/chrome/browser/ntp/NewTabPageUtils.java",
++  # Vanadium-specific dependencies
++  "+vanadium/chromium_src/chrome/browser/ntp_customization",
+ ]
+\ No newline at end of file
+diff --git a/chrome/browser/ntp_customization/java/src/org/chromium/chrome/browser/ntp_customization/NtpCustomizationUtils.java b/chrome/browser/ntp_customization/java/src/org/chromium/chrome/browser/ntp_customization/NtpCustomizationUtils.java
+index 607697f5c9ab1..8e276ea586257 100644
+--- a/chrome/browser/ntp_customization/java/src/org/chromium/chrome/browser/ntp_customization/NtpCustomizationUtils.java
++++ b/chrome/browser/ntp_customization/java/src/org/chromium/chrome/browser/ntp_customization/NtpCustomizationUtils.java
+@@ -82,6 +82,8 @@ import org.chromium.base.ResettersForTesting;
+ import org.chromium.base.shared_preferences.SharedPreferencesManager;
+ import org.chromium.base.task.AsyncTask;
+ import org.chromium.base.task.BackgroundOnlyAsyncTask;
++import org.chromium.base.task.PostTask;
++import org.chromium.base.task.TaskTraits;
+ import org.chromium.build.annotations.NullMarked;
+ import org.chromium.build.annotations.Nullable;
+ import org.chromium.chrome.browser.composeplate.ComposeplateUtils;
+@@ -1334,6 +1336,11 @@ public class NtpCustomizationUtils {
+      */
+     public static void fetchThemeCollectionImage(
+             ImageFetcher imageFetcher, GURL imageUrl, Callback<@Nullable Bitmap> callback) {
++        if (!NtpThemeCollectionsExt.isEnabled()) {
++            PostTask.postTask(TaskTraits.UI_DEFAULT, callback.bind(null));
++            return;
++        }
++
+         ImageFetcher.Params params =
+                 ImageFetcher.Params.create(
+                         imageUrl,
+diff --git a/chrome/browser/ntp_customization/junit/src/org/chromium/chrome/browser/ntp_customization/NtpCustomizationUtilsUnitTest.java b/chrome/browser/ntp_customization/junit/src/org/chromium/chrome/browser/ntp_customization/NtpCustomizationUtilsUnitTest.java
+index 10e77dfb048ac..12ce6bdaad377 100644
+--- a/chrome/browser/ntp_customization/junit/src/org/chromium/chrome/browser/ntp_customization/NtpCustomizationUtilsUnitTest.java
++++ b/chrome/browser/ntp_customization/junit/src/org/chromium/chrome/browser/ntp_customization/NtpCustomizationUtilsUnitTest.java
+@@ -21,6 +21,7 @@ import static org.mockito.Mockito.never;
+ import static org.mockito.Mockito.spy;
+ import static org.mockito.Mockito.times;
+ import static org.mockito.Mockito.verify;
++import static org.mockito.Mockito.verifyNoInteractions;
+ import static org.mockito.Mockito.when;
+ import static org.robolectric.Shadows.shadowOf;
+ 
+@@ -59,7 +60,6 @@ import android.widget.FrameLayout;
+ import android.widget.ImageButton;
+ 
+ import androidx.annotation.ColorInt;
+-import androidx.annotation.Nullable;
+ import androidx.core.content.ContextCompat;
+ import androidx.core.view.ViewCompat;
+ import androidx.test.core.app.ApplicationProvider;
+@@ -84,6 +84,7 @@ import org.chromium.base.test.RobolectricUtil;
+ import org.chromium.base.test.util.Features.DisableFeatures;
+ import org.chromium.base.test.util.Features.EnableFeatures;
+ import org.chromium.build.BuildConfig;
++import org.chromium.build.annotations.Nullable;
+ import org.chromium.chrome.browser.flags.ChromeFeatureList;
+ import org.chromium.chrome.browser.ntp_customization.NtpCustomizationUtils.NtpBackgroundType;
+ import org.chromium.chrome.browser.ntp_customization.policy.NtpCustomizationPolicyManager;
+@@ -116,6 +117,8 @@ import java.io.ByteArrayInputStream;
+ import java.io.File;
+ import java.io.FileNotFoundException;
+ import java.io.IOException;
++import java.util.ArrayList;
++import java.util.List;
+ 
+ /** Unit tests for {@link NtpCustomizationUtils} */
+ @RunWith(BaseRobolectricTestRunner.class)
+@@ -151,6 +154,7 @@ public class NtpCustomizationUtilsUnitTest {
+ 
+     @Before
+     public void setUp() {
++        NtpThemeCollectionsExt.setEnabledForTesting(true);
+         mContext =
+                 new ContextThemeWrapper(
+                         ApplicationProvider.getApplicationContext(),
+@@ -1134,6 +1138,22 @@ public class NtpCustomizationUtilsUnitTest {
+                         NtpBackgroundType.THEME_COLLECTION));
+     }
+ 
++    @Test
++    public void testDisabledCollectionsReportFailureWithoutFetching() {
++        NtpThemeCollectionsExt.setEnabledForTesting(false);
++        ImageFetcher imageFetcher = mock(ImageFetcher.class);
++        List<@Nullable Bitmap> results = new ArrayList<>();
++
++        NtpCustomizationUtils.fetchThemeCollectionImage(
++                imageFetcher, JUnitTestGURLs.URL_1, results::add);
++
++        assertTrue(results.isEmpty());
++        RobolectricUtil.runAllBackgroundAndUi();
++        assertEquals(1, results.size());
++        assertNull(results.get(0));
++        verifyNoInteractions(imageFetcher);
++    }
++
+     @Test
+     public void testFetchThemeCollectionImage() {
+         ImageFetcher imageFetcher = mock(ImageFetcher.class);
+diff --git a/chrome/browser/ntp_customization/junit/src/org/chromium/chrome/browser/ntp_customization/theme/NtpSyncedThemeManagerUnitTest.java b/chrome/browser/ntp_customization/junit/src/org/chromium/chrome/browser/ntp_customization/theme/NtpSyncedThemeManagerUnitTest.java
+index b98accea91a63..f67f548f159bd 100644
+--- a/chrome/browser/ntp_customization/junit/src/org/chromium/chrome/browser/ntp_customization/theme/NtpSyncedThemeManagerUnitTest.java
++++ b/chrome/browser/ntp_customization/junit/src/org/chromium/chrome/browser/ntp_customization/theme/NtpSyncedThemeManagerUnitTest.java
+@@ -46,6 +46,7 @@ import org.chromium.base.test.RobolectricUtil;
+ import org.chromium.build.annotations.Nullable;
+ import org.chromium.chrome.browser.ntp_customization.NtpCustomizationConfigManager;
+ import org.chromium.chrome.browser.ntp_customization.NtpCustomizationUtils;
++import org.chromium.chrome.browser.ntp_customization.NtpThemeCollectionsExt;
+ import org.chromium.chrome.browser.ntp_customization.policy.NtpCustomizationPolicyManager;
+ import org.chromium.chrome.browser.ntp_customization.theme.NtpSyncedThemeBridge.SyncedBackgroundInfo;
+ import org.chromium.chrome.browser.ntp_customization.theme.chrome_colors.NtpThemeColorInfo.NtpThemeColorId;
+@@ -86,6 +87,7 @@ public class NtpSyncedThemeManagerUnitTest {
+ 
+     @Before
+     public void setUp() {
++        NtpThemeCollectionsExt.setEnabledForTesting(true);
+         // The manager uses ContextUtils.getApplicationContext(), which Robolectric wraps.
+         mContext = ContextUtils.getApplicationContext();
+         NtpCustomizationUtils.setImageFetcherForTesting(mImageFetcher);
+diff --git a/chrome/browser/ntp_customization/junit/src/org/chromium/chrome/browser/ntp_customization/theme/NtpThemeCoordinatorUnitTest.java b/chrome/browser/ntp_customization/junit/src/org/chromium/chrome/browser/ntp_customization/theme/NtpThemeCoordinatorUnitTest.java
+index 5355c85911095..67c28505805d2 100644
+--- a/chrome/browser/ntp_customization/junit/src/org/chromium/chrome/browser/ntp_customization/theme/NtpThemeCoordinatorUnitTest.java
++++ b/chrome/browser/ntp_customization/junit/src/org/chromium/chrome/browser/ntp_customization/theme/NtpThemeCoordinatorUnitTest.java
+@@ -52,6 +52,7 @@ import org.chromium.chrome.browser.ntp_customization.NtpCustomizationConfigManag
+ import org.chromium.chrome.browser.ntp_customization.NtpCustomizationCoordinator.BottomSheetType;
+ import org.chromium.chrome.browser.ntp_customization.NtpCustomizationUtils;
+ import org.chromium.chrome.browser.ntp_customization.NtpCustomizationUtils.NtpBackgroundType;
++import org.chromium.chrome.browser.ntp_customization.NtpThemeCollectionsExt;
+ import org.chromium.chrome.browser.ntp_customization.R;
+ import org.chromium.chrome.browser.ntp_customization.theme.chrome_colors.NtpChromeColorsCoordinator;
+ import org.chromium.chrome.browser.ntp_customization.theme.theme_collections.BackgroundCollection;
+@@ -98,6 +99,7 @@ public class NtpThemeCoordinatorUnitTest {
+ 
+     @Before
+     public void setUp() {
++        NtpThemeCollectionsExt.setEnabledForTesting(true);
+         mContext =
+                 new ContextThemeWrapper(
+                         ApplicationProvider.getApplicationContext(),
+diff --git a/chrome/browser/ntp_customization/junit/src/org/chromium/chrome/browser/ntp_customization/theme/NtpThemeMediatorUnitTest.java b/chrome/browser/ntp_customization/junit/src/org/chromium/chrome/browser/ntp_customization/theme/NtpThemeMediatorUnitTest.java
+index 24fa9ff1cb97c..a85c4873c1ee5 100644
+--- a/chrome/browser/ntp_customization/junit/src/org/chromium/chrome/browser/ntp_customization/theme/NtpThemeMediatorUnitTest.java
++++ b/chrome/browser/ntp_customization/junit/src/org/chromium/chrome/browser/ntp_customization/theme/NtpThemeMediatorUnitTest.java
+@@ -57,6 +57,7 @@ import org.chromium.chrome.browser.ntp_customization.NtpCustomizationCoordinator
+ import org.chromium.chrome.browser.ntp_customization.NtpCustomizationUtils;
+ import org.chromium.chrome.browser.ntp_customization.NtpCustomizationUtils.NtpBackgroundType;
+ import org.chromium.chrome.browser.ntp_customization.NtpCustomizationViewProperties;
++import org.chromium.chrome.browser.ntp_customization.NtpThemeCollectionsExt;
+ import org.chromium.chrome.browser.ntp_customization.R;
+ import org.chromium.chrome.browser.ntp_customization.theme.theme_collections.BackgroundCollection;
+ import org.chromium.chrome.browser.ntp_customization.theme.theme_collections.NtpThemeCollectionManager;
+@@ -92,6 +93,7 @@ public class NtpThemeMediatorUnitTest {
+ 
+     @Before
+     public void setUp() {
++        NtpThemeCollectionsExt.setEnabledForTesting(true);
+         mContext =
+                 new ContextThemeWrapper(
+                         ApplicationProvider.getApplicationContext(),
+diff --git a/chrome/browser/ntp_customization/junit/src/org/chromium/chrome/browser/ntp_customization/theme/theme_collections/NtpThemeCollectionManagerUnitTest.java b/chrome/browser/ntp_customization/junit/src/org/chromium/chrome/browser/ntp_customization/theme/theme_collections/NtpThemeCollectionManagerUnitTest.java
+index 5299a4e33784f..2d96a4857009e 100644
+--- a/chrome/browser/ntp_customization/junit/src/org/chromium/chrome/browser/ntp_customization/theme/theme_collections/NtpThemeCollectionManagerUnitTest.java
++++ b/chrome/browser/ntp_customization/junit/src/org/chromium/chrome/browser/ntp_customization/theme/theme_collections/NtpThemeCollectionManagerUnitTest.java
+@@ -38,6 +38,7 @@ import org.chromium.base.test.BaseRobolectricTestRunner;
+ import org.chromium.base.test.RobolectricUtil;
+ import org.chromium.chrome.browser.ntp_customization.NtpCustomizationConfigManager;
+ import org.chromium.chrome.browser.ntp_customization.NtpCustomizationUtils;
++import org.chromium.chrome.browser.ntp_customization.NtpThemeCollectionsExt;
+ import org.chromium.chrome.browser.ntp_customization.theme.theme_collections.NtpThemeCollectionBridge.NativeNtpThemeCollectionBridge;
+ import org.chromium.chrome.browser.ntp_customization.theme_sync.data.NtpBackgroundDataThemeCollection;
+ import org.chromium.chrome.browser.profiles.Profile;
+@@ -70,6 +71,7 @@ public class NtpThemeCollectionManagerUnitTest {
+ 
+     @Before
+     public void setUp() {
++        NtpThemeCollectionsExt.setEnabledForTesting(true);
+         mContext = ApplicationProvider.getApplicationContext();
+         NtpCustomizationUtils.setImageFetcherForTesting(mImageFetcher);
+         NtpThemeCollectionBridgeJni.setInstanceForTesting(mNatives);
+diff --git a/chrome/browser/ntp_customization/junit/src/org/chromium/chrome/browser/ntp_customization/theme/theme_collections/NtpThemeCollectionsAdapterUnitTest.java b/chrome/browser/ntp_customization/junit/src/org/chromium/chrome/browser/ntp_customization/theme/theme_collections/NtpThemeCollectionsAdapterUnitTest.java
+index 1abc19aa0d153..0e6b86131ace9 100644
+--- a/chrome/browser/ntp_customization/junit/src/org/chromium/chrome/browser/ntp_customization/theme/theme_collections/NtpThemeCollectionsAdapterUnitTest.java
++++ b/chrome/browser/ntp_customization/junit/src/org/chromium/chrome/browser/ntp_customization/theme/theme_collections/NtpThemeCollectionsAdapterUnitTest.java
+@@ -43,6 +43,7 @@ import org.mockito.junit.MockitoRule;
+ 
+ import org.chromium.base.Callback;
+ import org.chromium.base.test.BaseRobolectricTestRunner;
++import org.chromium.chrome.browser.ntp_customization.NtpThemeCollectionsExt;
+ import org.chromium.chrome.browser.ntp_customization.R;
+ import org.chromium.chrome.browser.ntp_customization.theme.theme_collections.NtpThemeCollectionsAdapter.ThemeCollectionViewHolder;
+ import org.chromium.components.image_fetcher.ImageFetcher;
+@@ -74,6 +75,7 @@ public class NtpThemeCollectionsAdapterUnitTest {
+ 
+     @Before
+     public void setUp() {
++        NtpThemeCollectionsExt.setEnabledForTesting(true);
+         mContext =
+                 new ContextThemeWrapper(
+                         ApplicationProvider.getApplicationContext(),
+diff --git a/chrome/browser/ntp_customization/junit/src/org/chromium/chrome/browser/ntp_customization/theme/theme_collections/NtpThemeCollectionsCoordinatorUnitTest.java b/chrome/browser/ntp_customization/junit/src/org/chromium/chrome/browser/ntp_customization/theme/theme_collections/NtpThemeCollectionsCoordinatorUnitTest.java
+index 845b09491dc73..f555041569d0f 100644
+--- a/chrome/browser/ntp_customization/junit/src/org/chromium/chrome/browser/ntp_customization/theme/theme_collections/NtpThemeCollectionsCoordinatorUnitTest.java
++++ b/chrome/browser/ntp_customization/junit/src/org/chromium/chrome/browser/ntp_customization/theme/theme_collections/NtpThemeCollectionsCoordinatorUnitTest.java
+@@ -48,6 +48,7 @@ import org.chromium.chrome.browser.ntp_customization.BottomSheetDelegate;
+ import org.chromium.chrome.browser.ntp_customization.NtpCustomizationConfigManager;
+ import org.chromium.chrome.browser.ntp_customization.NtpCustomizationCoordinator.BottomSheetType;
+ import org.chromium.chrome.browser.ntp_customization.NtpCustomizationUtils;
++import org.chromium.chrome.browser.ntp_customization.NtpThemeCollectionsExt;
+ import org.chromium.chrome.browser.ntp_customization.R;
+ import org.chromium.chrome.browser.ntp_customization.theme.chrome_colors.NtpThemeColorInfo;
+ import org.chromium.chrome.browser.ntp_customization.theme.chrome_colors.NtpThemeColorUtils;
+@@ -91,6 +92,7 @@ public class NtpThemeCollectionsCoordinatorUnitTest {
+ 
+     @Before
+     public void setUp() {
++        NtpThemeCollectionsExt.setEnabledForTesting(true);
+         mContext =
+                 new ContextThemeWrapper(
+                         ApplicationProvider.getApplicationContext(),
+diff --git a/chrome/browser/ntp_customization/junit/src/org/chromium/chrome/browser/ntp_customization/theme_sync/NtpThemeSyncHistoryCoordinatorUnitTest.java b/chrome/browser/ntp_customization/junit/src/org/chromium/chrome/browser/ntp_customization/theme_sync/NtpThemeSyncHistoryCoordinatorUnitTest.java
+index b873cd940f76d..149204e712506 100644
+--- a/chrome/browser/ntp_customization/junit/src/org/chromium/chrome/browser/ntp_customization/theme_sync/NtpThemeSyncHistoryCoordinatorUnitTest.java
++++ b/chrome/browser/ntp_customization/junit/src/org/chromium/chrome/browser/ntp_customization/theme_sync/NtpThemeSyncHistoryCoordinatorUnitTest.java
+@@ -54,6 +54,7 @@ import org.chromium.chrome.browser.ntp_customization.NtpCustomizationConfigManag
+ import org.chromium.chrome.browser.ntp_customization.NtpCustomizationCoordinator.BottomSheetType;
+ import org.chromium.chrome.browser.ntp_customization.NtpCustomizationUtils;
+ import org.chromium.chrome.browser.ntp_customization.NtpCustomizationUtils.NtpBackgroundType;
++import org.chromium.chrome.browser.ntp_customization.NtpThemeCollectionsExt;
+ import org.chromium.chrome.browser.ntp_customization.R;
+ import org.chromium.chrome.browser.ntp_customization.theme.chrome_colors.NtpThemeColorInfo.NtpThemeColorId;
+ import org.chromium.chrome.browser.ntp_customization.theme.theme_collections.BackgroundCollection;
+@@ -117,6 +118,7 @@ public class NtpThemeSyncHistoryCoordinatorUnitTest {
+ 
+     @Before
+     public void setUp() {
++        NtpThemeCollectionsExt.setEnabledForTesting(true);
+         CrossDeviceThemeTracker.setInstanceForTesting(mCrossDeviceThemeTrackerJni);
+         mContext =
+                 new ContextThemeWrapper(
+diff --git a/vanadium/chromium_src/chrome/browser/ntp_customization/DEPS b/vanadium/chromium_src/chrome/browser/ntp_customization/DEPS
+new file mode 100644
+index 0000000000000..0c00773f7df45
+--- /dev/null
++++ b/vanadium/chromium_src/chrome/browser/ntp_customization/DEPS
+@@ -0,0 +1,4 @@
++include_rules = [
++  "+base/android",
++  "+build/android",
++]
+diff --git a/vanadium/chromium_src/chrome/browser/ntp_customization/ext/java/src/org/chromium/chrome/browser/ntp_customization/NtpThemeCollectionsExt.java b/vanadium/chromium_src/chrome/browser/ntp_customization/ext/java/src/org/chromium/chrome/browser/ntp_customization/NtpThemeCollectionsExt.java
+new file mode 100644
+index 0000000000000..6a58de30ffb5a
+--- /dev/null
++++ b/vanadium/chromium_src/chrome/browser/ntp_customization/ext/java/src/org/chromium/chrome/browser/ntp_customization/NtpThemeCollectionsExt.java
+@@ -0,0 +1,30 @@
++// Copyright 2026 GrapheneOS
++// Use of this source code is governed by a GPL-2.0-only style license that can be
++// found in the LICENSE file.
++
++package org.chromium.chrome.browser.ntp_customization;
++
++import androidx.annotation.VisibleForTesting;
++
++import org.chromium.base.ResettersForTesting;
++import org.chromium.build.BuildConfig;
++import org.chromium.build.annotations.NullMarked;
++
++/** Availability of remote wallpaper in the native Android NTP. */
++@NullMarked
++public final class NtpThemeCollectionsExt {
++    private static boolean sEnabledForTesting;
++
++    private NtpThemeCollectionsExt() {}
++
++    public static boolean isEnabled() {
++        return BuildConfig.IS_FOR_TEST && sEnabledForTesting;
++    }
++
++    @VisibleForTesting
++    public static void setEnabledForTesting(boolean enabled) {
++        boolean previous = sEnabledForTesting;
++        sEnabledForTesting = enabled;
++        ResettersForTesting.register(() -> sEnabledForTesting = previous);
++    }
++}
+diff --git a/vanadium/chromium_src/chrome/browser/ntp_customization/ntp_customization_java_ext_sources.gni b/vanadium/chromium_src/chrome/browser/ntp_customization/ntp_customization_java_ext_sources.gni
+index be8a4baf33804..3c290d37d5661 100644
+--- a/vanadium/chromium_src/chrome/browser/ntp_customization/ntp_customization_java_ext_sources.gni
++++ b/vanadium/chromium_src/chrome/browser/ntp_customization/ntp_customization_java_ext_sources.gni
+@@ -11,6 +11,7 @@ ntp_customization_java_ext_full_path_sources = [
+ # Three lines of code for minimizing conflicts in rebasing changes
+ # Three lines of code for minimizing conflicts in rebasing changes
+ ntp_customization_java_ext_rel_path_sources = [
++  "ext/java/src/org/chromium/chrome/browser/ntp_customization/NtpThemeCollectionsExt.java",
+ ]
+ # Three lines of code for minimizing conflicts in rebasing changes
+ # Three lines of code for minimizing conflicts in rebasing changes

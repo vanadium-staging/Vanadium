@@ -1,0 +1,100 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: quh4gko8 <88831734+quh4gko8@users.noreply.github.com>
+Date: Thu, 19 Nov 2026 12:00:00 +0000
+Subject: [PATCH] Extend //chrome/browser/tab_ui/android java and junit targets
+ deps
+
+---
+ chrome/browser/tab_ui/android/BUILD.gn        |  6 +++++
+ .../tab_ui/android/tab_ui_java_ext_deps.gni   | 26 +++++++++++++++++++
+ .../tab_ui/android/tab_ui_junit_ext_deps.gni  | 26 +++++++++++++++++++
+ 3 files changed, 58 insertions(+)
+ create mode 100644 vanadium/chromium_src/chrome/browser/tab_ui/android/tab_ui_java_ext_deps.gni
+ create mode 100644 vanadium/chromium_src/chrome/browser/tab_ui/android/tab_ui_junit_ext_deps.gni
+
+diff --git a/chrome/browser/tab_ui/android/BUILD.gn b/chrome/browser/tab_ui/android/BUILD.gn
+index d505baf94023a..db2fb29f11eb9 100644
+--- a/chrome/browser/tab_ui/android/BUILD.gn
++++ b/chrome/browser/tab_ui/android/BUILD.gn
+@@ -103,6 +103,9 @@ android_library("java") {
+     "//url:gurl_java",
+   ]
+   resources_package = "org.chromium.chrome.browser.tab_ui"
++
++  import ("//vanadium/chromium_src/chrome/browser/tab_ui/android/tab_ui_java_ext_deps.gni")
++  deps += tab_ui_java_ext_deps
+ }
+ 
+ android_resources("java_resources") {
+@@ -222,4 +225,7 @@ robolectric_library("junit") {
+     "//url:gurl_java",
+     "//url:gurl_junit_test_support",
+   ]
++
++  import ("//vanadium/chromium_src/chrome/browser/tab_ui/android/tab_ui_junit_ext_deps.gni")
++  deps += tab_ui_junit_ext_deps
+ }
+diff --git a/vanadium/chromium_src/chrome/browser/tab_ui/android/tab_ui_java_ext_deps.gni b/vanadium/chromium_src/chrome/browser/tab_ui/android/tab_ui_java_ext_deps.gni
+new file mode 100644
+index 0000000000000..3addf85f4ce41
+--- /dev/null
++++ b/vanadium/chromium_src/chrome/browser/tab_ui/android/tab_ui_java_ext_deps.gni
+@@ -0,0 +1,26 @@
++# Copyright 2026 GrapheneOS
++# Use of this source code is governed by a GPL-2.0-only style license that can be
++# found in the LICENSE file.
++
++# Three lines of code for minimizing conflicts in rebasing changes
++# Three lines of code for minimizing conflicts in rebasing changes
++# Three lines of code for minimizing conflicts in rebasing changes
++tab_ui_java_ext_full_path_deps = [
++]
++# Three lines of code for minimizing conflicts in rebasing changes
++# Three lines of code for minimizing conflicts in rebasing changes
++# Three lines of code for minimizing conflicts in rebasing changes
++tab_ui_java_ext_rel_path_deps = [
++]
++# Three lines of code for minimizing conflicts in rebasing changes
++# Three lines of code for minimizing conflicts in rebasing changes
++# Three lines of code for minimizing conflicts in rebasing changes
++tab_ui_java_ext_deps = [
++]
++# Three lines of code for minimizing conflicts in rebasing changes
++# Three lines of code for minimizing conflicts in rebasing changes
++# Three lines of code for minimizing conflicts in rebasing changes
++tab_ui_java_ext_deps += tab_ui_java_ext_full_path_deps
++foreach(rel_path, tab_ui_java_ext_rel_path_deps) {
++  tab_ui_java_ext_deps += [ rebase_path(rel_path) ]
++}
+diff --git a/vanadium/chromium_src/chrome/browser/tab_ui/android/tab_ui_junit_ext_deps.gni b/vanadium/chromium_src/chrome/browser/tab_ui/android/tab_ui_junit_ext_deps.gni
+new file mode 100644
+index 0000000000000..8a4e0797409e3
+--- /dev/null
++++ b/vanadium/chromium_src/chrome/browser/tab_ui/android/tab_ui_junit_ext_deps.gni
+@@ -0,0 +1,26 @@
++# Copyright 2026 GrapheneOS
++# Use of this source code is governed by a GPL-2.0-only style license that can be
++# found in the LICENSE file.
++
++# Three lines of code for minimizing conflicts in rebasing changes
++# Three lines of code for minimizing conflicts in rebasing changes
++# Three lines of code for minimizing conflicts in rebasing changes
++tab_ui_junit_ext_full_path_deps = [
++]
++# Three lines of code for minimizing conflicts in rebasing changes
++# Three lines of code for minimizing conflicts in rebasing changes
++# Three lines of code for minimizing conflicts in rebasing changes
++tab_ui_junit_ext_rel_path_deps = [
++]
++# Three lines of code for minimizing conflicts in rebasing changes
++# Three lines of code for minimizing conflicts in rebasing changes
++# Three lines of code for minimizing conflicts in rebasing changes
++tab_ui_junit_ext_deps = [
++]
++# Three lines of code for minimizing conflicts in rebasing changes
++# Three lines of code for minimizing conflicts in rebasing changes
++# Three lines of code for minimizing conflicts in rebasing changes
++tab_ui_junit_ext_deps += tab_ui_junit_ext_full_path_deps
++foreach(rel_path, tab_ui_junit_ext_rel_path_deps) {
++  tab_ui_junit_ext_deps += [ rebase_path(rel_path) ]
++}

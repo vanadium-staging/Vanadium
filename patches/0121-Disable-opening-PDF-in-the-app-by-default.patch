@@ -53,10 +53,10 @@ index fb18dd4f45000..e6b09e51926dc 100644
      @Rule public final MockitoRule mMockitoRule = MockitoJUnit.rule();
      @Mock private Tab mTab;
 diff --git a/chrome/browser/ui/android/pdf/java/src/org/chromium/chrome/browser/pdf/PdfUtils.java b/chrome/browser/ui/android/pdf/java/src/org/chromium/chrome/browser/pdf/PdfUtils.java
-index b642d56769b29..d2039e3394f90 100644
+index d157627aaa640..5384b134797dd 100644
 --- a/chrome/browser/ui/android/pdf/java/src/org/chromium/chrome/browser/pdf/PdfUtils.java
 +++ b/chrome/browser/ui/android/pdf/java/src/org/chromium/chrome/browser/pdf/PdfUtils.java
-@@ -254,6 +254,10 @@ public class PdfUtils {
+@@ -260,6 +260,10 @@ public class PdfUtils {
      }
  
      private static boolean isPlatformSupported() {

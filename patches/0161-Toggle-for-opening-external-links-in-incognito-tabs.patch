@@ -22,10 +22,10 @@ Changes since:
  create mode 100644 vanadium/chromium_src/chrome/android/java/src/org/chromium/chrome/browser/LaunchIntentDispatcherHooks.java
 
 diff --git a/chrome/android/java/src/org/chromium/chrome/browser/ChromeTabbedActivity.java b/chrome/android/java/src/org/chromium/chrome/browser/ChromeTabbedActivity.java
-index 2eabf7a465fbb..e42e2a1ff9171 100644
+index a2829a3e0d0ca..7dd06feafd02c 100644
 --- a/chrome/android/java/src/org/chromium/chrome/browser/ChromeTabbedActivity.java
 +++ b/chrome/android/java/src/org/chromium/chrome/browser/ChromeTabbedActivity.java
-@@ -3161,7 +3161,8 @@ public class ChromeTabbedActivity extends ChromeActivity implements PreAttachInt
+@@ -3204,7 +3204,8 @@ public class ChromeTabbedActivity extends ChromeActivity implements PreAttachInt
                  resultTab = launchIntent(loadUrlParams, externalAppId, true, intent);
                  break;
              case TabOpenType.OPEN_NEW_INCOGNITO_TAB:
@@ -35,7 +35,7 @@ index 2eabf7a465fbb..e42e2a1ff9171 100644
                      assert false : "Only Chrome is allowed to open incognito tabs";
                      Log.e(TAG, "Only Chrome is allowed to open incognito tabs");
                      return null;
-@@ -5448,6 +5449,11 @@ public class ChromeTabbedActivity extends ChromeActivity implements PreAttachInt
+@@ -5598,6 +5599,11 @@ public class ChromeTabbedActivity extends ChromeActivity implements PreAttachInt
              return firstTab;
          }
  
@@ -48,10 +48,10 @@ index 2eabf7a465fbb..e42e2a1ff9171 100644
                  getTabCreator(isIncognitoForced)
                          .launchUrlFromExternalApp(
 diff --git a/chrome/android/java/src/org/chromium/chrome/browser/IntentHandler.java b/chrome/android/java/src/org/chromium/chrome/browser/IntentHandler.java
-index 7f24846068d5b..60c3c8ad5c8a3 100644
+index 1d504fb9ab097..33af1c001c5d5 100644
 --- a/chrome/android/java/src/org/chromium/chrome/browser/IntentHandler.java
 +++ b/chrome/android/java/src/org/chromium/chrome/browser/IntentHandler.java
-@@ -1135,6 +1135,8 @@ public class IntentHandler {
+@@ -1138,6 +1138,8 @@ public class IntentHandler {
  
      private static boolean isAllowedIncognitoIntent(
              boolean isChrome, boolean isCustomTab, Intent intent) {
@@ -60,7 +60,7 @@ index 7f24846068d5b..60c3c8ad5c8a3 100644
          // "Open new incognito tab" is currently limited to Chrome for the Chrome app. It can be
          // launched by external apps if it's a Custom Tab, although there are additional checks in
          // IncognitoCustomTabIntentDataProvider#isValidIncognitoIntent.
-@@ -1245,6 +1247,9 @@ public class IntentHandler {
+@@ -1248,6 +1250,9 @@ public class IntentHandler {
              int tabOpenType = IntentUtils.safeGetIntExtra(intent, EXTRA_TAB_OPEN_TYPE, -1);
              if (tabOpenType != -1) return tabOpenType;
          }
@@ -71,10 +71,10 @@ index 7f24846068d5b..60c3c8ad5c8a3 100644
                  intent, WebappConstants.REUSE_URL_MATCHING_TAB_ELSE_NEW_TAB, false)) {
              return TabOpenType.REUSE_URL_MATCHING_TAB_ELSE_NEW_TAB;
 diff --git a/chrome/android/java/src/org/chromium/chrome/browser/LaunchIntentDispatcher.java b/chrome/android/java/src/org/chromium/chrome/browser/LaunchIntentDispatcher.java
-index 3429f1cf1b3d7..9c565e359643c 100644
+index 5b3f79a42cd33..553e9b0822683 100644
 --- a/chrome/android/java/src/org/chromium/chrome/browser/LaunchIntentDispatcher.java
 +++ b/chrome/android/java/src/org/chromium/chrome/browser/LaunchIntentDispatcher.java
-@@ -574,6 +574,7 @@ public class LaunchIntentDispatcher {
+@@ -595,6 +595,7 @@ public class LaunchIntentDispatcher {
  
          if (Intent.ACTION_VIEW.equals(newIntent.getAction())
                  && !IntentHandler.wasIntentSenderChrome(newIntent)) {

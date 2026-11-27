@@ -3,20 +3,21 @@ From: quh4gko8 <88831734+quh4gko8@users.noreply.github.com>
 Date: Tue, 14 Feb 2023 21:35:28 +0000
 Subject: [PATCH] Enable reduce accept language header by default
 
+This now reduces accept language count to 2.
 ---
- services/network/public/cpp/features.cc | 2 +-
+ components/language/core/browser/language_prefs.h | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/services/network/public/cpp/features.cc b/services/network/public/cpp/features.cc
-index 10eeeb04fff70..2448fe57b39b2 100644
---- a/services/network/public/cpp/features.cc
-+++ b/services/network/public/cpp/features.cc
-@@ -190,7 +190,7 @@ BASE_FEATURE(kOmitCorsClientCert, base::FEATURE_DISABLED_BY_DEFAULT);
+diff --git a/components/language/core/browser/language_prefs.h b/components/language/core/browser/language_prefs.h
+index 112ab04e591ee..c6400e443cfca 100644
+--- a/components/language/core/browser/language_prefs.h
++++ b/components/language/core/browser/language_prefs.h
+@@ -34,7 +34,7 @@ inline constexpr char kFallbackInputMethodLocale[] = "en-US";
+ // Maximum number of languages to include in the Accept-Language HTTP header and
+ // JavaScript navigator.languages getter to enhance privacy. See details in
+ // https://datatracker.ietf.org/doc/html/rfc7231#section-9.7.
+-inline constexpr size_t kMaxAcceptLanguageCount = 10;
++inline constexpr size_t kMaxAcceptLanguageCount = 2;
  
- // Enables support for the `Variants` response header and reduce
- // accept-language. https://github.com/Tanych/accept-language
--BASE_FEATURE(kReduceAcceptLanguage, base::FEATURE_DISABLED_BY_DEFAULT);
-+BASE_FEATURE(kReduceAcceptLanguage, base::FEATURE_ENABLED_BY_DEFAULT);
- 
- BASE_FEATURE_PARAM(base::TimeDelta,
-                    kReduceAcceptLanguageCacheDuration,
+ class LanguagePrefs {
+  public:
