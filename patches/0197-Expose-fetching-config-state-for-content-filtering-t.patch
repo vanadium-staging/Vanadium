@@ -5,12 +5,12 @@ Subject: [PATCH] Expose fetching config state for content filtering to native
  calls
 
 ---
- .../subresource_filter/ext/android/BUILD.gn   | 37 +++++++++++++++++++
+ .../subresource_filter/ext/android/BUILD.gn   | 36 +++++++++++++++++++
  .../subresource_filter/ext/android/DEPS       |  3 ++
- .../SubresourceFilterFetching.java            | 30 +++++++++++++++
- .../android/subresource_filter_fetching.cc    | 24 ++++++++++++
+ .../SubresourceFilterFetching.java            | 30 ++++++++++++++++
+ .../android/subresource_filter_fetching.cc    | 24 +++++++++++++
  .../ext/android/subresource_filter_fetching.h | 15 ++++++++
- 5 files changed, 109 insertions(+)
+ 5 files changed, 108 insertions(+)
  create mode 100644 vanadium/chromium_src/components/subresource_filter/ext/android/BUILD.gn
  create mode 100644 vanadium/chromium_src/components/subresource_filter/ext/android/DEPS
  create mode 100644 vanadium/chromium_src/components/subresource_filter/ext/android/java/src/org/chromium/components/subresource_filter/SubresourceFilterFetching.java
@@ -19,10 +19,10 @@ Subject: [PATCH] Expose fetching config state for content filtering to native
 
 diff --git a/vanadium/chromium_src/components/subresource_filter/ext/android/BUILD.gn b/vanadium/chromium_src/components/subresource_filter/ext/android/BUILD.gn
 new file mode 100644
-index 0000000000000..a82845d8231cf
+index 0000000000000..014fa4e71baa0
 --- /dev/null
 +++ b/vanadium/chromium_src/components/subresource_filter/ext/android/BUILD.gn
-@@ -0,0 +1,37 @@
+@@ -0,0 +1,36 @@
 +# Copyright 2020 The Chromium Authors
 +# Use of this source code is governed by a BSD-style license that can be
 +# found in the LICENSE file.
@@ -37,12 +37,11 @@ index 0000000000000..a82845d8231cf
 +}
 +
 +android_library("java") {
-+  srcjar_deps = [ ":subresource_filter_fetching_jni_headers" ]
 +  sources = [
 +    "java/src/org/chromium/components/subresource_filter/SubresourceFilterFetching.java",
 +  ]
 +  deps = [
-+    ":subresource_filter_fetching_jni_headers",
++    ":subresource_filter_fetching_jni_headers_java",
 +    "//base:base_java",
 +    "//third_party/jni_zero:jni_zero_java",
 +    "//vanadium/android_config/parser:config_app_parser_java",

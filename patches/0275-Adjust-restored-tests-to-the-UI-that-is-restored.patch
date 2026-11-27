@@ -1,0 +1,192 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: quh4gko8 <88831734+quh4gko8@users.noreply.github.com>
+Date: Thu, 19 Nov 2026 12:00:00 +0000
+Subject: [PATCH] Adjust restored tests to the UI that is restored
+
+---
+ .../settings/PasswordSettingsSearchTest.java  |   3 -
+ .../settings/PasswordSettingsTest.java        | 116 ------------------
+ .../settings/PasswordSettingsTestHelper.java  |   2 +-
+ 3 files changed, 1 insertion(+), 120 deletions(-)
+
+diff --git a/vanadium/chromium_src/chrome/android/javatests/src/org/chromium/chrome/browser/password_manager/settings/PasswordSettingsSearchTest.java b/vanadium/chromium_src/chrome/android/javatests/src/org/chromium/chrome/browser/password_manager/settings/PasswordSettingsSearchTest.java
+index 0dde4f6d3f78d..bf024345f4d17 100644
+--- a/vanadium/chromium_src/chrome/android/javatests/src/org/chromium/chrome/browser/password_manager/settings/PasswordSettingsSearchTest.java
++++ b/vanadium/chromium_src/chrome/android/javatests/src/org/chromium/chrome/browser/password_manager/settings/PasswordSettingsSearchTest.java
+@@ -55,11 +55,9 @@ import androidx.test.platform.app.InstrumentationRegistry;
+ import org.hamcrest.Matcher;
+ import org.junit.After;
+ import org.junit.Assert;
+-import org.junit.Before;
+ import org.junit.Rule;
+ import org.junit.Test;
+ import org.junit.runner.RunWith;
+-import org.mockito.Mock;
+ import org.mockito.junit.MockitoJUnit;
+ import org.mockito.junit.MockitoRule;
+ 
+@@ -77,7 +75,6 @@ import org.chromium.chrome.browser.history.HistoryContentManager;
+ import org.chromium.chrome.browser.history.StubbedHistoryProvider;
+ import org.chromium.chrome.browser.settings.SettingsActivityTestRule;
+ import org.chromium.chrome.test.ChromeJUnit4ClassRunner;
+-import org.chromium.ui.test.util.ViewUtils;
+ 
+ import java.util.Date;
+ import java.util.concurrent.atomic.AtomicReference;
+diff --git a/vanadium/chromium_src/chrome/android/javatests/src/org/chromium/chrome/browser/password_manager/settings/PasswordSettingsTest.java b/vanadium/chromium_src/chrome/android/javatests/src/org/chromium/chrome/browser/password_manager/settings/PasswordSettingsTest.java
+index 4e2a54edfbc69..208cb02e5ba40 100644
+--- a/vanadium/chromium_src/chrome/android/javatests/src/org/chromium/chrome/browser/password_manager/settings/PasswordSettingsTest.java
++++ b/vanadium/chromium_src/chrome/android/javatests/src/org/chromium/chrome/browser/password_manager/settings/PasswordSettingsTest.java
+@@ -15,11 +15,9 @@ import static org.chromium.ui.test.util.ViewUtils.onViewWaiting;
+ 
+ import android.os.Bundle;
+ 
+-import androidx.test.filters.MediumTest;
+ import androidx.test.filters.SmallTest;
+ 
+ import org.junit.After;
+-import org.junit.Assert;
+ import org.junit.Before;
+ import org.junit.Rule;
+ import org.junit.Test;
+@@ -168,87 +166,6 @@ public class PasswordSettingsTest {
+                 });
+     }
+ 
+-    /**
+-     * Tests that the link pointing to managing passwords in the user's account is not displayed for
+-     * non signed in users.
+-     */
+-    @Test
+-    @SmallTest
+-    @Feature({"Preferences"})
+-    public void testManageAccountLinkNotSignedIn() {
+-        // Add a password entry, because the link is only displayed if the password list is not
+-        // empty.
+-        mTestHelper.setPasswordSource(
+-                new SavedPasswordEntry("https://example.com", "test user", "password"));
+-        mTestHelper.startPasswordSettingsFromMainSettings(mPasswordSettingsActivityTestRule);
+-        PasswordSettings savedPasswordPrefs = mPasswordSettingsActivityTestRule.getFragment();
+-        Assert.assertNull(
+-                savedPasswordPrefs.findPreference(PasswordSettings.PREF_KEY_MANAGE_ACCOUNT_LINK));
+-    }
+-
+-    /**
+-     * Tests that the link pointing to managing passwords in the user's account is not displayed for
+-     * signed in users, not syncing passwords.
+-     */
+-    @Test
+-    @SmallTest
+-    @Feature({"Preferences"})
+-    public void testManageAccountLinkSignedInNotSyncing() {
+-        // Add a password entry, because the link is only displayed if the password list is not
+-        // empty.
+-        mTestHelper.setPasswordSource(
+-                new SavedPasswordEntry("https://example.com", "test user", "password"));
+-        setSyncServiceState(false, false);
+-
+-        mTestHelper.startPasswordSettingsFromMainSettings(mPasswordSettingsActivityTestRule);
+-        PasswordSettings savedPasswordPrefs = mPasswordSettingsActivityTestRule.getFragment();
+-
+-        Assert.assertNull(
+-                savedPasswordPrefs.findPreference(PasswordSettings.PREF_KEY_MANAGE_ACCOUNT_LINK));
+-    }
+-
+-    /**
+-     * Tests that the link pointing to managing passwords in the user's account is displayed for
+-     * users syncing passwords.
+-     */
+-    @Test
+-    @SmallTest
+-    @Feature({"Preferences"})
+-    public void testManageAccountLinkSyncing() {
+-        // Add a password entry, because the link is only displayed if the password list is not
+-        // empty.
+-        mTestHelper.setPasswordSource(
+-                new SavedPasswordEntry("https://example.com", "test user", "password"));
+-        setSyncServiceState(false, true);
+-
+-        mTestHelper.startPasswordSettingsFromMainSettings(mPasswordSettingsActivityTestRule);
+-        PasswordSettings savedPasswordPrefs = mPasswordSettingsActivityTestRule.getFragment();
+-
+-        Assert.assertNotNull(
+-                savedPasswordPrefs.findPreference(PasswordSettings.PREF_KEY_MANAGE_ACCOUNT_LINK));
+-    }
+-
+-    /**
+-     * Tests that the link pointing to managing passwords in the user's account is not displayed for
+-     * users syncing passwords with custom passphrase.
+-     */
+-    @Test
+-    @SmallTest
+-    @Feature({"Preferences"})
+-    public void testManageAccountLinkSyncingWithPassphrase() {
+-        // Add a password entry, because the link is only displayed if the password list is not
+-        // empty.
+-        mTestHelper.setPasswordSource(
+-                new SavedPasswordEntry("https://example.com", "test user", "password"));
+-        setSyncServiceState(true, true);
+-
+-        mTestHelper.startPasswordSettingsFromMainSettings(mPasswordSettingsActivityTestRule);
+-        PasswordSettings savedPasswordPrefs = mPasswordSettingsActivityTestRule.getFragment();
+-
+-        Assert.assertNull(
+-                savedPasswordPrefs.findPreference(PasswordSettings.PREF_KEY_MANAGE_ACCOUNT_LINK));
+-    }
+-
+     /**
+      * Ensure that the "Auto Sign-in" switch in "Save Passwords" settings actually enables and
+      * disables auto sign-in.
+@@ -326,39 +243,6 @@ public class PasswordSettingsTest {
+                 });
+     }
+ 
+-    /** Check that the check passwords preference is shown. */
+-    @Test
+-    @SmallTest
+-    @Feature({"Preferences"})
+-    public void testCheckPasswordsEnabled() {
+-        mTestHelper.startPasswordSettingsFromMainSettings(mPasswordSettingsActivityTestRule);
+-        ThreadUtils.runOnUiThreadBlocking(
+-                () -> {
+-                    PasswordSettings passwordPrefs =
+-                            mPasswordSettingsActivityTestRule.getFragment();
+-                    Assert.assertNotNull(
+-                            passwordPrefs.findPreference(PasswordSettings.PREF_CHECK_PASSWORDS));
+-                });
+-    }
+-
+-    @Test
+-    @MediumTest
+-    @Feature({"Preferences"})
+-    public void testDestroysPasswordCheckIfFirstInSettingsStack() {
+-        setSyncServiceState(true, true);
+-        mTestHelper.startPasswordSettingsDirectly(mPasswordSettingsActivityTestRule);
+-        mPasswordSettingsActivityTestRule.finishActivity();
+-    }
+-
+-    @Test
+-    @MediumTest
+-    @Feature({"Preferences"})
+-    public void testDoesNotDestroyPasswordCheckIfNotFirstInSettingsStack() {
+-        setSyncServiceState(true, true);
+-        mTestHelper.startPasswordSettingsFromMainSettings(mPasswordSettingsActivityTestRule);
+-        mPasswordSettingsActivityTestRule.finishActivity();
+-    }
+-
+     private static PrefService getPrefService() {
+         return UserPrefs.get(ProfileManager.getLastUsedRegularProfile());
+     }
+diff --git a/vanadium/chromium_src/chrome/android/javatests/src/org/chromium/chrome/browser/password_manager/settings/PasswordSettingsTestHelper.java b/vanadium/chromium_src/chrome/android/javatests/src/org/chromium/chrome/browser/password_manager/settings/PasswordSettingsTestHelper.java
+index e6be39d552bef..6a7c044a06518 100644
+--- a/vanadium/chromium_src/chrome/android/javatests/src/org/chromium/chrome/browser/password_manager/settings/PasswordSettingsTestHelper.java
++++ b/vanadium/chromium_src/chrome/android/javatests/src/org/chromium/chrome/browser/password_manager/settings/PasswordSettingsTestHelper.java
+@@ -63,7 +63,7 @@ class PasswordSettingsTestHelper {
+                                     ProfileManager.getLastUsedRegularProfile())
+                             .resetPasswordManagerHandlerForTest();
+                 });
+-        setPasswordSource(null);
++        mHandler = null;
+     }
+ 
+     FakePasswordManagerHandler getHandler() {

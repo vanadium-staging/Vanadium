@@ -13,10 +13,10 @@ Subject: [PATCH] Check config app feature flags set on webview cached flags
  create mode 100644 vanadium/chromium_src/android_webview/common/ext/java/src/org/chromium/android_webview/common/WebViewCachedFlagsHooks.java
 
 diff --git a/android_webview/java/src/org/chromium/android_webview/common/WebViewCachedFlags.java b/android_webview/java/src/org/chromium/android_webview/common/WebViewCachedFlags.java
-index a8e48ecf6969d..b04d49e5dbe00 100644
+index cc93a3c2255f4..17707b25ed417 100644
 --- a/android_webview/java/src/org/chromium/android_webview/common/WebViewCachedFlags.java
 +++ b/android_webview/java/src/org/chromium/android_webview/common/WebViewCachedFlags.java
-@@ -258,6 +258,12 @@ public class WebViewCachedFlags {
+@@ -257,6 +257,12 @@ public class WebViewCachedFlags {
       */
      public boolean isCachedFeatureEnabled(String feature) {
          logFeatureAccess(feature);
@@ -30,10 +30,10 @@ index a8e48ecf6969d..b04d49e5dbe00 100644
              return true;
          } else if (mOverrideDisabled.contains(feature)) {
 diff --git a/vanadium/chromium_src/android_webview/common/ext/BUILD.gn b/vanadium/chromium_src/android_webview/common/ext/BUILD.gn
-index 7f2bccb502962..390f1409dcbdd 100644
+index dccaa5eab9344..d9fb789e899e5 100644
 --- a/vanadium/chromium_src/android_webview/common/ext/BUILD.gn
 +++ b/vanadium/chromium_src/android_webview/common/ext/BUILD.gn
-@@ -51,3 +51,18 @@ generate_jni("feature_map_jni_headers") {
+@@ -48,3 +48,18 @@ generate_jni("feature_map_jni_headers") {
      "java/src/org/chromium/android_webview/common/AwExtFeatureMap.java",
    ]
  }

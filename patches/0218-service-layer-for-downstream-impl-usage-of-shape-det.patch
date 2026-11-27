@@ -4,7 +4,7 @@ Date: Tue, 17 Feb 2026 06:45:45 +0000
 Subject: [PATCH] service layer for downstream impl usage of shape detection
 
 ---
- .../shape_detection/android/BUILD.gn          |  94 ++++++
+ .../shape_detection/android/BUILD.gn          |  91 +++++
  .../downstream/shape_detection/android/DEPS   |   3 +
  .../shape_detection/android/features.cc       |  72 ++++
  .../shape_detection/android/features.h        |  18 +
@@ -12,7 +12,7 @@ Subject: [PATCH] service layer for downstream impl usage of shape detection
  .../DownstreamImplsFeatureList.java           |  57 ++++
  .../DownstreamImplsFeatureMap.java            |  42 +++
  .../ZxingBarcodeDetectionImpl.java            | 314 ++++++++++++++++++
- 8 files changed, 713 insertions(+)
+ 8 files changed, 710 insertions(+)
  create mode 100644 vanadium/chromium_src/services/downstream/shape_detection/android/BUILD.gn
  create mode 100644 vanadium/chromium_src/services/downstream/shape_detection/android/DEPS
  create mode 100644 vanadium/chromium_src/services/downstream/shape_detection/android/features.cc
@@ -24,10 +24,10 @@ Subject: [PATCH] service layer for downstream impl usage of shape detection
 
 diff --git a/vanadium/chromium_src/services/downstream/shape_detection/android/BUILD.gn b/vanadium/chromium_src/services/downstream/shape_detection/android/BUILD.gn
 new file mode 100644
-index 0000000000000..17cb62c05b9ba
+index 0000000000000..0f827cd17c12c
 --- /dev/null
 +++ b/vanadium/chromium_src/services/downstream/shape_detection/android/BUILD.gn
-@@ -0,0 +1,94 @@
+@@ -0,0 +1,91 @@
 +import("//third_party/jni_zero/jni_zero.gni")
 +
 +source_set("features") {
@@ -79,14 +79,11 @@ index 0000000000000..17cb62c05b9ba
 +
 +  deps = [
 +    ":downstream_impl_mode_enums_java",
++    ":feature_map_jni_headers_java",
 +    ":features_java",
 +    "//base:base_java",
 +    "//build/android:build_java",
 +    "//third_party/jni_zero:jni_zero_java",
-+  ]
-+
-+  srcjar_deps = [
-+    ":feature_map_jni_headers",
 +  ]
 +}
 +
