@@ -30,7 +30,7 @@ index 689bd4479105c..83ab02895e3ba 100644
      }
  
 diff --git a/vanadium/chromium_src/chrome/browser/flags/ext/android/BUILD.gn b/vanadium/chromium_src/chrome/browser/flags/ext/android/BUILD.gn
-index 5531e5cb9bba4..e92accf8dfb46 100644
+index b2e0eeb0dfa25..8dcdf3e13d50f 100644
 --- a/vanadium/chromium_src/chrome/browser/flags/ext/android/BUILD.gn
 +++ b/vanadium/chromium_src/chrome/browser/flags/ext/android/BUILD.gn
 @@ -10,6 +10,7 @@ source_set("features") {

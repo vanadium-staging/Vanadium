@@ -1,0 +1,202 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: quh4gko8 <88831734+quh4gko8@users.noreply.github.com>
+Date: Tue, 24 Nov 2026 02:34:13 +0000
+Subject: [PATCH] Disable native Android NTP wallpaper metadata
+
+---
+ .../ntp_android_background_service_factory.cc | 14 +-----
+ .../ntp_android_custom_background_service.cc  | 17 ++++++-
+ .../ntp_android_custom_background_service.h   |  1 +
+ ...roid_custom_background_service_unittest.cc | 50 ++++++++++++++++++-
+ .../ntp_theme_collection_bridge.cc            |  5 +-
+ 5 files changed, 70 insertions(+), 17 deletions(-)
+
+diff --git a/chrome/browser/ntp_customization/ntp_android_background_service_factory.cc b/chrome/browser/ntp_customization/ntp_android_background_service_factory.cc
+index e8bff67ea9617..f928f1f3ec30b 100644
+--- a/chrome/browser/ntp_customization/ntp_android_background_service_factory.cc
++++ b/chrome/browser/ntp_customization/ntp_android_background_service_factory.cc
+@@ -4,16 +4,8 @@
+ 
+ #include "chrome/browser/ntp_customization/ntp_android_background_service_factory.h"
+ 
+-#include <optional>
+-#include <string>
+-
+-#include "chrome/browser/browser_process.h"
+-#include "chrome/browser/global_features.h"
+ #include "chrome/browser/profiles/profile.h"
+-#include "components/application_locale_storage/application_locale_storage.h"
+ #include "components/themes/ntp_background_service.h"
+-#include "content/public/browser/browser_context.h"
+-#include "content/public/browser/storage_partition.h"
+ 
+ // static
+ NtpBackgroundService* NtpAndroidBackgroundServiceFactory::GetForProfile(
+@@ -41,8 +33,6 @@ NtpAndroidBackgroundServiceFactory::~NtpAndroidBackgroundServiceFactory() = defa
+ 
+ std::unique_ptr<KeyedService>
+ NtpAndroidBackgroundServiceFactory::BuildServiceInstanceForBrowserContext(
+-    content::BrowserContext* context) const {
+-  return std::make_unique<NtpBackgroundService>(
+-      g_browser_process->GetFeatures()->application_locale_storage(),
+-      Profile::FromBrowserContext(context)->GetURLLoaderFactory());
++    content::BrowserContext*) const {
++  return nullptr;
+ }
+diff --git a/chrome/browser/ntp_customization/ntp_android_custom_background_service.cc b/chrome/browser/ntp_customization/ntp_android_custom_background_service.cc
+index 5482e231f681b..49d4c0b0f050e 100644
+--- a/chrome/browser/ntp_customization/ntp_android_custom_background_service.cc
++++ b/chrome/browser/ntp_customization/ntp_android_custom_background_service.cc
+@@ -323,6 +323,10 @@ void NtpAndroidCustomBackgroundService::SetCustomBackgroundInfo(
+     const std::string& attribution_line_2,
+     const GURL& action_url,
+     const std::string& collection_id) {
++  if (!background_service_ &&
++      (!background_url.is_empty() || !collection_id.empty())) {
++    return;
++  }
+   pref_service_->ClearPref(prefs::kNtpAndroidChromeColorDict);
+   if (!background_url.is_valid() && !collection_id.empty()) {
+     // Daily refresh setup.
+@@ -354,6 +358,14 @@ void NtpAndroidCustomBackgroundService::ResetCustomBackgroundInfo() {
+   NotifySyncBridge();
+ }
+ 
++std::optional<CustomBackground>
++NtpAndroidCustomBackgroundService::GetCustomBackground() {
++  if (!background_service_) {
++    return std::nullopt;
++  }
++  return NtpCustomBackgroundServiceBase::GetCustomBackground();
++}
++
+ void NtpAndroidCustomBackgroundService::RefreshBackgroundIfNeeded() {
+   // Only fetch the next image if the stored background is a daily refresh
+   // theme collection. Java requests the next image based on SharedPreferences,
+@@ -369,6 +381,9 @@ void NtpAndroidCustomBackgroundService::RefreshBackgroundIfNeeded() {
+ }
+ 
+ void NtpAndroidCustomBackgroundService::OnNextCollectionImageAvailable() {
++  if (!background_service_) {
++    return;
++  }
+   auto image = background_service_->next_image();
+   if (!active_custom_background_ ||
+       !active_custom_background_->daily_refresh_enabled ||
+@@ -463,7 +478,7 @@ void NtpAndroidCustomBackgroundService::UpdateThemeCollectionPrefsWithColor(
+     const GURL& attribution_action_url,
+     SkColor color,
+     bool is_daily_refresh) {
+-  if (!image_url.is_valid()) {
++  if (!background_service_ || !image_url.is_valid()) {
+     return;
+   }
+ 
+diff --git a/chrome/browser/ntp_customization/ntp_android_custom_background_service.h b/chrome/browser/ntp_customization/ntp_android_custom_background_service.h
+index 07004c07a7e07..b2b221ea78e7e 100644
+--- a/chrome/browser/ntp_customization/ntp_android_custom_background_service.h
++++ b/chrome/browser/ntp_customization/ntp_android_custom_background_service.h
+@@ -97,6 +97,7 @@ class NtpAndroidCustomBackgroundService
+                                const std::string& collection_id) override;
+   void SelectLocalBackgroundImage(const base::FilePath& path) override;
+   void ResetCustomBackgroundInfo() override;
++  std::optional<CustomBackground> GetCustomBackground() override;
+   void RefreshBackgroundIfNeeded() override;
+   void OnNextCollectionImageAvailable() override;
+   std::optional<int> GetNextRefreshTimestamp() const override;
+diff --git a/chrome/browser/ntp_customization/ntp_android_custom_background_service_unittest.cc b/chrome/browser/ntp_customization/ntp_android_custom_background_service_unittest.cc
+index d3b2ded017362..152aa76b74d3f 100644
+--- a/chrome/browser/ntp_customization/ntp_android_custom_background_service_unittest.cc
++++ b/chrome/browser/ntp_customization/ntp_android_custom_background_service_unittest.cc
+@@ -27,6 +27,7 @@
+ #include "components/themes/ntp_background_service.h"
+ #include "components/themes/ntp_custom_background_service_constants.h"
+ #include "components/themes/ntp_custom_background_service_observer.h"
++#include "components/themes/theme_utils.h"
+ #include "content/public/test/browser_task_environment.h"
+ #include "services/network/public/cpp/shared_url_loader_factory.h"
+ #include "services/network/public/cpp/weak_wrapper_shared_url_loader_factory.h"
+@@ -174,12 +175,12 @@ class NtpAndroidCustomBackgroundServiceTest : public testing::Test {
+   }
+ 
+   std::unique_ptr<NtpAndroidCustomBackgroundService>
+-  CreateServiceWithThemeSyncEnabled() {
++  CreateServiceWithThemeSyncEnabled(Profile* profile = nullptr) {
+     scoped_feature_list_.Reset();
+     scoped_feature_list_.InitAndEnableFeature(
+         syncer::kNewTabPageCustomizationThemeSync);
+     return std::make_unique<NtpAndroidCustomBackgroundService>(
+-        profile_.get(),
++        profile ? profile : profile_.get(),
+         syncer::DataTypeStoreTestUtil::FactoryForForwardingStore(store_.get()));
+   }
+ 
+@@ -880,6 +881,51 @@ TEST_F(NtpAndroidCustomBackgroundServiceTest,
+   service_->SetSyncedThemeBridgeForTesting(nullptr);
+ }
+ 
++TEST_F(NtpAndroidCustomBackgroundServiceTest,
++       UnavailableMetadataKeepsLocalTheme) {
++  auto profile = TestingProfile::Builder().Build();
++  EXPECT_EQ(nullptr,
++            NtpAndroidBackgroundServiceFactory::GetForProfile(profile.get()));
++
++  auto store = syncer::DataTypeStoreTestUtil::CreateInMemoryStoreForTest();
++  NtpAndroidCustomBackgroundService service(
++      profile.get(),
++      syncer::DataTypeStoreTestUtil::FactoryForForwardingStore(store.get()));
++  service.SelectLocalBackgroundImage(base::FilePath());
++
++  service.SetCustomBackgroundInfo(GURL(kTestValidUrl), GURL(), "", "", GURL(),
++                                  kTestCollectionId);
++  service.UpdateThemeCollectionPrefsWithColor(
++      GURL(kTestValidUrl), kTestCollectionId, "", "", GURL(), SK_ColorBLUE,
++      /*is_daily_refresh=*/false);
++
++  EXPECT_TRUE(profile->GetPrefs()->GetBoolean(
++      prefs::kNtpAndroidCustomBackgroundLocalToDevice));
++  EXPECT_FALSE(profile->GetPrefs()->GetUserPrefValue(
++      prefs::kNtpAndroidCustomBackgroundDict));
++}
++
++TEST_F(NtpAndroidCustomBackgroundServiceTest,
++       LegacyWallpaperWithoutMetadataStaysInert) {
++  auto profile = TestingProfile::Builder().Build();
++  const auto specifics = CreateTestThemeSpecifics(
++      kTestValidUrl, kTestCollectionId, /*daily_refresh_enabled=*/true);
++  auto background =
++      themes::GetBackgroundDictFromProto(specifics.ntp_background());
++  background.Set(kNtpCustomBackgroundResumeToken, "resume");
++  profile->GetPrefs()->SetDict(prefs::kNtpAndroidCustomBackgroundDict,
++                               std::move(background));
++  auto service = CreateServiceWithThemeSyncEnabled(profile.get());
++  InstallStrictMockSyncedBridge(service.get());
++
++  service->GetStoredContinuousThemeAndNotify();
++  service->RefreshBackgroundIfNeeded();
++
++  EXPECT_FALSE(service->GetCustomBackground().has_value());
++  EXPECT_TRUE(profile->GetPrefs()->GetUserPrefValue(
++      prefs::kNtpAndroidCustomBackgroundDict));
++}
++
+ TEST_F(NtpAndroidCustomBackgroundServiceTest,
+        GetStoredContinuousThemeAndNotify_ThemeCollection) {
+   std::unique_ptr<NtpAndroidCustomBackgroundService> service =
+diff --git a/chrome/browser/ntp_customization/ntp_theme_collection_bridge.cc b/chrome/browser/ntp_customization/ntp_theme_collection_bridge.cc
+index 81cc46267b630..cf6d781ad052c 100644
+--- a/chrome/browser/ntp_customization/ntp_theme_collection_bridge.cc
++++ b/chrome/browser/ntp_customization/ntp_theme_collection_bridge.cc
+@@ -44,9 +44,10 @@ NtpThemeCollectionBridge::NtpThemeCollectionBridge(
+       ntp_custom_background_service_(
+           NtpAndroidCustomBackgroundServiceFactory::GetForProfile(profile)),
+       j_java_obj_(env, j_java_obj) {
+-  CHECK(ntp_background_service_);
+   CHECK(ntp_custom_background_service_);
+-  ntp_background_service_->AddObserver(this);
++  if (ntp_background_service_) {
++    ntp_background_service_->AddObserver(this);
++  }
+   ntp_custom_background_service_->SetThemeCollectionBridge(this);
+ }
+ 

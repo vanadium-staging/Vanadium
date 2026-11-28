@@ -11,10 +11,10 @@ updates
  2 files changed, 2 insertions(+)
 
 diff --git a/chrome/android/java/src/org/chromium/chrome/browser/init/ProcessInitializationHandler.java b/chrome/android/java/src/org/chromium/chrome/browser/init/ProcessInitializationHandler.java
-index 9d650675e7514..e1506ca3f74c7 100644
+index d0ef85a33faaa..e3e540a8d5caa 100644
 --- a/chrome/android/java/src/org/chromium/chrome/browser/init/ProcessInitializationHandler.java
 +++ b/chrome/android/java/src/org/chromium/chrome/browser/init/ProcessInitializationHandler.java
-@@ -716,6 +716,7 @@ public class ProcessInitializationHandler {
+@@ -708,6 +708,7 @@ public class ProcessInitializationHandler {
                              new ApplicationStatusAccessibilityStateVisibilityManager());
                  });
          tasks.add(TabPersistentStoreImpl::onDeferredStartup);

@@ -13,7 +13,7 @@ Subject: [PATCH] Earlier WebView config parsing and feature list init
  create mode 100644 vanadium/chromium_src/android_webview/glue/ext/java/src/com/android/webview/chromium/WebViewChromiumFactoryProviderHooks.java
 
 diff --git a/android_webview/glue/java/src/com/android/webview/chromium/WebViewChromiumFactoryProvider.java b/android_webview/glue/java/src/com/android/webview/chromium/WebViewChromiumFactoryProvider.java
-index 2c61c912278c1..70ffe5b04d59c 100644
+index a8e188ca997b6..75e5b5d787d34 100644
 --- a/android_webview/glue/java/src/com/android/webview/chromium/WebViewChromiumFactoryProvider.java
 +++ b/android_webview/glue/java/src/com/android/webview/chromium/WebViewChromiumFactoryProvider.java
 @@ -536,6 +536,7 @@ public class WebViewChromiumFactoryProvider implements WebViewFactoryProvider {

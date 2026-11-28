@@ -1,0 +1,58 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: quh4gko8 <88831734+quh4gko8@users.noreply.github.com>
+Date: Thu, 19 Nov 2026 12:00:00 +0000
+Subject: [PATCH] Extend //chrome/browser/android/screenshot_protection java
+ target sources
+
+---
+ .../android/screenshot_protection/BUILD.gn    |  3 +++
+ ...screenshot_protection_java_ext_sources.gni | 26 +++++++++++++++++++
+ 2 files changed, 29 insertions(+)
+ create mode 100644 vanadium/chromium_src/chrome/browser/android/screenshot_protection/screenshot_protection_java_ext_sources.gni
+
+diff --git a/chrome/browser/android/screenshot_protection/BUILD.gn b/chrome/browser/android/screenshot_protection/BUILD.gn
+index 074a726e178e9..d8d95f58c9314 100644
+--- a/chrome/browser/android/screenshot_protection/BUILD.gn
++++ b/chrome/browser/android/screenshot_protection/BUILD.gn
+@@ -22,6 +22,9 @@ if (is_android) {
+       "//components/policy/android:policy_java",
+       "//third_party/androidx:androidx_annotation_annotation_java",
+     ]
++
++    import ("//vanadium/chromium_src/chrome/browser/android/screenshot_protection/screenshot_protection_java_ext_sources.gni")
++    sources += screenshot_protection_java_ext_sources
+   }
+ 
+   robolectric_binary("junit") {
+diff --git a/vanadium/chromium_src/chrome/browser/android/screenshot_protection/screenshot_protection_java_ext_sources.gni b/vanadium/chromium_src/chrome/browser/android/screenshot_protection/screenshot_protection_java_ext_sources.gni
+new file mode 100644
+index 0000000000000..68fe66d1c3b0e
+--- /dev/null
++++ b/vanadium/chromium_src/chrome/browser/android/screenshot_protection/screenshot_protection_java_ext_sources.gni
+@@ -0,0 +1,26 @@
++# Copyright 2026 GrapheneOS
++# Use of this source code is governed by a GPL-2.0-only style license that can be
++# found in the LICENSE file.
++
++# Three lines of code for minimizing conflicts in rebasing changes
++# Three lines of code for minimizing conflicts in rebasing changes
++# Three lines of code for minimizing conflicts in rebasing changes
++screenshot_protection_java_ext_full_path_sources = [
++]
++# Three lines of code for minimizing conflicts in rebasing changes
++# Three lines of code for minimizing conflicts in rebasing changes
++# Three lines of code for minimizing conflicts in rebasing changes
++screenshot_protection_java_ext_rel_path_sources = [
++]
++# Three lines of code for minimizing conflicts in rebasing changes
++# Three lines of code for minimizing conflicts in rebasing changes
++# Three lines of code for minimizing conflicts in rebasing changes
++screenshot_protection_java_ext_sources = [
++]
++# Three lines of code for minimizing conflicts in rebasing changes
++# Three lines of code for minimizing conflicts in rebasing changes
++# Three lines of code for minimizing conflicts in rebasing changes
++screenshot_protection_java_ext_sources += screenshot_protection_java_ext_full_path_sources
++foreach(rel_path, screenshot_protection_java_ext_rel_path_sources) {
++  screenshot_protection_java_ext_sources += [ rebase_path(rel_path) ]
++}

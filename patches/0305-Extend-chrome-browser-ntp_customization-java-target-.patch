@@ -1,0 +1,57 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: quh4gko8 <88831734+quh4gko8@users.noreply.github.com>
+Date: Mon, 23 Nov 2026 05:33:57 +0000
+Subject: [PATCH] Extend //chrome/browser/ntp_customization java target sources
+
+---
+ chrome/browser/ntp_customization/BUILD.gn     |  3 +++
+ .../ntp_customization_java_ext_sources.gni    | 26 +++++++++++++++++++
+ 2 files changed, 29 insertions(+)
+ create mode 100644 vanadium/chromium_src/chrome/browser/ntp_customization/ntp_customization_java_ext_sources.gni
+
+diff --git a/chrome/browser/ntp_customization/BUILD.gn b/chrome/browser/ntp_customization/BUILD.gn
+index 73b67d549b5bc..964584b17e6e5 100644
+--- a/chrome/browser/ntp_customization/BUILD.gn
++++ b/chrome/browser/ntp_customization/BUILD.gn
+@@ -231,6 +231,9 @@ android_library("java") {
+     "//url:url_java",
+   ]
+   resources_package = "org.chromium.chrome.browser.ntp_customization"
++
++  import("//vanadium/chromium_src/chrome/browser/ntp_customization/ntp_customization_java_ext_sources.gni")
++  sources += ntp_customization_java_ext_sources
+ }
+ 
+ generate_jni("jni_headers") {
+diff --git a/vanadium/chromium_src/chrome/browser/ntp_customization/ntp_customization_java_ext_sources.gni b/vanadium/chromium_src/chrome/browser/ntp_customization/ntp_customization_java_ext_sources.gni
+new file mode 100644
+index 0000000000000..be8a4baf33804
+--- /dev/null
++++ b/vanadium/chromium_src/chrome/browser/ntp_customization/ntp_customization_java_ext_sources.gni
+@@ -0,0 +1,26 @@
++# Copyright 2023-2026 GrapheneOS
++# Use of this source code is governed by a GPL-2.0-only style license that can be
++# found in the LICENSE file.
++
++# Three lines of code for minimizing conflicts in rebasing changes
++# Three lines of code for minimizing conflicts in rebasing changes
++# Three lines of code for minimizing conflicts in rebasing changes
++ntp_customization_java_ext_full_path_sources = [
++]
++# Three lines of code for minimizing conflicts in rebasing changes
++# Three lines of code for minimizing conflicts in rebasing changes
++# Three lines of code for minimizing conflicts in rebasing changes
++ntp_customization_java_ext_rel_path_sources = [
++]
++# Three lines of code for minimizing conflicts in rebasing changes
++# Three lines of code for minimizing conflicts in rebasing changes
++# Three lines of code for minimizing conflicts in rebasing changes
++ntp_customization_java_ext_sources = [
++]
++# Three lines of code for minimizing conflicts in rebasing changes
++# Three lines of code for minimizing conflicts in rebasing changes
++# Three lines of code for minimizing conflicts in rebasing changes
++ntp_customization_java_ext_sources += ntp_customization_java_ext_full_path_sources
++foreach(rel_path, ntp_customization_java_ext_rel_path_sources) {
++  ntp_customization_java_ext_sources += [ rebase_path(rel_path) ]
++}

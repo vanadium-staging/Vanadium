@@ -1,0 +1,140 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: quh4gko8 <88831734+quh4gko8@users.noreply.github.com>
+Date: Mon, 23 Nov 2026 12:31:15 +0000
+Subject: [PATCH] Disable continuous Android NTP theme sync
+
+---
+ chrome/browser/ntp_customization/BUILD.gn     |  1 -
+ .../ntp_android_custom_background_service.cc  |  3 +-
+ .../ntp_android_custom_background_service.h   |  3 +-
+ ...droid_custom_background_service_factory.cc | 10 ++----
+ ...roid_custom_background_service_unittest.cc | 35 +++++++++++++++++++
+ 5 files changed, 42 insertions(+), 10 deletions(-)
+
+diff --git a/chrome/browser/ntp_customization/BUILD.gn b/chrome/browser/ntp_customization/BUILD.gn
+index 964584b17e6e5..c712eb1190786 100644
+--- a/chrome/browser/ntp_customization/BUILD.gn
++++ b/chrome/browser/ntp_customization/BUILD.gn
+@@ -39,7 +39,6 @@ source_set("ntp_customization") {
+     "//chrome/browser:browser_process",
+     "//chrome/browser:global_features",
+     "//chrome/browser/android:tabs_public",
+-    "//chrome/browser/sync:factories",
+     "//chrome/browser/ui/side_panel",
+     "//chrome/common:constants",
+     "//components/application_locale_storage",
+diff --git a/chrome/browser/ntp_customization/ntp_android_custom_background_service.cc b/chrome/browser/ntp_customization/ntp_android_custom_background_service.cc
+index 49d4c0b0f050e..54b2eb362f017 100644
+--- a/chrome/browser/ntp_customization/ntp_android_custom_background_service.cc
++++ b/chrome/browser/ntp_customization/ntp_android_custom_background_service.cc
+@@ -201,7 +201,8 @@ NtpAndroidCustomBackgroundService::NtpAndroidCustomBackgroundService(
+   // Desktop Android devices until Desktop Android theme sync requirements are
+   // finalized.
+ #if !BUILDFLAG(ENABLE_WEBUI_NTP)
+-  if (base::FeatureList::IsEnabled(syncer::kNewTabPageCustomizationThemeSync)) {
++  if (store_factory &&
++      base::FeatureList::IsEnabled(syncer::kNewTabPageCustomizationThemeSync)) {
+     is_theme_sync_ready_ = false;
+     theme_sync_bridge_ =
+         std::make_unique<ntp_customization::NtpAndroidThemeSyncBridge>(
+diff --git a/chrome/browser/ntp_customization/ntp_android_custom_background_service.h b/chrome/browser/ntp_customization/ntp_android_custom_background_service.h
+index b2b221ea78e7e..0c3e225ef33ea 100644
+--- a/chrome/browser/ntp_customization/ntp_android_custom_background_service.h
++++ b/chrome/browser/ntp_customization/ntp_android_custom_background_service.h
+@@ -55,7 +55,8 @@ class NtpAndroidCustomBackgroundService
+   static void RegisterProfilePrefs(PrefRegistrySimple* registry);
+ 
+   // Constructs a custom background service for the given profile and
+-  // initializes the theme sync bridge if the feature flag is enabled.
++  // initializes the theme sync bridge if the feature flag is enabled and
++  // a store factory was provided.
+   NtpAndroidCustomBackgroundService(
+       Profile* profile,
+       syncer::OnceDataTypeStoreFactory store_factory);
+diff --git a/chrome/browser/ntp_customization/ntp_android_custom_background_service_factory.cc b/chrome/browser/ntp_customization/ntp_android_custom_background_service_factory.cc
+index 33a3044fd5c34..5614fc2972fe9 100644
+--- a/chrome/browser/ntp_customization/ntp_android_custom_background_service_factory.cc
++++ b/chrome/browser/ntp_customization/ntp_android_custom_background_service_factory.cc
+@@ -7,9 +7,7 @@
+ #include "chrome/browser/ntp_customization/ntp_android_background_service_factory.h"
+ #include "chrome/browser/ntp_customization/ntp_android_custom_background_service.h"
+ #include "chrome/browser/profiles/profile.h"
+-#include "chrome/browser/sync/data_type_store_service_factory.h"
+-#include "components/prefs/pref_service.h"
+-#include "components/sync/model/data_type_store_service.h"
++#include "components/sync/model/data_type_store.h"
+ 
+ // static
+ NtpAndroidCustomBackgroundService*
+@@ -35,7 +33,6 @@ NtpAndroidCustomBackgroundServiceFactory::
+               .WithAshInternals(ProfileSelection::kOriginalOnly)
+               .Build()) {
+   DependsOn(NtpAndroidBackgroundServiceFactory::GetInstance());
+-  DependsOn(DataTypeStoreServiceFactory::GetInstance());
+ }
+ 
+ NtpAndroidCustomBackgroundServiceFactory::
+@@ -44,8 +41,7 @@ NtpAndroidCustomBackgroundServiceFactory::
+ std::unique_ptr<KeyedService>
+ NtpAndroidCustomBackgroundServiceFactory::BuildServiceInstanceForBrowserContext(
+     content::BrowserContext* context) const {
+-  Profile* profile = Profile::FromBrowserContext(context);
++  // Vanadium: Continuous Chrome theme sync is unavailable.
+   return std::make_unique<NtpAndroidCustomBackgroundService>(
+-      profile,
+-      DataTypeStoreServiceFactory::GetForProfile(profile)->GetStoreFactory());
++      Profile::FromBrowserContext(context), syncer::OnceDataTypeStoreFactory());
+ }
+diff --git a/chrome/browser/ntp_customization/ntp_android_custom_background_service_unittest.cc b/chrome/browser/ntp_customization/ntp_android_custom_background_service_unittest.cc
+index 152aa76b74d3f..47f441f6d8a62 100644
+--- a/chrome/browser/ntp_customization/ntp_android_custom_background_service_unittest.cc
++++ b/chrome/browser/ntp_customization/ntp_android_custom_background_service_unittest.cc
+@@ -13,6 +13,7 @@
+ #include "base/test/task_environment.h"
+ #include "base/time/time.h"
+ #include "chrome/browser/ntp_customization/ntp_android_background_service_factory.h"
++#include "chrome/browser/ntp_customization/ntp_android_custom_background_service_factory.h"
+ #include "chrome/browser/ntp_customization/ntp_synced_theme_bridge.h"
+ #include "chrome/browser/ntp_customization/ntp_theme_collection_bridge.h"
+ #include "chrome/common/pref_names.h"
+@@ -299,6 +300,40 @@ TEST_F(NtpAndroidCustomBackgroundServiceTest, RegisterAllPrefs) {
+   EXPECT_TRUE(pref->GetValue()->is_dict());
+ }
+ 
++TEST_F(NtpAndroidCustomBackgroundServiceTest,
++       ProfileServiceDoesNotReplayStoredThemeWithSyncFlagEnabled) {
++  base::test::ScopedFeatureList feature_list(
++      syncer::kNewTabPageCustomizationThemeSync);
++  auto profile = MakeTestingProfile(
++      &locale_storage_,
++      base::MakeRefCounted<network::WeakWrapperSharedURLLoaderFactory>(
++          &test_url_loader_factory_));
++  PrefService* prefs = profile->GetPrefs();
++  base::DictValue preset;
++  preset.Set(kNtpAndroidThemeColorIdKey, kTestColorId);
++  prefs->SetDict(prefs::kNtpAndroidChromeColorDict, preset.Clone());
++
++  auto* profile_service =
++      NtpAndroidCustomBackgroundServiceFactory::GetForProfile(profile.get());
++  ASSERT_TRUE(profile_service);
++  EXPECT_FALSE(profile_service->GetSyncControllerDelegate());
++  EXPECT_TRUE(profile_service->IsThemeSyncReady());
++  InstallStrictMockSyncedBridge(profile_service);
++
++  profile_service->GetStoredContinuousThemeAndNotify();
++  EXPECT_EQ(prefs->GetDict(prefs::kNtpAndroidChromeColorDict), preset);
++  EXPECT_FALSE(prefs->GetUserPrefValue(prefs::kNtpAndroidCustomBackgroundDict));
++  EXPECT_FALSE(prefs->GetBoolean(prefs::kNtpAndroidCustomBackgroundLocalToDevice));
++
++  prefs->ClearPref(prefs::kNtpAndroidChromeColorDict);
++  profile_service->GetStoredContinuousThemeAndNotify();
++  task_environment_.RunUntilIdle();
++
++  EXPECT_FALSE(prefs->GetUserPrefValue(prefs::kNtpAndroidChromeColorDict));
++  EXPECT_FALSE(prefs->GetUserPrefValue(prefs::kNtpAndroidCustomBackgroundDict));
++  EXPECT_FALSE(prefs->GetBoolean(prefs::kNtpAndroidCustomBackgroundLocalToDevice));
++}
++
+ TEST_F(NtpAndroidCustomBackgroundServiceTest, SetCustomBackgroundInfo) {
+   GURL bg_url(kTestBackgroundUrl);
+   GURL thumb_url(kTestThumbnailUrl);
